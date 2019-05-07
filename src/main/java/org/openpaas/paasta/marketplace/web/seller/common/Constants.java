@@ -3,9 +3,9 @@ package org.openpaas.paasta.marketplace.web.seller.common;
 /**
  * Constants 클래스
  *
- * @author REX
+ * @author hrjin
  * @version 1.0
- * @since 2018.08.02
+ * @since 2019.04.17
  */
 public class Constants {
 
@@ -22,24 +22,12 @@ public class Constants {
 
 
 
-    // TODO :: Market WEB  SELLER URI
-    public static final String URI_INTRO_OVERVIEW = "/caas/intro/overview";
-    public static final String URI_INTRO_ACCESS_INFO = "/caas/intro/accessInfo";
-
-    public static final String URI_WORKLOAD_OVERVIEW = "/caas/workloads/overview";
-    public static final String URI_WORKLOAD_DEPLOYMENTS = "/caas/workloads/deployments";
-    public static final String URI_WORKLOAD_PODS = "/caas/workloads/pods";
-    public static final String URI_WORKLOAD_REPLICA_SETS = "/caas/workloads/replicaSets";
-
-    public static final String URI_SERVICES = "/caas/services";
-
-    public static final String URI_USERS = "/caas/users";
-
-    public static final String URI_ROLES = "/caas/roles";
+    // TODO :: Market WEB SELLER URI
+    public static final String URI_SELLER_PROFILE = "/seller/profile";
 
 
     // TODO :: Market API URI
-
+    public static final String URI_MARKET_API = "/api/seller/profile";
 
 
     private Constants() {
