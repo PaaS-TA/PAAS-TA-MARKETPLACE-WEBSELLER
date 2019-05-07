@@ -1,5 +1,6 @@
 package org.openpaas.paasta.marketplace.web.seller.config.security.userdetail;
 
+import lombok.Data;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
@@ -16,6 +17,7 @@ import java.util.*;
  * @version 1.0
  * @since 2018.08.28
  */
+@Data
 public class User implements UserDetails, CredentialsContainer {
 
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
@@ -57,33 +59,6 @@ public class User implements UserDetails, CredentialsContainer {
         this.authorities = Collections.unmodifiableSet(sortAuthorities(authorities));
     }
 
-    public Collection<GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
 
     public void eraseCredentials() {
         //password = null;
@@ -101,70 +76,6 @@ public class User implements UserDetails, CredentialsContainer {
         }
 
         return sortedAuthorities;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getExpireDate() {
-        return expireDate;
-    }
-
-    public void setExpireDate(Long expireDate) {
-        this.expireDate = expireDate;
-    }
-
-    public String getImgPath() {
-        return imgPath;
-    }
-
-    public void setImgPath(String imgPath) {
-        this.imgPath = imgPath;
-    }
-
-    public String getServiceInstanceId() {
-        return serviceInstanceId;
-    }
-
-    public void setServiceInstanceId(String serviceInstanceId) {
-        this.serviceInstanceId = serviceInstanceId;
-    }
-
-    public String getOrganizationGuid() {
-        return organizationGuid;
-    }
-
-    public void setOrganizationGuid(String organizationGuid) {
-        this.organizationGuid = organizationGuid;
-    }
-
-    public String getSpaceGuid() {
-        return spaceGuid;
-    }
-
-    public void setSpaceGuid(String spaceGuid) {
-        this.spaceGuid = spaceGuid;
-    }
-
-    public String getNameSpace() {
-        return nameSpace;
-    }
-
-    public void setNameSpace(String nameSpace) {
-        this.nameSpace = nameSpace;
     }
 
     private static class AuthorityComparator implements Comparator<GrantedAuthority>, Serializable {
