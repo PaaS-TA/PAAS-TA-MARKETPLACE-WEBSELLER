@@ -12,21 +12,12 @@
 <sec:authorize access="isAuthenticated()">
     <sec:authentication property="details.userId" var="userId"/>
     <sec:authentication property="details.username" var="username"/>
-    <sec:authentication property="details.serviceInstanceId" var="serviceInstanceId"/>
-    <sec:authentication property="details.organizationGuid" var="organizationGuid"/>
-    <sec:authentication property="details.spaceGuid" var="spaceGuid"/>
-    <sec:authentication property="details.nameSpace" var="nameSpace"/>
 </sec:authorize>
 <sec:authorize access="!isAuthenticated()">
     <script>
         location.href='/common/error/unauthorized';
     </script>
 </sec:authorize>
-
-<!--[if lt IE 9]>
-<script type="text/javascript" src="/resources/js/html5shiv.min.js"></script>
-<script type="text/javascript" src="/resources/js/respond.min.js"></script>
-<![endif]-->
 
 <%--CSS--%>
 <link rel="shortcut icon" type="image/x-icon" href="<c:url value="/resources/images/favicon.ico"/>">
@@ -40,10 +31,6 @@
 
     var USER_ID = "${userId}";
     var USER_NAME = "${username}";
-    var SERVICE_INSTANCE_ID = "${serviceInstanceId}";
-    var ORGANIZATION_GUID = "${organizationGuid}";
-    var SPACE_GUID = "${spaceGuid}";
-    var NAME_SPACE = "${nameSpace}";
 
     var _csrf_token = document.getElementsByName("_csrf")[0].getAttribute("content");
     var _csrf_header = document.getElementsByName("_csrf_header")[0].getAttribute("content");
