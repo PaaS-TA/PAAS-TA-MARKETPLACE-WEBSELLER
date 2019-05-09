@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 /**
+ * 판매자 프로필 Controller
  *
  * @author hrjin
  * @version 1.0
@@ -29,12 +30,24 @@ public class SellerProfileController {
     @Autowired
     SellerProfileService sellerProfileService;
 
+    /**
+     * 프로필 등록 페이지 이동
+     *
+     * @param httpServletRequest the httpServletRequest
+     * @return ModelAndView
+     */
     @GetMapping(value = Constants.URI_SELLER_PROFILE)
-    public ModelAndView getProfile(HttpServletRequest httpServletRequest){
+    public ModelAndView getProfileCreatePage(HttpServletRequest httpServletRequest){
         return commonService.setPathVariables(httpServletRequest, VIEW_URL + "/createProfile", new ModelAndView());
     }
 
-    @PostMapping(value = Constants.URI_MARKET_API)
+    /**
+     * 프로필 등록
+     *
+     * @param sellerProfile the seller profile
+     * @return SellerProfile
+     */
+    @PostMapping(value = Constants.URI_MARKET_API_PROFILE)
     private SellerProfile createProfile(@RequestBody SellerProfile sellerProfile){
         return sellerProfileService.createProfile(sellerProfile);
     }
