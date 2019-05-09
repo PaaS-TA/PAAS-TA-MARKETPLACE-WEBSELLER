@@ -20,14 +20,16 @@ public class Constants {
     public static final String MARKET_BASE_URL = "/";
     public static final String MARKET_INIT_URL = "/seller";
 
+    public static final String BUSINESS_GROUP_TYPE = "BUSINESS_TYPE";
 
 
-    // TODO :: Market WEB SELLER URI
+    // Market WEB SELLER URI
     public static final String URI_SELLER_PROFILE = "/seller/profile";
 
 
-    // TODO :: Market API URI
-    public static final String URI_MARKET_API = "/api/seller/profile";
+    // Market API URI
+    public static final String URI_MARKET_API_PROFILE = "/api/seller/profile";
+    public static final String URI_MARKET_API_CODE = "/api/seller/customCode";
 
 
     private Constants() {
