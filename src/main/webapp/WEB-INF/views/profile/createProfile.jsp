@@ -109,7 +109,9 @@
     };
 
     var callbackCreateProfile = function(data){
-        alert("저장 완료!!! " + JSON.stringify(data));
+        console.log("저장 완료!!! " + JSON.stringify(data));
+
+        procMovePage("<%= Constants.URI_SELLER_PROFILE %>" + "/" + data.id);
     };
 
 
