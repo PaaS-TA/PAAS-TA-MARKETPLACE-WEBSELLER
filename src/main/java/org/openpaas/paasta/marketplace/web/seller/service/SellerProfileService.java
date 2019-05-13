@@ -8,19 +8,36 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 
 /**
+ * 판매자 프로필 Service
  *
  * @author hrjin
  * @version 1.0
  * @since 2019-05-07
  */
-
 @Service
 public class SellerProfileService {
 
     @Resource(name = "marketApiRest")
     RestTemplate marketApiRest;
 
+    /**
+     * 판매자 프로필 등록
+     *
+     * @param sellerProfile the seller profile
+     * @return SellerProfile
+     */
     public SellerProfile createProfile(SellerProfile sellerProfile) {
         return marketApiRest.postForObject("/profile", sellerProfile, SellerProfile.class);
+    }
+
+
+    /**
+     * 판매자 프로필 상세 조회
+     *
+     * @param id the id
+     * @return SellerProfile
+     */
+    public SellerProfile getProfile(Long id) {
+        return marketApiRest.getForObject("/profile/" + id, SellerProfile.class);
     }
 }

@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
  * @version 1.0
  * @since 2019-05-07
  */
-
 @RestController
 public class SellerProfileController {
 
@@ -50,5 +49,29 @@ public class SellerProfileController {
     @PostMapping(value = Constants.URI_MARKET_API_PROFILE)
     private SellerProfile createProfile(@RequestBody SellerProfile sellerProfile){
         return sellerProfileService.createProfile(sellerProfile);
+    }
+
+
+    /**
+     * 프로필 상세 조회 페이지 이동
+     *
+     * @param httpServletRequest the httpServletRequest
+     * @return ModelAndView
+     */
+    @GetMapping(value = Constants.URI_SELLER_PROFILE + "/{id}")
+    public ModelAndView getProfilePage(HttpServletRequest httpServletRequest, @PathVariable(value = "id") Long id){
+        return commonService.setPathVariables(httpServletRequest, VIEW_URL + "/getProfile", new ModelAndView());
+    }
+
+
+    /**
+     * 프로필 상세 조회
+     *
+     * @param id the id
+     * @return SellerProfile
+     */
+    @GetMapping(value = Constants.URI_MARKET_API_PROFILE + "/{id}")
+    private SellerProfile getProfile(@PathVariable Long id){
+        return sellerProfileService.getProfile(id);
     }
 }
