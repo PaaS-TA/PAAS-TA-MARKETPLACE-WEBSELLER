@@ -96,6 +96,7 @@
         var homepageUrl = $('#homepageUrl').val();
 
         var param = {
+            "userId": USER_NAME,
             "sellerName": sellerName,
             "businessType": businessType,
             "managerName": managerName,
