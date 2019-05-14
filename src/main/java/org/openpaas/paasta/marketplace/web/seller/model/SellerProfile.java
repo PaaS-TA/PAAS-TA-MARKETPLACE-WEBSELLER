@@ -12,7 +12,7 @@ import java.util.List;
  * @since 2019-05-07
  */
 @Data
-public class SellerProfile extends AbstractEntity{
+public class SellerProfile extends CommonEntity {
 
     private Long id;
     private String userId;

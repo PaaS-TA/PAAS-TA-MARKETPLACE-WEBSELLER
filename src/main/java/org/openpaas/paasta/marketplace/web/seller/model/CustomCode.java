@@ -10,7 +10,7 @@ import lombok.Data;
  * @since 2019-05-08
  */
 @Data
-public class CustomCode extends AbstractEntity{
+public class CustomCode extends CommonEntity {
 
     private Long id;
 
