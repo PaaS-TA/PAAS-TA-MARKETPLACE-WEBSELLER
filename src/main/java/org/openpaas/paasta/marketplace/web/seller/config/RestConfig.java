@@ -39,15 +39,15 @@ public class RestConfig {
     private String uaaAccessToken;
 
 
-    @Bean
-    RestTemplate cfJavaClientApiRest() {
-        RestTemplate rest = new RestTemplate();
-        rest.setUriTemplateHandler(new DefaultUriBuilderFactory(cfJavaClientApiUri));
-        rest.getInterceptors().add(cfJavaClientApiInterceptor());
-        rest.getInterceptors().add(loggingInterceptor());
-
-        return rest;
-    }
+//    @Bean
+//    RestTemplate cfJavaClientApiRest() {
+//        RestTemplate rest = new RestTemplate();
+//        rest.setUriTemplateHandler(new DefaultUriBuilderFactory(cfJavaClientApiUri));
+//        rest.getInterceptors().add(cfJavaClientApiInterceptor());
+//        rest.getInterceptors().add(loggingInterceptor());
+//
+//        return rest;
+//    }
 
     @Bean
     RestTemplate marketApiRest() {
@@ -67,12 +67,12 @@ public class RestConfig {
         return tokenHeaderInterceptor;
     }
 
-    @Bean
-    AuthHeaderInterceptor cfJavaClientApiInterceptor() {
-        AuthHeaderInterceptor tokenHeaderInterceptor = new AuthHeaderInterceptor(AUTHORIZATION_HEADER_KEY, cfJavaClientApiUsername, cfJavaClientApiPassword);
-
-        return tokenHeaderInterceptor;
-    }
+//    @Bean
+//    AuthHeaderInterceptor cfJavaClientApiInterceptor() {
+//        AuthHeaderInterceptor tokenHeaderInterceptor = new AuthHeaderInterceptor(AUTHORIZATION_HEADER_KEY, cfJavaClientApiUsername, cfJavaClientApiPassword);
+//
+//        return tokenHeaderInterceptor;
+//    }
 
 
     @Bean
