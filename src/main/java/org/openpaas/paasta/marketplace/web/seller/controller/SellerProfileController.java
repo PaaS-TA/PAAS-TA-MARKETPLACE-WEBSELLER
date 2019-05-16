@@ -74,4 +74,29 @@ public class SellerProfileController {
     private SellerProfile getProfile(@PathVariable Long id){
         return sellerProfileService.getProfile(id);
     }
+
+
+
+    /**
+     * 프로필 수정 페이지 이동
+     *
+     * @param httpServletRequest the httpServletRequest
+     * @return ModelAndView
+     */
+    @GetMapping(value = Constants.URI_SELLER_PROFILE + "/{id}/update")
+    public ModelAndView getProfileUpdatePage(HttpServletRequest httpServletRequest, @PathVariable Long id){
+        return commonService.setPathVariables(httpServletRequest, VIEW_URL + "/updateProfile", new ModelAndView());
+    }
+
+
+    /**
+     * 프로필 수정
+     *
+     * @param id the id
+     * @param sellerProfile the seller profile
+     */
+    @PutMapping(value = Constants.URI_MARKET_API_PROFILE + "/{id}")
+    private void updateProfile(@PathVariable Long id, @RequestBody SellerProfile sellerProfile){
+        sellerProfileService.updateProfile(id, sellerProfile);
+    }
 }

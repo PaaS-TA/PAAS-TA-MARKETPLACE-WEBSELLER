@@ -57,7 +57,7 @@
     </tr>
 </table>
 <div>
-    <button type="button" onclick="">수정</button>
+    <button type="button" id="updateBtn">수정</button>
 </div>
 </body>
 </html>
@@ -80,6 +80,10 @@
         $('.homepageUrl').html(data.homepageUrl);
         $('.createdDate').html(data.createdDate);
     };
+
+    $("#updateBtn").on("click", function () {
+       procMovePage("<%= Constants.URI_SELLER_PROFILE %>/" + "<c:out value='${id}'/>/update");
+    });
 
 
     // ON LOAD

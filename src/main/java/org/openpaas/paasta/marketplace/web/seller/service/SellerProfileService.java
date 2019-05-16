@@ -40,4 +40,14 @@ public class SellerProfileService {
     public SellerProfile getProfile(Long id) {
         return marketApiRest.getForObject("/profile/" + id, SellerProfile.class);
     }
+
+
+    /**
+     * 판매자 프로필 수정
+     *
+     * @param sellerProfile the seller profile
+     */
+    public void updateProfile(Long id, SellerProfile sellerProfile) {
+        marketApiRest.put("/profile/" + id, sellerProfile);
+    }
 }
