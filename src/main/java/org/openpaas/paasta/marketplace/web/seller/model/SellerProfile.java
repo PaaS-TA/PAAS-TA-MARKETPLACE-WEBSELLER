@@ -1,8 +1,8 @@
 package org.openpaas.paasta.marketplace.web.seller.model;
 
-import lombok.Data;
 
-import java.util.List;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 판매자 프로필 모델
@@ -12,15 +12,16 @@ import java.util.List;
  * @since 2019-05-07
  */
 @Data
-public class SellerProfile extends CommonEntity {
+@EqualsAndHashCode(callSuper = true)
+public class SellerProfile extends BaseModel {
 
-    private Long id;
-    private String userId;
+    private String id;
     private String sellerName;
     private String businessType;
-    private List<CustomCode> businessTypeList;
     private String managerName;
     private String email;
     private String homepageUrl;
+
+//    private List<CustomCode> businessTypeList;
 
 }

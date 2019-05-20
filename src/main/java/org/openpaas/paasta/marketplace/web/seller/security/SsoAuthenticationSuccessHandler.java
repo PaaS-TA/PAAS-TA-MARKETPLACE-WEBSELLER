@@ -43,7 +43,7 @@ public class SsoAuthenticationSuccessHandler extends SavedRequestAwareAuthentica
         if(request.getSession() != null && sessionRedirectUrl != "") {
             LOGGER.info("[onAuthenticationSuccess] Process Start - sessionRedirectUrl:" + sessionRedirectUrl);
 
-            sessionRedirectUrl = Constants.MARKET_INIT_URL;
+            sessionRedirectUrl = Constants.MARKET_SELLER_URL;
 
         }
 

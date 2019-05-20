@@ -63,7 +63,7 @@ public class SsoSecurityConfiguration extends Common {
 
     @Bean(name = "ssoEntryPointMatcher")
     public RequestMatcher ssoEntryPointMatcher() {
-        return new AntPathRequestMatcher(Constants.MARKET_INIT_URL + "/**");
+        return new AntPathRequestMatcher(Constants.MARKET_SELLER_URL + "/**");
     }
 
     @Bean(name = "ssoClientContextFilter")

@@ -1,6 +1,7 @@
 package org.openpaas.paasta.marketplace.web.seller.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Custom Code 모델
@@ -10,9 +11,10 @@ import lombok.Data;
  * @since 2019-05-08
  */
 @Data
-public class CustomCode extends CommonEntity {
+@EqualsAndHashCode(callSuper = true)
+public class CustomCode extends BaseModel {
 
-    private Long id;
+    private Long codeId;
 
     // ex) BC
     private String groupCode;
@@ -21,8 +23,9 @@ public class CustomCode extends CommonEntity {
     private String groupCodeName;
 
     // ex) GOVERNMENT, COMPANY, PERSON, ETC
-    private String codeUnit;
+    private String unitCode;
 
     // ex) 공공기관, 기업, 개인, 기타
-    private String codeUnitName;
+    private String unitCodeName;
+
 }

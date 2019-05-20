@@ -17,10 +17,10 @@ public class Constants {
     public static final String TARGET_CF_API = "cfApi";
     public static final String TARGET_MARKET_API = "marketApi";
 
-    public static final String MARKET_BASE_URL = "/";
-    public static final String MARKET_INIT_URL = "/seller";
+//    public static final String MARKET_BASE_URL = "/";
+    public static final String MARKET_SELLER_URL = "/seller";
 
-    public static final String BUSINESS_GROUP_TYPE = "BUSINESS_TYPE";
+    public static final String GROUP_CODE_BUSINESS_TYPE = "BUSINESS_TYPE";
 
 
     // Market WEB SELLER URI
@@ -28,8 +28,8 @@ public class Constants {
 
 
     // Market API URI
-    public static final String URI_MARKET_API_PROFILE = "/api/seller/profile";
-    public static final String URI_MARKET_API_CODE = "/api/seller/customCode";
+    public static final String URI_MARKET_API_PROFILE = "/api/profile";
+    public static final String URI_MARKET_API_CODE = "/api/customCode";
 
 
     private Constants() {

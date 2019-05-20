@@ -26,7 +26,7 @@
     <tr>
         <td>유형</td>
         <td>
-        <select onchange="selectBox();" id="businessGroup">
+        <select onchange="selectBox();" id="businessType">
         </select>
         </td>
     </tr>
@@ -50,39 +50,39 @@
 </html>
 <script type="text/javascript">
 
-    var BUSINESS_TYPE_GROUP = [];
+    var UNIT_CODE_LIST = [];
     var codeUnitValue;
 
 
     var getBusinessGroup = function () {
-        var groupTypeName = "<%= Constants.BUSINESS_GROUP_TYPE %>";
-        var reqUrl = "<%= Constants.URI_MARKET_API_CODE %>/"  + groupTypeName;
+        var groupCode = "<%= Constants.GROUP_CODE_BUSINESS_TYPE %>";
+        var reqUrl = "<%= Constants.URI_MARKET_API_CODE %>" + "/" + groupCode;
 
-        procCallAjax(reqUrl, "GET", null, null, callbackGetBusinessGroup);
+        procCallAjax(reqUrl, "GET", null, null, callbackGetUnitCodeList);
     };
 
-    var callbackGetBusinessGroup = function (data) {
+    var callbackGetUnitCodeList = function (data) {
         console.log("비즈니스 코드 List :::" + JSON.stringify(data));
 
-        BUSINESS_TYPE_GROUP = data;
+        UNIT_CODE_LIST = data;
 
-        var businessGroupArea = $("#businessGroup");
+        var businessTypeArea = $("#businessType");
         var htmlString = [];
         var option = "<option selected='selected'>선택</option>";
 
 
         for(var i = 0; i < data.length; i++){
-            option += "<option value=" + data[i].codeUnit + ">" + data[i].codeUnitName + "</option>"
+            option += "<option value=" + data[i].unitCode + ">" + data[i].unitCodeName + "</option>"
         }
 
         htmlString.push(option);
-        businessGroupArea.html(htmlString);
+        businessTypeArea.html(htmlString);
 
     };
 
     var selectBox = function () {
-      codeUnitValue = $("#businessGroup option:selected").val();
-      console.log("선택된 값은? " + codeUnitValue);
+      unitCodeValue = $("#businessType option:selected").val();
+      console.log("선택된 값은? " + unitCodeValue);
     };
 
 
@@ -90,13 +90,13 @@
         var reqUrl = "<%= Constants.URI_MARKET_API_PROFILE %>";
 
         var sellerName = $('#sellerName').val();
-        var businessType = codeUnitValue;
+        var businessType = unitCodeValue;
         var managerName = $('#managerName').val();
         var email = $('#emailAddress').val();
         var homepageUrl = $('#homepageUrl').val();
 
         var param = {
-            "userId": USER_NAME,
+            "id": USER_NAME,
             "sellerName": sellerName,
             "businessType": businessType,
             "managerName": managerName,
@@ -113,7 +113,6 @@
 
         procMovePage("<%= Constants.URI_SELLER_PROFILE %>" + "/" + data.id);
     };
-
 
 
     // ON LOAD

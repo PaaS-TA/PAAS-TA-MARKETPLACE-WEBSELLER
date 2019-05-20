@@ -18,15 +18,16 @@ import java.util.List;
 public class CustomCodeService {
 
     @Resource(name = "marketApiRest")
-    RestTemplate marketApiRest;
+    private RestTemplate marketApiRest;
 
     /**
-     * Group Type Name 으로 Group Code 목록 조회
+     * GroupCode로 단위코드 목록 조회
      *
-     * @param groupTypeName the group type name
+     * @param groupCode
      * @return List<CustomCode>
      */
-    public List<CustomCode> getGroupCodeListByGroupName(String groupTypeName) {
-        return marketApiRest.getForObject("/customCode/" + groupTypeName, List.class);
+    public List<CustomCode> getUnitCodeListByGroupCode(String groupCode) {
+        return marketApiRest.getForObject("/customCode/" + groupCode, List.class);
     }
+
 }

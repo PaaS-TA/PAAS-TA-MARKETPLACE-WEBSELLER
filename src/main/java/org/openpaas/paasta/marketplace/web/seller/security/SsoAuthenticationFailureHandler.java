@@ -31,7 +31,7 @@ public class SsoAuthenticationFailureHandler implements AuthenticationFailureHan
         request.getSession().invalidate();
         SecurityContextHolder.clearContext();
 
-        response.sendRedirect(Constants.MARKET_INIT_URL);
+        response.sendRedirect(Constants.MARKET_SELLER_URL);
 
         LOGGER.info("** onAuthenticationFailure out");
     }
