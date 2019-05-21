@@ -1,6 +1,6 @@
 package org.openpaas.paasta.marketplace.web.seller.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ public class BaseModel {
 
 	protected String createId;
     protected String updateId;
-    protected Date createDate;
-    protected Date updateDate;
+    protected LocalDateTime createDate;
+    protected LocalDateTime updateDate;
 
 }

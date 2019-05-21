@@ -1,11 +1,10 @@
 package org.openpaas.paasta.marketplace.web.seller.service;
 
+import javax.annotation.Resource;
+
 import org.openpaas.paasta.marketplace.web.seller.model.SellerProfile;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import javax.annotation.Resource;
 
 /**
  * 판매자 프로필 Service

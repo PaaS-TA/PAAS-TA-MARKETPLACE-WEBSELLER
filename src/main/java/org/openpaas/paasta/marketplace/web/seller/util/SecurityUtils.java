@@ -10,36 +10,32 @@ public class SecurityUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityUtils.class);
 
-    public static User getUser() {
+    public static Object getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        logger.debug("authentication={}", authentication);
+        logger.info("authentication={}", authentication);
 
         if (authentication == null) {
             return null;
         }
 
         Object principal = authentication.getPrincipal();
-        logger.debug("principal={}", principal);
+        logger.info("principal={}", principal);
 
         if (principal == null) {
             return null;
+        } else {
+        	return principal;
         }
-
-        if (principal instanceof User) {
-            return (User) principal;
-        }
-
-        return null;
     }
 
     public static String getUserId() {
-        User user = getUser();
+        Object user = getUser();
 
         if (user == null) {
             return null;
         }
 
-        return user.getUsername();
+        return user.toString();
     }
 
 }

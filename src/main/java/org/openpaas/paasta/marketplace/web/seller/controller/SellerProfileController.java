@@ -4,6 +4,7 @@ import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.common.Constants;
 import org.openpaas.paasta.marketplace.web.seller.model.SellerProfile;
 import org.openpaas.paasta.marketplace.web.seller.service.SellerProfileService;
+import org.openpaas.paasta.marketplace.web.seller.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -48,7 +49,12 @@ public class SellerProfileController {
      */
     @PostMapping(value = Constants.URI_MARKET_API_PROFILE)
     private SellerProfile createProfile(@RequestBody SellerProfile sellerProfile){
-        return sellerProfileService.createProfile(sellerProfile);
+    	String userId = SecurityUtils.getUserId();
+    	sellerProfile.setSellerId(userId);
+    	sellerProfile.setCreateId(userId);
+    	sellerProfile.setUpdateId(userId);
+
+    	return sellerProfileService.createProfile(sellerProfile);
     }
 
 
@@ -76,9 +82,9 @@ public class SellerProfileController {
     }
 
 
-    @GetMapping(value = Constants.URI_MARKET_API_PROFILE + "/{userId}")
-    private SellerProfile getProfileByUserId(@PathVariable String userId){
-        return sellerProfileService.getProfileByUserId(userId);
+    @GetMapping(value = Constants.URI_MARKET_API_PROFILE + "/{sellerId}")
+    private SellerProfile getProfileBySellerId(@PathVariable String sellerId){
+        return sellerProfileService.getProfileByUserId(sellerId);
     }
 
 
