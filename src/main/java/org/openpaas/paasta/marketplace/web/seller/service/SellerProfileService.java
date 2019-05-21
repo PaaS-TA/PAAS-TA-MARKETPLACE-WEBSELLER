@@ -47,7 +47,11 @@ public class SellerProfileService {
      *
      * @param sellerProfile the seller profile
      */
-    public void updateProfile(Long id, SellerProfile sellerProfile) {
+    public void updateProfile(String id, SellerProfile sellerProfile) {
         marketApiRest.put("/profile/" + id, sellerProfile);
+    }
+
+    public SellerProfile getProfileByUserId(String userId) {
+        return marketApiRest.getForObject("/profile/user/" + userId, SellerProfile.class);
     }
 }

@@ -76,6 +76,11 @@ public class SellerProfileController {
     }
 
 
+    @GetMapping(value = Constants.URI_MARKET_API_PROFILE + "/{userId}")
+    private SellerProfile getProfileByUserId(@PathVariable String userId){
+        return sellerProfileService.getProfileByUserId(userId);
+    }
+
 
     /**
      * 프로필 수정 페이지 이동
@@ -96,7 +101,7 @@ public class SellerProfileController {
      * @param sellerProfile the seller profile
      */
     @PutMapping(value = Constants.URI_MARKET_API_PROFILE + "/{id}")
-    private void updateProfile(@PathVariable Long id, @RequestBody SellerProfile sellerProfile){
+    private void updateProfile(@PathVariable String id, @RequestBody SellerProfile sellerProfile){
         sellerProfileService.updateProfile(id, sellerProfile);
     }
 }

@@ -74,7 +74,7 @@
 
 
     var getBusinessGroup = function () {
-        var groupTypeName = "<%= Constants.BUSINESS_GROUP_TYPE %>";
+        var groupTypeName = "<%= Constants.GROUP_CODE_BUSINESS_TYPE %>";
         var reqUrl = "<%= Constants.URI_MARKET_API_CODE %>/"  + groupTypeName;
 
         procCallAjax(reqUrl, "GET", null, null, callbackGetBusinessGroup);
@@ -94,9 +94,9 @@
         for(var i = 0; i < data.length; i++){
             if(codeGroupName === data[i].codeUnit){
                 option += "<option selected='selected' value=" + data[i].codeUnit + ">" + data[i].codeUnitName + "</option>";
+            }else{
+                option += "<option value=" + data[i].codeUnit + ">" + data[i].codeUnitName + "</option>"
             }
-
-            option += "<option value=" + data[i].codeUnit + ">" + data[i].codeUnitName + "</option>"
         }
 
         htmlString.push(option);
