@@ -13,12 +13,14 @@ import lombok.Data;
 @Data
 public class SellerProfile extends BaseModel {
 
+    private Long id;
     private String sellerId;
     private String sellerName;
     private String businessType;
     private String managerName;
     private String email;
     private String homepageUrl;
+    private String deleteYn;
 
 //    private List<CustomCode> businessTypeList;
 
