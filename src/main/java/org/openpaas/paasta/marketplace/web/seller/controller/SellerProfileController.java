@@ -82,10 +82,10 @@ public class SellerProfileController {
     }
 
 
-    @GetMapping(value = Constants.URI_MARKET_API_PROFILE + "/{sellerId}")
-    private SellerProfile getProfileBySellerId(@PathVariable String sellerId){
-        return sellerProfileService.getProfileByUserId(sellerId);
-    }
+//    @GetMapping(value = Constants.URI_MARKET_API_PROFILE + "/{sellerId}")
+//    private SellerProfile getProfileBySellerId(@PathVariable String sellerId){
+//        return sellerProfileService.getProfileByUserId(sellerId);
+//    }
 
 
     /**

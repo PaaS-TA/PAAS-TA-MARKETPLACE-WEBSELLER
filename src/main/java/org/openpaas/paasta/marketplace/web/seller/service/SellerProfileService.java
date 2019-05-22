@@ -50,7 +50,7 @@ public class SellerProfileService {
         marketApiRest.put("/profile/" + id, sellerProfile);
     }
 
-    public SellerProfile getProfileByUserId(String userId) {
-        return marketApiRest.getForObject("/profile/user/" + userId, SellerProfile.class);
-    }
+//    public SellerProfile getProfileByUserId(String userId) {
+//        return marketApiRest.getForObject("/profile/user/" + userId, SellerProfile.class);
+//    }
 }
