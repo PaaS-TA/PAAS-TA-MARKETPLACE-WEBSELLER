@@ -64,7 +64,7 @@
 <script type="text/javascript">
 
     var getProfile = function(){
-        var reqUrl = "<%= Constants.URI_MARKET_API_PROFILE %>/" + "<c:out value='${id}'/>";
+        var reqUrl = "<%= Constants.URI_MARKET_API_PROFILE %>"+ "/" + "<c:out value='${id}'/>";
         console.log("url 은 ???" + reqUrl);
 
         procCallAjax(reqUrl, "GET", null, null, callbackGetProfile);
@@ -78,7 +78,7 @@
         $('.managerName').html(data.managerName);
         $('.emailAddress').html(data.email);
         $('.homepageUrl').html(data.homepageUrl);
-        $('.createdDate').html(data.createdDate);
+        $('.createdDate').html(data.createDate);
     };
 
     $("#updateBtn").on("click", function () {

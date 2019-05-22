@@ -51,7 +51,7 @@
 <script type="text/javascript">
 
     var UNIT_CODE_LIST = [];
-    var codeUnitValue;
+    var unitCodeValue;
 
 
     var getBusinessGroup = function () {
@@ -96,7 +96,6 @@
         var homepageUrl = $('#homepageUrl').val();
 
         var param = {
-            "id": USER_NAME,
             "sellerName": sellerName,
             "businessType": businessType,
             "managerName": managerName,
