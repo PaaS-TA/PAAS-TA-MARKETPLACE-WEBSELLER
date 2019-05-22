@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.common.Constants;
+import org.openpaas.paasta.marketplace.web.seller.model.ResultModel;
 import org.openpaas.paasta.marketplace.web.seller.model.SellerProfile;
 import org.openpaas.paasta.marketplace.web.seller.service.SellerProfileService;
 import org.openpaas.paasta.marketplace.web.seller.util.DateUtils;
@@ -88,10 +89,12 @@ public class SellerProfileController {
     @GetMapping(value = Constants.URI_MARKET_API_PROFILE + "/{id}")
     private SellerProfile getProfile(@PathVariable Long id) {
     	SellerProfile seller = sellerProfileService.getProfile(id);
-		String result = DateUtils.getConvertDate(seller.getCreateDate(), DateUtils.FORMAT_1);
-		log.info("date: " + result);
-		seller.setStrCreateDate(result);
-		seller.setStrUpdateDate(result);
+		String createdDate = DateUtils.getConvertDate(seller.getCreateDate(), DateUtils.FORMAT_1);
+        String updatedDate = DateUtils.getConvertDate(seller.getCreateDate(), DateUtils.FORMAT_1);
+		log.info("createdDate: " + createdDate);
+        log.info("updatedDate: " + updatedDate);
+		seller.setStrCreateDate(createdDate);
+		seller.setStrUpdateDate(updatedDate);
 
 		return seller;
     }
@@ -122,7 +125,10 @@ public class SellerProfileController {
      * @param sellerProfile the seller profile
      */
     @PutMapping(value = Constants.URI_MARKET_API_PROFILE + "/{id}")
-    private void updateProfile(@PathVariable String id, @RequestBody SellerProfile sellerProfile){
-        sellerProfileService.updateProfile(id, sellerProfile);
+    private ResultModel updateProfile(@PathVariable Long id, @RequestBody SellerProfile sellerProfile){
+        String userId = SecurityUtils.getUserId();
+        sellerProfile.setUpdateId(userId);
+
+        return sellerProfileService.updateProfile(id, sellerProfile);
     }
 }

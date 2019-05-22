@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="org.openpaas.paasta.marketplace.web.seller.common.Constants" %>
+<%--<%@ page import="org.openpaas.paasta.marketplace.web.seller.common.Constants" %>--%>
 <html>
 <head>
     <meta id="_csrf" name="_csrf" content="${_csrf.token}"/>
@@ -82,7 +82,7 @@
     };
 
     $("#updateBtn").on("click", function () {
-       procMovePage("<%= Constants.URI_SELLER_PROFILE %>/" + "<c:out value='${id}'/>/update");
+       procMovePage("<%= Constants.URI_SELLER_PROFILE %>" + "/" + "<c:out value='${id}'/>" + "/update");
     });
 
 

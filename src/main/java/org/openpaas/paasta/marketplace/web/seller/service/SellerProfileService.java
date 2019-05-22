@@ -1,10 +1,12 @@
 package org.openpaas.paasta.marketplace.web.seller.service;
 
-import javax.annotation.Resource;
-
+import org.openpaas.paasta.marketplace.web.seller.common.Constants;
+import org.openpaas.paasta.marketplace.web.seller.model.ResultModel;
 import org.openpaas.paasta.marketplace.web.seller.model.SellerProfile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.Resource;
 
 /**
  * 판매자 프로필 Service
@@ -46,8 +48,18 @@ public class SellerProfileService {
      *
      * @param sellerProfile the seller profile
      */
-    public void updateProfile(String id, SellerProfile sellerProfile) {
-        marketApiRest.put("/profile/" + id, sellerProfile);
+    public ResultModel updateProfile(Long id, SellerProfile sellerProfile) {
+        ResultModel result = new ResultModel();
+
+        try{
+            marketApiRest.put("/profile/" + id, sellerProfile);
+            result.setResultCode(Constants.RESULT_STATUS_SUCCESS);
+        }catch (Exception e){
+            result.setResultCode(Constants.RESULT_STATUS_FAIL);
+            result.setResultMessage(e.getMessage());
+        }
+
+        return result;
     }
 
 //    public SellerProfile getProfileByUserId(String userId) {
