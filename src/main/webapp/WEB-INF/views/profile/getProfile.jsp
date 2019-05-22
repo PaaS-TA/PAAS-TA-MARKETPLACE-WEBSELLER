@@ -78,7 +78,7 @@
         $('.managerName').html(data.managerName);
         $('.emailAddress').html(data.email);
         $('.homepageUrl').html(data.homepageUrl);
-        $('.createdDate').html(data.createDate);
+        $('.createdDate').html(data.strCreateDate);
     };
 
     $("#updateBtn").on("click", function () {

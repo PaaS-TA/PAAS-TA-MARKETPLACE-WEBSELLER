@@ -12,4 +12,7 @@ public class BaseModel {
     protected LocalDateTime createDate;
     protected LocalDateTime updateDate;
 
+    protected String strCreateDate;
+    protected String strUpdateDate;
+
 }
