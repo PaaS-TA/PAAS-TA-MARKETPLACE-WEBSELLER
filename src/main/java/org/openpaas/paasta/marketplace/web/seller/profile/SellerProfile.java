@@ -1,7 +1,10 @@
-package org.openpaas.paasta.marketplace.web.seller.model;
+package org.openpaas.paasta.marketplace.web.seller.profile;
 
+
+import org.openpaas.paasta.marketplace.web.seller.common.BaseModel;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 판매자 프로필 모델
@@ -11,6 +14,7 @@ import lombok.Data;
  * @since 2019-05-07
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class SellerProfile extends BaseModel {
 
     private Long id;

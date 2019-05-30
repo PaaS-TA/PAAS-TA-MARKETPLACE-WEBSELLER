@@ -1,6 +1,12 @@
 package org.openpaas.paasta.marketplace.web.seller.security;
 
-import org.openpaas.paasta.marketplace.web.seller.common.Constants;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -8,11 +14,6 @@ import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Extension of {@link SavedRequestAwareAuthenticationSuccessHandler}
@@ -43,7 +44,7 @@ public class SsoAuthenticationSuccessHandler extends SavedRequestAwareAuthentica
         if(request.getSession() != null && sessionRedirectUrl != "") {
             LOGGER.info("[onAuthenticationSuccess] Process Start - sessionRedirectUrl:" + sessionRedirectUrl);
 
-            sessionRedirectUrl = Constants.MARKET_SELLER_URL;
+            sessionRedirectUrl = SellerConstants.MARKET_SELLER_URL;
 
         }
 

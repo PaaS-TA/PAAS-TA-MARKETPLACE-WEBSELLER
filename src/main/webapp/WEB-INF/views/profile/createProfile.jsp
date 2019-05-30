@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--<%@ page import="org.openpaas.paasta.marketplace.web.seller.common.Constants" %>--%>
+<%-- <%@ page import="org.openpaas.paasta.marketplace.web.seller.common.SellerConstants" %> --%>
 <html>
 <head>
     <meta id="_csrf" name="_csrf" content="${_csrf.token}"/>
@@ -15,7 +15,7 @@
     <meta id="_csrf_header" name="_csrf_header" content="${_csrf.headerName}"/>
     <title>프로필 등록</title>
 
-    <%@include file="../common/commonLibs.jsp" %>
+	<%@include file="../common/commonLibs.jsp" %>
 </head>
 <body>
 <table>
@@ -55,13 +55,13 @@
 
 
     var getBusinessGroup = function () {
-        var groupCode = "<%= Constants.GROUP_CODE_BUSINESS_TYPE %>";
-        var reqUrl = "<%= Constants.URI_MARKET_API_CODE %>" + "/" + groupCode;
+        var groupCode = "<%= SellerConstants.GROUP_CODE_BUSINESS_TYPE %>";
+        var reqUrl = "<%= SellerConstants.URI_WEB_CUSTOM_CODE %>" + "/" + groupCode;
 
-        procCallAjax(reqUrl, "GET", null, null, callbackGetUnitCodeList);
+        procCallAjax(reqUrl, "GET", null, null, callbackGetBusinessTypeList);
     };
 
-    var callbackGetUnitCodeList = function (data) {
+    var callbackGetBusinessTypeList = function (data) {
         console.log("비즈니스 코드 List :::" + JSON.stringify(data));
 
         UNIT_CODE_LIST = data;
@@ -87,7 +87,7 @@
 
 
     var createProfile = function () {
-        var reqUrl = "<%= Constants.URI_MARKET_API_PROFILE %>";
+        var reqUrl = "<%= SellerConstants.URI_WEB_CUSTOM_CODE %>";
 
         var sellerName = $('#sellerName').val();
         var businessType = unitCodeValue;
@@ -110,7 +110,7 @@
     var callbackCreateProfile = function(data){
         console.log("저장 완료!!! " + JSON.stringify(data));
 
-        procMovePage("<%= Constants.URI_SELLER_PROFILE %>" + "/" + data.id);
+        procMovePage("<%= SellerConstants.URI_WEB_CUSTOM_CODE %>" + "/" + data.id);
     };
 
 

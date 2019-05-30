@@ -55,7 +55,7 @@
     var unitCodeValue;
 
     var getProfile = function () {
-        var reqUrl = "<%= Constants.URI_MARKET_API_PROFILE %>" + "/" + "<c:out value='${id}'/>";
+        var reqUrl = "<%= SellerConstants.URI_WEB_SELLER_PROFILE %>" + "/" + "<c:out value='${id}'/>";
         console.log("url 은 ???" + reqUrl);
 
         procCallAjax(reqUrl, "GET", null, null, callbackGetProfile);
@@ -74,8 +74,8 @@
 
 
     var getBusinessGroup = function () {
-        var groupTypeName = "<%= Constants.GROUP_CODE_BUSINESS_TYPE %>";
-        var reqUrl = "<%= Constants.URI_MARKET_API_CODE %>" + "/" + groupTypeName;
+        var groupTypeName = "<%= SellerConstants.GROUP_CODE_BUSINESS_TYPE %>";
+        var reqUrl = "<%= SellerConstants.URI_WEB_SELLER_PROFILE %>" + "/" + groupTypeName;
 
         procCallAjax(reqUrl, "GET", null, null, callbackGetBusinessGroup);
     };
@@ -111,7 +111,7 @@
 
 
     var updateProfile = function () {
-        var reqUrl = "<%= Constants.URI_MARKET_API_PROFILE %>" + "/" + "<c:out value='${id}'/>";
+        var reqUrl = "<%= SellerConstants.URI_WEB_SELLER_PROFILE %>" + "/" + "<c:out value='${id}'/>";
 
         var sellerName = $('#sellerName').val();
         var businessType = unitCodeValue;
@@ -134,7 +134,7 @@
     var callbackUpdateProfile = function(data){
         console.log("update 완료!!! ");
         if(data.resultCode === RESULT_STATUS_SUCCESS){
-            procMovePage("<%= Constants.URI_SELLER_PROFILE %>" + "/" + "<c:out value='${id}'/>");
+            procMovePage("<%= SellerConstants.URI_WEB_SELLER_PROFILE %>" + "/" + "<c:out value='${id}'/>");
         }else{
             alert("작업 결과는 " + RESULT_STATUS_FAIL + "입니다.")
         }

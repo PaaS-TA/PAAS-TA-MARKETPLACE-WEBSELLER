@@ -1,4 +1,4 @@
-package org.openpaas.paasta.marketplace.web.seller.model;
+package org.openpaas.paasta.marketplace.web.seller.common;
 
 import java.time.LocalDateTime;
 
@@ -14,5 +14,8 @@ public class BaseModel {
 
     protected String strCreateDate;
     protected String strUpdateDate;
+    
+    protected String resultCode;
+    protected String resultMessage;
 
 }

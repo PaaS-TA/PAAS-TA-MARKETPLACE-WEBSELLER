@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--<%@ page import="org.openpaas.paasta.marketplace.web.seller.common.Constants" %>--%>
+<%-- <%@ page import="org.openpaas.paasta.marketplace.web.seller.common.Constants" %> --%>
 <html>
 <head>
     <meta id="_csrf" name="_csrf" content="${_csrf.token}"/>
@@ -64,7 +64,7 @@
 <script type="text/javascript">
 
     var getProfile = function(){
-        var reqUrl = "<%= Constants.URI_MARKET_API_PROFILE %>"+ "/" + "<c:out value='${id}'/>";
+        var reqUrl = "<%= SellerConstants.URI_WEB_SELLER_PROFILE %>"+ "/" + "<c:out value='${id}'/>";
         console.log("url 은 ???" + reqUrl);
 
         procCallAjax(reqUrl, "GET", null, null, callbackGetProfile);
@@ -82,7 +82,7 @@
     };
 
     $("#updateBtn").on("click", function () {
-       procMovePage("<%= Constants.URI_SELLER_PROFILE %>" + "/" + "<c:out value='${id}'/>" + "/update");
+       procMovePage("<%= SellerConstants.URI_WEB_SELLER_PROFILE %>" + "/" + "<c:out value='${id}'/>" + "/update");
     });
 
 

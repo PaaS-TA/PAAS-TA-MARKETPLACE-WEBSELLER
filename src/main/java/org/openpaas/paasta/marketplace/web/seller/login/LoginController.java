@@ -1,4 +1,4 @@
-package org.openpaas.paasta.marketplace.web.seller.controller;
+package org.openpaas.paasta.marketplace.web.seller.login;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

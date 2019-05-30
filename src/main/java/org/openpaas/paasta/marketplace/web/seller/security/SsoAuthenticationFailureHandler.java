@@ -1,16 +1,17 @@
 package org.openpaas.paasta.marketplace.web.seller.security;
 
-import org.openpaas.paasta.marketplace.web.seller.common.Constants;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * CustomInterceptor 클래스.
@@ -31,7 +32,7 @@ public class SsoAuthenticationFailureHandler implements AuthenticationFailureHan
         request.getSession().invalidate();
         SecurityContextHolder.clearContext();
 
-        response.sendRedirect(Constants.MARKET_SELLER_URL);
+        response.sendRedirect(SellerConstants.MARKET_SELLER_URL);
 
         LOGGER.info("** onAuthenticationFailure out");
     }

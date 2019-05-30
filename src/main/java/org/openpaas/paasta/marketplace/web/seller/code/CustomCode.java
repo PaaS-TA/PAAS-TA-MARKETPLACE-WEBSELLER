@@ -1,4 +1,6 @@
-package org.openpaas.paasta.marketplace.web.seller.model;
+package org.openpaas.paasta.marketplace.web.seller.code;
+
+import org.openpaas.paasta.marketplace.web.seller.common.BaseModel;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

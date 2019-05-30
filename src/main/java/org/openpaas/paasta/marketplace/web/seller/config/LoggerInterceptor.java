@@ -6,12 +6,13 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import java.io.IOException;
 
-public class LoggingInterceptor implements ClientHttpRequestInterceptor {
+public class LoggerInterceptor extends HandlerInterceptorAdapter implements ClientHttpRequestInterceptor {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoggingInterceptor.class);
+	private static final Logger logger = LoggerFactory.getLogger(LoggerInterceptor.class);
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
