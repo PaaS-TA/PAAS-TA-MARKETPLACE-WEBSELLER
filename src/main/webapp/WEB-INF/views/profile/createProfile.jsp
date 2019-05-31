@@ -50,24 +50,24 @@
 </html>
 <script type="text/javascript">
 
-    var UNIT_CODE_LIST = [];
-    var unitCodeValue;
+    var BUSINESS_TYPE_LIST = [];
+    var businessTypeValue;
 
-
-    var getBusinessGroup = function () {
+    
+    var getBusinessType = function () {
         var groupCode = "<%= SellerConstants.GROUP_CODE_BUSINESS_TYPE %>";
-        var reqUrl = "<%= SellerConstants.URI_WEB_CUSTOM_CODE %>" + "/" + groupCode;
+        var reqUrl = "<%= SellerConstants.URI_WEB_CUSTOM_CODE_LIST %>".replace("{groupCode}", groupCode);
 
         procCallAjax(reqUrl, "GET", null, null, callbackGetBusinessTypeList);
     };
 
     var callbackGetBusinessTypeList = function (data) {
-        console.log("비즈니스 코드 List :::" + JSON.stringify(data));
+        console.log("업체유형 목록 :::" + JSON.stringify(data));
 
-        UNIT_CODE_LIST = data;
+        BUSINESS_TYPE_LIST = data;
 
         var businessTypeArea = $("#businessType");
-        var htmlString = [];
+        var htmlArray = [];
         var option = "<option selected='selected'>선택</option>";
 
 
@@ -75,22 +75,21 @@
             option += "<option value=" + data[i].unitCode + ">" + data[i].unitCodeName + "</option>"
         }
 
-        htmlString.push(option);
-        businessTypeArea.html(htmlString);
+        htmlArray.push(option);
+        businessTypeArea.html(htmlArray);
 
     };
 
     var selectBox = function () {
-      unitCodeValue = $("#businessType option:selected").val();
-      console.log("선택된 값은? " + unitCodeValue);
+    	businessTypeValue = $("#businessType option:selected").val();
+      	console.log("선택된 값은? " + businessTypeValue);
     };
 
-
     var createProfile = function () {
-        var reqUrl = "<%= SellerConstants.URI_WEB_CUSTOM_CODE %>";
+        var reqUrl = "<%= SellerConstants.URI_WEB_SELLER_PROFILE_CREATE %>";
 
         var sellerName = $('#sellerName').val();
-        var businessType = unitCodeValue;
+        var businessType = businessTypeValue;
         var managerName = $('#managerName').val();
         var email = $('#emailAddress').val();
         var homepageUrl = $('#homepageUrl').val();
@@ -102,6 +101,7 @@
             "email": email,
             "homepageUrl": homepageUrl
         };
+        alert(JSON.stringify(param));
 
         procCallAjax(reqUrl, "POST", JSON.stringify(param), null, callbackCreateProfile);
 
@@ -110,13 +110,13 @@
     var callbackCreateProfile = function(data){
         console.log("저장 완료!!! " + JSON.stringify(data));
 
-        procMovePage("<%= SellerConstants.URI_WEB_CUSTOM_CODE %>" + "/" + data.id);
+        procMovePage("<%= SellerConstants.URI_WEB_SELLER_PROFILE_DETAIL %>".replace("{id}", data.id));
     };
 
-
+    
     // ON LOAD
     $(document).ready(function() {
-        getBusinessGroup();
+        getBusinessType();
     });
 
 </script>

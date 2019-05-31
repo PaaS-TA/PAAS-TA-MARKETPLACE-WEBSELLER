@@ -10,9 +10,9 @@ import org.openpaas.paasta.marketplace.web.seller.util.DateUtils;
 import org.openpaas.paasta.marketplace.web.seller.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,7 +44,7 @@ public class SellerProfileController {
      * @param id
      * @return
      */
-    @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE)
+    @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE_LIST)
     public ModelAndView getProfileListPage(HttpServletRequest httpServletRequest) {
     	// 화면 변수 처리
     	ModelAndView mv = commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/getProfileList", new ModelAndView());
@@ -66,10 +66,10 @@ public class SellerProfileController {
      * @param httpServletRequest the httpServletRequest
      * @return ModelAndView
      */
-    @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE + "/{id}")
+    @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE_DETAIL)
     public ModelAndView getProfilePage(HttpServletRequest httpServletRequest, @PathVariable(value = "id") Long id) {
     	// 화면 변수 처리
-    	ModelAndView mv = commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/getProfile1", new ModelAndView());
+    	ModelAndView mv = commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/getProfile", new ModelAndView());
     	
     	// 프로필 정보 조회
     	SellerProfile profile = sellerProfileService.getProfile(id);
@@ -110,7 +110,7 @@ public class SellerProfileController {
      * @param httpServletRequest the httpServletRequest
      * @return ModelAndView
      */
-    @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE)
+    @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE_CREATE)
     public ModelAndView getProfileCreatePage(HttpServletRequest httpServletRequest){
     	log.info("create view");
     	return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/createProfile", new ModelAndView());
@@ -122,7 +122,7 @@ public class SellerProfileController {
      * @param sellerProfile the seller profile
      * @return SellerProfile
      */
-    @PostMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE)
+    @PostMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE_CREATE)
     private SellerProfile createProfile(@RequestBody SellerProfile sellerProfile) throws Exception {
     	String userId = SecurityUtils.getUserId();
     	sellerProfile.setSellerId(userId);
@@ -143,7 +143,7 @@ public class SellerProfileController {
      * @param httpServletRequest the httpServletRequest
      * @return ModelAndView
      */
-    @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE + "/{id}/update")
+    @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE_UPDATE)
     public ModelAndView getProfileUpdatePage(HttpServletRequest httpServletRequest, @PathVariable Long id){
         return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/updateProfile", new ModelAndView());
     }
@@ -154,7 +154,7 @@ public class SellerProfileController {
      * @param id the id
      * @param sellerProfile the seller profile
      */
-    @PatchMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE + "/{id}")
+    @PutMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE_UPDATE)
     private SellerProfile updateProfile(@PathVariable Long id, @RequestBody SellerProfile sellerProfile){
         String userId = SecurityUtils.getUserId();
         sellerProfile.setUpdateId(userId);

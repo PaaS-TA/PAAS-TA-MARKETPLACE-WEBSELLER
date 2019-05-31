@@ -89,7 +89,7 @@ public class RestTemplateService extends Common {
 
         // Market API
         if (SellerConstants.TARGET_API_MARKET.equals(targetApi)) {
-            requestMap.put("apiUrl", property.getMarketApiUri() + SellerConstants.URI_MARKET_API_BASE);
+            requestMap.put("apiUrl", property.getMarketApiUri());
             requestMap.put("authorization", "Basic " + Base64Utils.encodeToString((property.getMarketApiUsername() + ":" + property.getMarketApiPassword()).getBytes(StandardCharsets.UTF_8)));
         }
 

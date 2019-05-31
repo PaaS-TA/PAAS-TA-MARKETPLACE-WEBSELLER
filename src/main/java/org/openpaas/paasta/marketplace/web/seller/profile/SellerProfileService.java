@@ -31,7 +31,7 @@ public class SellerProfileService {
      * @return SellerProfileList
      */
     public List<SellerProfile> getSellerProfileList() {
-        SellerProfileList profiles = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_WEB_SELLER_PROFILE, HttpMethod.GET, null, SellerProfileList.class);
+        SellerProfileList profiles = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PROFILE, HttpMethod.GET, null, SellerProfileList.class);
         return profiles.getItems();
     }
 
@@ -42,7 +42,7 @@ public class SellerProfileService {
      * @return SellerProfile
      */
     public SellerProfile getProfile(Long id) {
-        return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_WEB_SELLER_PROFILE + "/" + id, HttpMethod.GET, null, SellerProfile.class);
+        return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PROFILE + "/" + id, HttpMethod.GET, null, SellerProfile.class);
     }
 
     /**
@@ -53,7 +53,7 @@ public class SellerProfileService {
      * @throws Exception 
      */
     public SellerProfile createProfile(SellerProfile sellerProfile) {
-    	return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_WEB_SELLER_PROFILE, HttpMethod.POST, sellerProfile, SellerProfile.class);
+    	return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PROFILE, HttpMethod.POST, sellerProfile, SellerProfile.class);
     }
 
     /**
@@ -62,7 +62,7 @@ public class SellerProfileService {
      * @param sellerProfile the seller profile
      */
     public SellerProfile updateProfile(Long id, SellerProfile sellerProfile) {
-        return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_WEB_SELLER_PROFILE + "/" + id, HttpMethod.PATCH, sellerProfile, SellerProfile.class);
+        return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PROFILE + "/" + id, HttpMethod.PUT, sellerProfile, SellerProfile.class);
     }
 
 //    public SellerProfile getProfileByUserId(String userId) {

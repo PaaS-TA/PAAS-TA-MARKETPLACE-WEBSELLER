@@ -28,7 +28,7 @@ public class CustomCodeService {
      * @return CustomCodeList
      */
     public List<CustomCode> getUnitCodeListByGroupCode(String groupCode) {
-    	CustomCodeList codeList = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_WEB_CUSTOM_CODE + "/" + groupCode, HttpMethod.GET, null, CustomCodeList.class);
+    	CustomCodeList codeList = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_CUSTOM_CODE + "/" + groupCode, HttpMethod.GET, null, CustomCodeList.class);
     	return codeList.getItems();
     }
 

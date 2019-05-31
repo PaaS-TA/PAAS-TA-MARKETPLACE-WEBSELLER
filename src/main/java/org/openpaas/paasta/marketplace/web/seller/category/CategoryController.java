@@ -29,7 +29,7 @@ public class CategoryController {
      * @param groupCode
      * @return List<CustomCode>
      */
-    @GetMapping(value = SellerConstants.URI_WEB_CATEGORY)
+    @GetMapping(value = SellerConstants.URI_WEB_CATEGORY_LIST)
     public List<Category> getCategoryList(){
     	log.info("category...");
         return categoryService.getCategoryListByDeleteYn();

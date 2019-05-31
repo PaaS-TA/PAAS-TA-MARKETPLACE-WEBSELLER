@@ -21,8 +21,8 @@ public class SellerConstants {
     public static final String TARGET_API_MARKET = "marketApi";
 
     // general data
-    public static final String URI_WEB_CUSTOM_CODE = "/customCode";
-    public static final String URI_WEB_CATEGORY = "/category";
+    public static final String URI_WEB_CUSTOM_CODE_LIST = "/customCode/{groupCode}";
+    public static final String URI_WEB_CATEGORY_LIST = "/category/list";
 
     public static final String GROUP_CODE_BUSINESS_TYPE = "BUSINESS_TYPE";
 
@@ -30,10 +30,16 @@ public class SellerConstants {
     public static final String MARKET_SELLER_URL = "/seller";
 
     // market api uri
-    public static final String URI_MARKET_API_BASE = "/api";
+    public static final String URI_API_BASE = "/api";
+    public static final String URI_API_CUSTOM_CODE = "/api/customCode";
+    public static final String URI_API_CATEGORY = "/api/category";
+    public static final String URI_API_SELLER_PROFILE = "/api/seller/profile";
 
     // market web seller uri
-    public static final String URI_WEB_SELLER_PROFILE = "/seller/profile";
+    public static final String URI_WEB_SELLER_PROFILE_LIST = "/seller/profile/list";
+    public static final String URI_WEB_SELLER_PROFILE_DETAIL = "/seller/profile/detail/{id}";
+    public static final String URI_WEB_SELLER_PROFILE_CREATE = "/seller/profile/create";
+    public static final String URI_WEB_SELLER_PROFILE_UPDATE = "/seller/profile/update/{id}";
 
     // market web view uri
     public static final String URI_VIEW_PROFILE = "/profile";
