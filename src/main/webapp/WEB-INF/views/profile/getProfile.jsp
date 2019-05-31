@@ -26,9 +26,9 @@
         </td>
     </tr>
     <tr>
-        <td>유형</td>
+        <td>업체유형</td>
         <td>
-            <span class="businessUnit"></span>
+            <span class="businessType"></span>
         </td>
     </tr>
     <tr>
@@ -74,7 +74,7 @@
         console.log("나의 프로필 정보는 ::: " + JSON.stringify(data));
 
         $('.sellerName').html(data.sellerName);
-        $('.businessUnit').html(data.businessType);
+        $('.businessType').html(data.businessType);
         $('.managerName').html(data.managerName);
         $('.emailAddress').html(data.email);
         $('.homepageUrl').html(data.homepageUrl);

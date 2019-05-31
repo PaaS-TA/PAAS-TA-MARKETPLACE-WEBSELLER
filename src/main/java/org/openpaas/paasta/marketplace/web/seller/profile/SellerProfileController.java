@@ -38,7 +38,7 @@ public class SellerProfileController {
     private SellerProfileService sellerProfileService;
 
     /**
-     * 프로필 목록 조회
+     * 프로필 목록 조회 화면
      * 
      * @param httpServletRequest
      * @param id
@@ -47,17 +47,24 @@ public class SellerProfileController {
     @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE_LIST)
     public ModelAndView getProfileListPage(HttpServletRequest httpServletRequest) {
     	// 화면 변수 처리
-    	ModelAndView mv = commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/getProfileList", new ModelAndView());
-    	
-    	// 프로필 정보 조회
+    	return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/getlistProfile", new ModelAndView());
+    }
+
+    /**
+     * 프로필 목록 조회
+     *
+     * @param id the id
+     * @return SellerProfile
+     */
+    @GetMapping(value = SellerConstants.URI_CTRL_SELLER_PROFILE_LIST)
+    private List<SellerProfile> getProfileList() {
     	List<SellerProfile> profileList = sellerProfileService.getSellerProfileList();
     	for (SellerProfile profile : profileList) {
 	        profile.setStrCreateDate(DateUtils.getConvertDate(profile.getCreateDate(), DateUtils.FORMAT_1));
 	        profile.setStrUpdateDate(DateUtils.getConvertDate(profile.getCreateDate(), DateUtils.FORMAT_1));
     	}
-		mv.addObject("profiles", profileList);
-		
-		return mv;
+
+		return profileList;
     }
 
     /**
@@ -69,19 +76,7 @@ public class SellerProfileController {
     @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE_DETAIL)
     public ModelAndView getProfilePage(HttpServletRequest httpServletRequest, @PathVariable(value = "id") Long id) {
     	// 화면 변수 처리
-    	ModelAndView mv = commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/getProfile", new ModelAndView());
-    	
-    	// 프로필 정보 조회
-    	SellerProfile profile = sellerProfileService.getProfile(id);
-		String createdDate = DateUtils.getConvertDate(profile.getCreateDate(), DateUtils.FORMAT_1);
-        String updatedDate = DateUtils.getConvertDate(profile.getCreateDate(), DateUtils.FORMAT_1);
-		log.info("createdDate: " + createdDate);
-        log.info("updatedDate: " + updatedDate);
-        profile.setStrCreateDate(createdDate);
-        profile.setStrUpdateDate(updatedDate);
-		mv.addObject("profile", profile);
-		
-		return mv;
+    	return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/getProfile", new ModelAndView());
     }
 
 
@@ -91,18 +86,18 @@ public class SellerProfileController {
      * @param id the id
      * @return SellerProfile
      */
-//    @GetMapping(value = SellerConstants.URI_API_BASE + SellerConstants.URI_WEB_SELLER_PROFILE + "/{id}")
-//    private SellerProfile getProfile(@PathVariable Long id) {
-//    	SellerProfile seller = sellerProfileService.getProfile(id);
-//		String createdDate = DateUtils.getConvertDate(seller.getCreateDate(), DateUtils.FORMAT_1);
-//        String updatedDate = DateUtils.getConvertDate(seller.getCreateDate(), DateUtils.FORMAT_1);
-//		log.info("createdDate: " + createdDate);
-//        log.info("updatedDate: " + updatedDate);
-//		seller.setStrCreateDate(createdDate);
-//		seller.setStrUpdateDate(updatedDate);
-//
-//		return seller;
-//    }
+    @GetMapping(value = SellerConstants.URI_CTRL_SELLER_PROFILE_DETAIL)
+    private SellerProfile getProfile(@PathVariable Long id) {
+    	SellerProfile seller = sellerProfileService.getProfile(id);
+		String createdDate = DateUtils.getConvertDate(seller.getCreateDate(), DateUtils.FORMAT_1);
+        String updatedDate = DateUtils.getConvertDate(seller.getCreateDate(), DateUtils.FORMAT_1);
+		log.info("createdDate: " + createdDate);
+        log.info("updatedDate: " + updatedDate);
+		seller.setStrCreateDate(createdDate);
+		seller.setStrUpdateDate(updatedDate);
+
+		return seller;
+    }
 
     /**
      * 프로필 등록 페이지 이동

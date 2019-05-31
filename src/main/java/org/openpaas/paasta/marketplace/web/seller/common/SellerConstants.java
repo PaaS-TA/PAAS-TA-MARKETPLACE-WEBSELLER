@@ -41,6 +41,10 @@ public class SellerConstants {
     public static final String URI_WEB_SELLER_PROFILE_CREATE = "/seller/profile/create";
     public static final String URI_WEB_SELLER_PROFILE_UPDATE = "/seller/profile/update/{id}";
 
+    // market web seller uri
+    public static final String URI_CTRL_SELLER_PROFILE_LIST = "/ctrl/seller/profile/list";
+    public static final String URI_CTRL_SELLER_PROFILE_DETAIL = "/ctrl/seller/profile/detail/{id}";
+
     // market web view uri
     public static final String URI_VIEW_PROFILE = "/profile";
 
