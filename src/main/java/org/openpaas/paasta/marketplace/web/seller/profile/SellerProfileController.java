@@ -56,7 +56,7 @@ public class SellerProfileController {
      * @param id the id
      * @return SellerProfile
      */
-    @GetMapping(value = SellerConstants.URI_CTRL_SELLER_PROFILE_LIST)
+    @GetMapping(value = SellerConstants.URI_DB_SELLER_PROFILE_LIST)
     private List<SellerProfile> getProfileList() {
     	List<SellerProfile> profileList = sellerProfileService.getSellerProfileList();
     	for (SellerProfile profile : profileList) {
@@ -86,7 +86,7 @@ public class SellerProfileController {
      * @param id the id
      * @return SellerProfile
      */
-    @GetMapping(value = SellerConstants.URI_CTRL_SELLER_PROFILE_DETAIL)
+    @GetMapping(value = SellerConstants.URI_DB_SELLER_PROFILE_DETAIL)
     private SellerProfile getProfile(@PathVariable Long id) {
     	SellerProfile seller = sellerProfileService.getProfile(id);
 		String createdDate = DateUtils.getConvertDate(seller.getCreateDate(), DateUtils.FORMAT_1);
