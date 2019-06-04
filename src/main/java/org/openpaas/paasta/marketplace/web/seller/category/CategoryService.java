@@ -20,7 +20,7 @@ public class CategoryService {
      * @return CategoryList
      */
     public List<Category> getCategoryListByDeleteYn() {
-    	CategoryList categoryList = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_CATEGORY, HttpMethod.GET, null, CategoryList.class);
+    	CategoryList categoryList = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_CATEGORY, null, HttpMethod.GET, null, CategoryList.class);
     	return categoryList.getItems();
     }
     
@@ -31,7 +31,7 @@ public class CategoryService {
      * @return
      */
     public Category getCategory(Long id) {
-        return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_CATEGORY + "/" + id, HttpMethod.GET, null, Category.class);
+        return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_CATEGORY + "/" + id, null, HttpMethod.GET, null, Category.class);
     }
 
 }
