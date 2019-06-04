@@ -1,10 +1,14 @@
 package org.openpaas.paasta.marketplace.web.seller.category;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
 import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Category Controller
@@ -25,10 +29,21 @@ public class CategoryController {
      *
      * @return CategoryList
      */
-    @GetMapping(value = SellerConstants.URI_WEB_CATEGORY_LIST)
-    public CategoryList getCategoryList(){
+    @GetMapping(value = SellerConstants.URI_DB_CATEGORY_LIST)
+    public List<Category> getCategoryList(){
     	log.info("category...");
         return categoryService.getCategoryListByDeleteYn();
+    }
+    
+    /**
+     * 카테고리 상세 조회
+     * 
+     * @param id
+     * @return
+     */
+    @GetMapping(value = SellerConstants.URI_DB_CATEGORY_DETAIL)
+    private Category getCategory(@PathVariable Long id) {
+    	return categoryService.getCategory(id);
     }
 
 }

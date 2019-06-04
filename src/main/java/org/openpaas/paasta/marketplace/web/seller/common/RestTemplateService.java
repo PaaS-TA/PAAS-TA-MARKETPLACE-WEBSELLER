@@ -51,10 +51,10 @@ public class RestTemplateService extends Common {
         log.info("<T> T send :: Request : {} {} : {}, Content-Type: {}", httpMethod, apiFullUrl, restUrl, reqHeaders.get(SellerConstants.CONTENT_TYPE));
 
         try {
-			ResponseEntity<T> resEntity =  restTemplate.exchange(apiFullUrl, httpMethod, reqEntity, responseType);
+			ResponseEntity<T> resEntity = restTemplate.exchange(apiFullUrl, httpMethod, reqEntity, responseType);
 			if (resEntity.getBody() != null) {
 	            log.info("Response Type: {}", resEntity.getBody().getClass());
-	            log.info(resEntity.getBody().toString());
+	            log.info("Response Body: {}", resEntity.getBody().toString());
 	        } else {
 	            log.info("Response Type: {}", "response body is null");
 	        }
@@ -62,7 +62,7 @@ public class RestTemplateService extends Common {
 			return resEntity.getBody();
 		} catch (Exception e) {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
-	        resultMap.put("resultCode", "FAIL");
+	        resultMap.put("resultCode", SellerConstants.RESULT_STATUS_FAIL);
 	        resultMap.put("resultMessage", e.getMessage());
 	        ObjectMapper mapper = new ObjectMapper();
 	

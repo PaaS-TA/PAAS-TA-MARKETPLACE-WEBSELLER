@@ -56,7 +56,7 @@
     
     var getBusinessType = function () {
         var groupCode = "<%= SellerConstants.GROUP_CODE_BUSINESS_TYPE %>";
-        var reqUrl = "<%= SellerConstants.URI_WEB_CUSTOM_CODE_LIST %>".replace("{groupCode}", groupCode);
+        var reqUrl = "<%= SellerConstants.URI_DB_CUSTOM_CODE_LIST %>".replace("{groupCode}", groupCode);
 
         procCallAjax(reqUrl, "GET", null, null, callbackGetBusinessTypeList);
     };
@@ -101,7 +101,7 @@
             "email": email,
             "homepageUrl": homepageUrl
         };
-        alert(JSON.stringify(param));
+        /* alert(JSON.stringify(param)); */
 
         procCallAjax(reqUrl, "POST", JSON.stringify(param), null, callbackCreateProfile);
 
@@ -109,8 +109,13 @@
 
     var callbackCreateProfile = function(data){
         console.log("저장 완료!!! " + JSON.stringify(data));
-
-        procMovePage("<%= SellerConstants.URI_WEB_SELLER_PROFILE_DETAIL %>".replace("{id}", data.id));
+        /* alert(JSON.stringify(data)); */
+        if (data.resultCode === "SUCCESS") {
+        	procMovePage("<%= SellerConstants.URI_WEB_SELLER_PROFILE_DETAIL %>".replace("{id}", data.id));
+        } else {
+        	alert("오류 발생!!! : [" + data.resultMessage + "]");
+        	return;
+        }
     };
 
     

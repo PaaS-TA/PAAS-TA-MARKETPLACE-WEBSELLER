@@ -1,14 +1,10 @@
 package org.openpaas.paasta.marketplace.web.seller.profile;
 
-import java.util.List;
-
 import org.openpaas.paasta.marketplace.web.seller.common.RestTemplateService;
 import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 판매자 프로필 Service
@@ -18,22 +14,10 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2019-05-07
  */
 @Service
-@Slf4j
 public class SellerProfileService {
 
     @Autowired
     private RestTemplateService marketApiRest;
-
-    /**
-     * 판매자 프로필 목록 조회
-     *
-     * @param 
-     * @return SellerProfileList
-     */
-    public List<SellerProfile> getSellerProfileList() {
-        SellerProfileList profiles = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PROFILE, HttpMethod.GET, null, SellerProfileList.class);
-        return profiles.getItems();
-    }
 
     /**
      * 판매자 프로필 상세 조회
@@ -65,7 +49,4 @@ public class SellerProfileService {
         return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PROFILE + "/" + id, HttpMethod.PUT, sellerProfile, SellerProfile.class);
     }
 
-//    public SellerProfile getProfileByUserId(String userId) {
-//        return marketApiRest.getForObject("/profile/user/" + userId, SellerProfile.class);
-//    }
 }

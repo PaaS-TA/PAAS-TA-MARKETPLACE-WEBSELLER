@@ -1,7 +1,5 @@
 package org.openpaas.paasta.marketplace.web.seller.profile;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.slf4j.Slf4j;
-
 
 /**
  * 판매자 프로필 Controller
@@ -38,37 +35,7 @@ public class SellerProfileController {
     private SellerProfileService sellerProfileService;
 
     /**
-     * 프로필 목록 조회 화면
-     * 
-     * @param httpServletRequest
-     * @param id
-     * @return
-     */
-    @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE_LIST)
-    public ModelAndView getProfileListPage(HttpServletRequest httpServletRequest) {
-    	// 화면 변수 처리
-    	return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/getlistProfile", new ModelAndView());
-    }
-
-    /**
-     * 프로필 목록 조회
-     *
-     * @param id the id
-     * @return SellerProfile
-     */
-    @GetMapping(value = SellerConstants.URI_DB_SELLER_PROFILE_LIST)
-    private List<SellerProfile> getProfileList() {
-    	List<SellerProfile> profileList = sellerProfileService.getSellerProfileList();
-    	for (SellerProfile profile : profileList) {
-	        profile.setStrCreateDate(DateUtils.getConvertDate(profile.getCreateDate(), DateUtils.FORMAT_1));
-	        profile.setStrUpdateDate(DateUtils.getConvertDate(profile.getCreateDate(), DateUtils.FORMAT_1));
-    	}
-
-		return profileList;
-    }
-
-    /**
-     * 프로필 상세 조회
+     * 프로필 상세 조회 화면
      *
      * @param httpServletRequest the httpServletRequest
      * @return ModelAndView
@@ -81,7 +48,7 @@ public class SellerProfileController {
 
 
     /**
-     * 프로필 상세 조회
+     * 프로필 상세 조회 DB
      *
      * @param id the id
      * @return SellerProfile
