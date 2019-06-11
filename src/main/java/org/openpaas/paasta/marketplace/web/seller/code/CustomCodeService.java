@@ -22,14 +22,13 @@ public class CustomCodeService {
     private RestTemplateService marketApiRest;
 
     /**
-     * GroupCode로 단위코드 목록 조회
+     * GroupCode 로 단위코드 목록 조회
      *
-     * @param groupCode
+     * @param groupCode the group code
      * @return CustomCodeList
      */
-    public List<CustomCode> getUnitCodeListByGroupCode(String groupCode) {
-    	CustomCodeList codeList = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_CUSTOM_CODE + "/" + groupCode, null, HttpMethod.GET, null, CustomCodeList.class);
-    	return codeList.getItems();
+    public CustomCodeList getUnitCodeListByGroupCode(String groupCode) {
+    	return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_CUSTOM_CODE + "/" + groupCode, null, HttpMethod.GET, null, CustomCodeList.class);
     }
 
 }
