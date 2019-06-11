@@ -25,7 +25,7 @@ public class SellerConstants {
 
     public static final String URI_DB_CUSTOM_CODE_LIST = "/db/customCode/{groupCode}";
     public static final String URI_DB_CATEGORY_LIST = "/db/category/list";
-    public static final String URI_DB_CATEGORY_DETAIL = "/db/category/detail/{id}";
+    public static final String URI_DB_CATEGORY_DETAIL = "/db/category/{id}/detail";
 
     // cf api uri
     public static final String MARKET_SELLER_URL = "/seller";
@@ -37,12 +37,12 @@ public class SellerConstants {
     public static final String URI_API_SELLER_PROFILE = "/api/seller/profile";
 
     // market web seller page uri
-    public static final String URI_WEB_SELLER_PROFILE_DETAIL = "/seller/profile/detail/{id}";
+    public static final String URI_WEB_SELLER_PROFILE_DETAIL = "/seller/profile/{id}/detail";
     public static final String URI_WEB_SELLER_PROFILE_CREATE = "/seller/profile/create";
-    public static final String URI_WEB_SELLER_PROFILE_UPDATE = "/seller/profile/update/{id}";
+    public static final String URI_WEB_SELLER_PROFILE_UPDATE = "/seller/profile/{id}/update";
 
     // market web seller DB uri
-    public static final String URI_DB_SELLER_PROFILE_DETAIL = "/db/seller/profile/detail/{id}";
+    public static final String URI_DB_SELLER_PROFILE_DETAIL = "/db/seller/profile/{id}/detail";
 
     // market web seller view file uri
     public static final String URI_VIEW_PROFILE = "/profile";
