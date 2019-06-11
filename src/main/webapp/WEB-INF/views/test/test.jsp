@@ -19,7 +19,5 @@
     <h1>상품을 등록할 수 있답니다!!!</h1>
 </div>
 
-<a href="/seller/profile/list">프로필 목록</a>
-<br/><br/>
 <a href="/seller/profile/create">프로필 등록</a>
 </body>
