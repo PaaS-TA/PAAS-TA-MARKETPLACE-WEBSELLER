@@ -20,6 +20,7 @@ public class SellerConstants {
     public static final String TARGET_API_CF = "cfApi";
     public static final String TARGET_API_MARKET = "marketApi";
 
+    
     // general data
     public static final String GROUP_CODE_BUSINESS_TYPE = "BUSINESS_TYPE";
 
@@ -27,24 +28,39 @@ public class SellerConstants {
     public static final String URI_DB_CATEGORY_LIST = "/db/category/list";
     public static final String URI_DB_CATEGORY_DETAIL = "/db/category/{id}/detail";
 
+    
     // cf api uri
     public static final String MARKET_SELLER_URL = "/seller";
 
+    
     // market api uri
     public static final String URI_API_BASE = "/api";
     public static final String URI_API_CUSTOM_CODE = "/api/customCode";
     public static final String URI_API_CATEGORY = "/api/category";
+    public static final String URI_API_SELLER_PRODUCT = "/api/seller/product";
     public static final String URI_API_SELLER_PROFILE = "/api/seller/profile";
 
+    
     // market web seller page uri
+    public static final String URI_WEB_SELLER_PRODUCT_LIST = "/seller/product/list";
+    public static final String URI_WEB_SELLER_PRODUCT_DETAIL = "/seller/product/{id}/detail";
+    public static final String URI_WEB_SELLER_PRODUCT_CREATE = "/seller/product/create";
+    public static final String URI_WEB_SELLER_PRODUCT_UPDATE = "/seller/product/{id}/update";
+    
     public static final String URI_WEB_SELLER_PROFILE_DETAIL = "/seller/profile/{id}/detail";
     public static final String URI_WEB_SELLER_PROFILE_CREATE = "/seller/profile/create";
     public static final String URI_WEB_SELLER_PROFILE_UPDATE = "/seller/profile/{id}/update";
 
+    
     // market web seller DB uri
+    public static final String URI_DB_SELLER_PRODUCT_LIST = "/db/seller/product/list";
+    public static final String URI_DB_SELLER_PRODUCT_DETAIL = "/db/seller/product/{id}/detail";
+    
     public static final String URI_DB_SELLER_PROFILE_DETAIL = "/db/seller/profile/{id}/detail";
 
+    
     // market web seller view file uri
+    public static final String URI_VIEW_PRODUCT = "/product";
     public static final String URI_VIEW_PROFILE = "/profile";
 
     

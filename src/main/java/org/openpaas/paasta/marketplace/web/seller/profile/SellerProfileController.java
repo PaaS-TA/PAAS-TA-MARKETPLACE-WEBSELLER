@@ -73,7 +73,7 @@ public class SellerProfileController {
      * @return ModelAndView
      */
     @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE_CREATE)
-    public ModelAndView getProfileCreatePage(HttpServletRequest httpServletRequest){
+    public ModelAndView createProfilePage(HttpServletRequest httpServletRequest){
     	log.info("create view");
     	return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/createProfile", new ModelAndView());
     }

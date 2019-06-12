@@ -20,4 +20,6 @@
 </div>
 
 <a href="/seller/profile/create">프로필 등록</a>
+<br/><br/>
+<a href="/seller/product/create">상품 등록</a>
 </body>
