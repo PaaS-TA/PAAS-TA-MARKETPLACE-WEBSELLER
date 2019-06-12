@@ -26,7 +26,7 @@
     <tr>
         <td>유형</td>
         <td>
-            <select onchange="selectBox();" id="businessGroup">
+            <select onchange="selectBox();" id="businessType">
             </select>
         </td>
     </tr>
@@ -50,12 +50,12 @@
 </html>
 <script type="text/javascript">
 
-    var UNIT_CODE_LIST = [];
-    var codeGroupName;
-    var unitCodeValue;
+    var BUSINESS_TYPE_LIST = [];
+    var orgBusinessType;
+    var businessTypeValue;
 
     var getProfile = function () {
-        var reqUrl = "<%= SellerConstants.URI_WEB_SELLER_PROFILE %>" + "/" + "<c:out value='${id}'/>";
+        var reqUrl = "<%= SellerConstants.URI_DB_SELLER_PROFILE_DETAIL %>".replace("{id}", "<c:out value='${id}'/>");
         console.log("url 은 ???" + reqUrl);
 
         procCallAjax(reqUrl, "GET", null, null, callbackGetProfile);
@@ -65,34 +65,31 @@
         console.log("나의 프로필 정보는 ::: " + JSON.stringify(data));
 
         $('#sellerName').val(data.sellerName);
-        codeGroupName = data.businessType;
+        orgBusinessType = data.businessType;
         $('#managerName').val(data.managerName);
         $('#emailAddress').val(data.email);
         $('#homepageUrl').val(data.homepageUrl);
 
     };
 
+    var getBusinessType = function () {
+        var groupCode = "<%= SellerConstants.GROUP_CODE_BUSINESS_TYPE %>";
+        var reqUrl = "<%= SellerConstants.URI_DB_CUSTOM_CODE_LIST %>".replace("{groupCode}", groupCode);
 
-    var getBusinessGroup = function () {
-        var groupTypeName = "<%= SellerConstants.GROUP_CODE_BUSINESS_TYPE %>";
-        var reqUrl = "<%= SellerConstants.URI_WEB_SELLER_PROFILE %>" + "/" + groupTypeName;
-
-        procCallAjax(reqUrl, "GET", null, null, callbackGetBusinessGroup);
+        procCallAjax(reqUrl, "GET", null, null, callbackGetBusinessType);
     };
 
-    var callbackGetBusinessGroup = function (data) {
+    var callbackGetBusinessType = function (data) {
         console.log("비즈니스 코드 List :::" + JSON.stringify(data));
 
-        UNIT_CODE_LIST = data;
+        BUSINESS_TYPE_LIST = data;
 
-        var businessGroupArea = $("#businessGroup");
+        var businessTypeArea = $("#businessType");
         var htmlString = [];
 
         var option = "<option>선택</option>";
-
-
         for(var i = 0; i < data.length; i++){
-            if(codeGroupName === data[i].unitCode){
+            if(orgBusinessType === data[i].unitCode){
                 option += "<option selected='selected' value=" + data[i].unitCode + ">" + data[i].unitCodeName + "</option>";
             }else{
                 option += "<option value=" + data[i].unitCode + ">" + data[i].unitCodeName + "</option>"
@@ -100,21 +97,20 @@
         }
 
         htmlString.push(option);
-        businessGroupArea.html(htmlString);
+        businessTypeArea.html(htmlString);
 
     };
 
     var selectBox = function () {
-        unitCodeValue = $("#businessGroup option:selected").val();
-        console.log("선택된 값은? " + unitCodeValue);
+        businessTypeValue = $("#businessType option:selected").val();
+        console.log("선택된 값은? " + businessTypeValue);
     };
 
-
     var updateProfile = function () {
-        var reqUrl = "<%= SellerConstants.URI_WEB_SELLER_PROFILE %>" + "/" + "<c:out value='${id}'/>";
+        var reqUrl = "<%= SellerConstants.URI_WEB_SELLER_PROFILE_UPDATE %>".replace("{id}", "<c:out value='${id}'/>");
 
         var sellerName = $('#sellerName').val();
-        var businessType = unitCodeValue;
+        var businessType = businessTypeValue;
         var managerName = $('#managerName').val();
         var email = $('#emailAddress').val();
         var homepageUrl = $('#homepageUrl').val();
@@ -133,9 +129,9 @@
 
     var callbackUpdateProfile = function(data){
         console.log("update 완료!!! ");
-        if(data.resultCode === RESULT_STATUS_SUCCESS){
-            procMovePage("<%= SellerConstants.URI_WEB_SELLER_PROFILE %>" + "/" + "<c:out value='${id}'/>");
-        }else{
+        if(data.resultCode === RESULT_STATUS_SUCCESS) {
+            procMovePage("<%= SellerConstants.URI_WEB_SELLER_PROFILE_DETAIL %>".replace("{id}", data.id);
+        } else {
             alert("작업 결과는 " + RESULT_STATUS_FAIL + "입니다.")
         }
     };
@@ -144,7 +140,7 @@
     // ON LOAD
     $(document).ready(function() {
         getProfile();
-        getBusinessGroup();
+        getBusinessType();
     });
 
 </script>

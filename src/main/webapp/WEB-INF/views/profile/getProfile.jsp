@@ -64,7 +64,7 @@
 <script type="text/javascript">
 
     var getProfile = function() {
-        var reqUrl = "<%= SellerConstants.URI_WEB_SELLER_PROFILE_DETAIL %>".replace("{id}", "<c:out value='${id}'/>");
+        var reqUrl = "<%= SellerConstants.URI_DB_SELLER_PROFILE_DETAIL %>".replace("{id}", "<c:out value='${id}'/>");
         console.log("url 은 ???" + reqUrl);
 
         procCallAjax(reqUrl, "GET", null, null, callbackGetProfile);

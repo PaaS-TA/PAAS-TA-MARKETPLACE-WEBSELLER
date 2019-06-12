@@ -70,7 +70,6 @@
         var htmlArray = [];
         var option = "<option selected='selected'>선택</option>";
 
-
         for(var i = 0; i < BUSINESS_TYPE_LIST.length; i++){
             option += "<option value=" + BUSINESS_TYPE_LIST[i].unitCode + ">" + BUSINESS_TYPE_LIST[i].unitCodeName + "</option>"
         }
