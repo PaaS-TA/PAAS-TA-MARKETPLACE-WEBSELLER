@@ -63,7 +63,7 @@
     var callbackGetBusinessTypeList = function (data) {
         console.log("업체유형 목록 :::" + JSON.stringify(data));
 
-        BUSINESS_TYPE_LIST = data.item;
+        BUSINESS_TYPE_LIST = data.items;
 
         var businessTypeArea = $("#businessType");
         var htmlArray = [];
