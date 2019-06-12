@@ -64,15 +64,15 @@
     var callbackGetBusinessTypeList = function (data) {
         console.log("업체유형 목록 :::" + JSON.stringify(data));
 
-        BUSINESS_TYPE_LIST = data;
+        BUSINESS_TYPE_LIST = data.items;
 
         var businessTypeArea = $("#businessType");
         var htmlArray = [];
         var option = "<option selected='selected'>선택</option>";
 
 
-        for(var i = 0; i < data.length; i++){
-            option += "<option value=" + data[i].unitCode + ">" + data[i].unitCodeName + "</option>"
+        for(var i = 0; i < BUSINESS_TYPE_LIST.length; i++){
+            option += "<option value=" + BUSINESS_TYPE_LIST[i].unitCode + ">" + BUSINESS_TYPE_LIST[i].unitCodeName + "</option>"
         }
 
         htmlArray.push(option);
