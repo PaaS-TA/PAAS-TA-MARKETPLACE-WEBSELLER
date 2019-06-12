@@ -1,7 +1,5 @@
 package org.openpaas.paasta.marketplace.web.seller.code;
 
-import java.util.List;
-
 import org.openpaas.paasta.marketplace.web.seller.common.RestTemplateService;
 import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +25,8 @@ public class CustomCodeService {
      * @param groupCode the group code
      * @return CustomCodeList
      */
-    public List<CustomCode> getUnitCodeListByGroupCode(String groupCode) {
-    	CustomCodeList customCodeList = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_CUSTOM_CODE + "/" + groupCode, null, HttpMethod.GET, null, CustomCodeList.class);
-    	return customCodeList.getItems();
+    public CustomCodeList getUnitCodeListByGroupCode(String groupCode) {
+    	return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_CUSTOM_CODE + "/" + groupCode, null, HttpMethod.GET, null, CustomCodeList.class);
     }
 
 }

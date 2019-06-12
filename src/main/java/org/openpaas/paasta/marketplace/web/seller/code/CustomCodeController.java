@@ -1,7 +1,5 @@
 package org.openpaas.paasta.marketplace.web.seller.code;
 
-import java.util.List;
-
 import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +29,7 @@ public class CustomCodeController {
      * @return CustomCodeList
      */
     @GetMapping(value = SellerConstants.URI_DB_CUSTOM_CODE_LIST)
-    public List<CustomCode> getUnitCodeListByGroupCode(@PathVariable String groupCode){
+    public CustomCodeList getUnitCodeListByGroupCode(@PathVariable String groupCode){
     	log.info("custom code");
         return customCodeService.getUnitCodeListByGroupCode(groupCode);
     }

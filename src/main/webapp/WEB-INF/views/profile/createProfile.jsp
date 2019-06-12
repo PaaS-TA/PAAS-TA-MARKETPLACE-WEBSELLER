@@ -52,7 +52,6 @@
 
     var BUSINESS_TYPE_LIST = [];
     var businessTypeValue;
-
     
     var getBusinessType = function () {
         var groupCode = "<%= SellerConstants.GROUP_CODE_BUSINESS_TYPE %>";
@@ -64,7 +63,7 @@
     var callbackGetBusinessTypeList = function (data) {
         console.log("업체유형 목록 :::" + JSON.stringify(data));
 
-        BUSINESS_TYPE_LIST = data.items;
+        BUSINESS_TYPE_LIST = data.item;
 
         var businessTypeArea = $("#businessType");
         var htmlArray = [];
