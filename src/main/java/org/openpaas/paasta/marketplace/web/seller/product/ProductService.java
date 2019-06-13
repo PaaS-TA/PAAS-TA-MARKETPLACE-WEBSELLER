@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.openpaas.paasta.marketplace.web.seller.common.RestTemplateService;
 import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
+import org.openpaas.paasta.marketplace.web.seller.util.DateUtils;
 import org.openpaas.paasta.marketplace.web.seller.util.FileUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,37 @@ public class ProductService {
 
 	@Autowired
     private RestTemplateService marketApiRest;
+
+	/**
+	 * 상품 상세
+	 * @param id
+	 * @return
+	 */
+	public Product getProduct(Long id) {
+		Product product = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PRODUCT + "/" + id, null, HttpMethod.GET, null, Product.class);
+        String createdDate = DateUtils.getConvertDate(product.getCreateDate(), DateUtils.FORMAT_1);
+        String updatedDate = DateUtils.getConvertDate(product.getCreateDate(), DateUtils.FORMAT_1);
+		log.info("createdDate: " + createdDate);
+        log.info("updatedDate: " + updatedDate);
+        product.setStrCreateDate(createdDate);
+        product.setStrUpdateDate(updatedDate);
+        return product;
+	}
 	
+	/**
+	 * 상품 등록
+	 * @param request
+	 * @return
+	 */
 	public Product createProduct(RequestProduct request) {
 		Product product = new Product();
-		BeanUtils.copyProperties(request, product);
+		WebProduct webProduct = new WebProduct();
+		BeanUtils.copyProperties(request, webProduct);
 		log.info("product={}", product);
 		
 		// 등록자ID, 수정자ID
-		product.setCreateId(request.getSellerId());
-		product.setUpdateId(request.getSellerId());
+		webProduct.setCreateId(request.getSellerId());
+		webProduct.setUpdateId(request.getSellerId());
 
 		// 파일 경로
     	String filePath = uploadPath + SEPARATOR + product.getProductName() + SEPARATOR + product.getVersionInfo() + SEPARATOR;
@@ -50,7 +73,7 @@ public class ProductService {
     			return product;
     		}
     		String envFileName = FileUtils.fileUpload(filePath, request.getEnvFile());
-    		product.setEnvFileName(envFileName);
+    		webProduct.setEnvFileName(envFileName);
 
     		// 상품파일
     		MultipartFile productFile = request.getProductFile();
@@ -60,7 +83,7 @@ public class ProductService {
     			return product;
     		}
     		String productFileName = FileUtils.fileUpload(filePath, request.getProductFile());
-	    	product.setProductFileName(productFileName);
+    		webProduct.setProductFileName(productFileName);
 
 	    	// 아이콘파일
 	    	MultipartFile iconFile = request.getIconFile();
@@ -70,7 +93,7 @@ public class ProductService {
 	    		return product;
 	    	}
 	    	String iconFileName = FileUtils.fileUpload(filePath, request.getIconFile());
-	    	product.setIconFileName(iconFileName);
+	    	webProduct.setIconFileName(iconFileName);
 
 	    	// 스크린샷파일
 			List<MultipartFile> screenshotFiles = request.getScreenshotFiles();
@@ -90,7 +113,7 @@ public class ProductService {
 					screenshots.add(screenshotFileName);
 				}
 			}
-			product.setScreenshotFileNames(screenshots);
+			webProduct.setScreenshotFileNames(screenshots);
     	} catch(Exception e) {
     		product.setResultCode(SellerConstants.RESULT_STATUS_FAIL);
     		product.setResultMessage(e.getMessage());

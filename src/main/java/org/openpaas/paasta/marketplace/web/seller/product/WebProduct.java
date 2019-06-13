@@ -2,31 +2,26 @@ package org.openpaas.paasta.marketplace.web.seller.product;
 
 import java.util.List;
 
-import org.openpaas.paasta.marketplace.web.seller.category.Category;
 import org.openpaas.paasta.marketplace.web.seller.common.BaseModel;
-import org.openpaas.paasta.marketplace.web.seller.profile.SellerProfile;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class Product extends BaseModel {
-
-	// 상품ID
-	private Long id;
+public class WebProduct extends BaseModel {
 
 	// 카테고리ID
-    private Category category;
+    private Long categoryId;
 
     // 판매자ID
-    private SellerProfile seller;
+    private String sellerId;
 
     // 파일경로
     private String filePath;
 
     // 스크린샷 파일명 목록
-    private List<Screenshot> screenshots;
+    private List<String> screenshotFileNames;
 
     // 상품명
     private String productName;

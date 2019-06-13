@@ -45,7 +45,6 @@ public class SellerProfileController {
     	return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/getProfile", new ModelAndView());
     }
 
-
     /**
      * 프로필 상세 조회 DB
      *

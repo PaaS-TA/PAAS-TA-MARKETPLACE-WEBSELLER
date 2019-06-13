@@ -24,4 +24,6 @@
 <a href="/seller/profile/3/detail">프로필 상세</a>
 <br/><br/>
 <a href="/seller/product/create">상품 등록</a>
+<br/><br/>
+<a href="/seller/product/15/detail">상품 상세</a>
 </body>

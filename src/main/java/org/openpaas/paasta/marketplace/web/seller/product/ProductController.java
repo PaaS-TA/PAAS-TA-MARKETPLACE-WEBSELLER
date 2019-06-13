@@ -4,10 +4,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
+import org.openpaas.paasta.marketplace.web.seller.profile.SellerProfile;
 import org.openpaas.paasta.marketplace.web.seller.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,13 +25,48 @@ public class ProductController {
 
 	@Autowired
 	private ProductService productService;
-	
+
+	/**
+     * 프로필 상세 조회 화면
+     *
+     * @param httpServletRequest the httpServletRequest
+     * @return ModelAndView
+     */
+    @GetMapping(value = SellerConstants.URI_WEB_SELLER_PRODUCT_DETAIL)
+    public ModelAndView getProductPage(HttpServletRequest httpServletRequest, @PathVariable(value = "id") Long id) {
+    	// 화면 변수 처리
+    	return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PRODUCT + "/getProduct", new ModelAndView());
+    }
+
+
+    /**
+     * 프로필 상세 조회 DB
+     *
+     * @param id the id
+     * @return SellerProfile
+     */
+    @GetMapping(value = SellerConstants.URI_DB_SELLER_PRODUCT_DETAIL)
+    private Product getProduct(@PathVariable Long id) {
+    	return productService.getProduct(id);
+    }
+
+    /**
+     * 상품 등록 페이지 이동
+     * @param httpServletRequest
+     * @return
+     */
 	@GetMapping(value = SellerConstants.URI_WEB_SELLER_PRODUCT_CREATE)
     public ModelAndView createProductPage(HttpServletRequest httpServletRequest){
     	log.info("create view");
     	return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PRODUCT + "/createProduct", new ModelAndView());
     }
 	
+	/**
+	 * 상품 등록
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@PostMapping(value = SellerConstants.URI_WEB_SELLER_PRODUCT_CREATE)
     private Product createProduct(@ModelAttribute RequestProduct request) throws Exception {
     	String userId = SecurityUtils.getUserId();
