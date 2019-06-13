@@ -1,7 +1,5 @@
 package org.openpaas.paasta.marketplace.web.seller.category;
 
-import java.util.List;
-
 import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,9 +28,9 @@ public class CategoryController {
      * @return CategoryList
      */
     @GetMapping(value = SellerConstants.URI_DB_CATEGORY_LIST)
-    public List<Category> getCategoryList(){
+    public CategoryList getCategoryList(){
     	log.info("category...");
-        return categoryService.getCategoryListByDeleteYn();
+        return categoryService.getCategoryList();
     }
     
     /**

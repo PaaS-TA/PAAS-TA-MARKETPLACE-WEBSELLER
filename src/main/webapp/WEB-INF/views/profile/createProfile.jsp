@@ -50,7 +50,6 @@
 </html>
 <script type="text/javascript">
 
-    var BUSINESS_TYPE_LIST = [];
     var businessTypeValue;
     
     var getBusinessType = function () {
@@ -63,7 +62,7 @@
     var callbackGetBusinessTypeList = function (data) {
         console.log("업체유형 목록 :::" + JSON.stringify(data));
 
-        BUSINESS_TYPE_LIST = data.items;
+        var BUSINESS_TYPE_LIST = data.items;
 
         var businessTypeArea = $("#businessType");
         var htmlArray = [];

@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
-import org.openpaas.paasta.marketplace.web.seller.util.DateUtils;
 import org.openpaas.paasta.marketplace.web.seller.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,15 +54,7 @@ public class SellerProfileController {
      */
     @GetMapping(value = SellerConstants.URI_DB_SELLER_PROFILE_DETAIL)
     private SellerProfile getProfile(@PathVariable Long id) {
-    	SellerProfile seller = sellerProfileService.getProfile(id);
-		String createdDate = DateUtils.getConvertDate(seller.getCreateDate(), DateUtils.FORMAT_1);
-        String updatedDate = DateUtils.getConvertDate(seller.getCreateDate(), DateUtils.FORMAT_1);
-		log.info("createdDate: " + createdDate);
-        log.info("updatedDate: " + updatedDate);
-		seller.setStrCreateDate(createdDate);
-		seller.setStrUpdateDate(updatedDate);
-
-		return seller;
+    	return sellerProfileService.getProfile(id);
     }
 
     /**
