@@ -50,7 +50,6 @@
 </html>
 <script type="text/javascript">
 
-    var BUSINESS_TYPE_LIST = [];
     var orgBusinessType;
     var businessTypeValue;
 
@@ -82,23 +81,22 @@
     var callbackGetBusinessType = function (data) {
         console.log("비즈니스 코드 List :::" + JSON.stringify(data));
 
-        BUSINESS_TYPE_LIST = data;
+        var BUSINESS_TYPE_LIST = data.items;
 
         var businessTypeArea = $("#businessType");
         var htmlString = [];
 
         var option = "<option>선택</option>";
-        for(var i = 0; i < data.length; i++){
-            if(orgBusinessType === data[i].unitCode){
-                option += "<option selected='selected' value=" + data[i].unitCode + ">" + data[i].unitCodeName + "</option>";
-            }else{
-                option += "<option value=" + data[i].unitCode + ">" + data[i].unitCodeName + "</option>"
+        for(var i = 0; i < BUSINESS_TYPE_LIST.length; i++){
+            if(orgBusinessType === BUSINESS_TYPE_LIST[i].unitCode) {
+                option += "<option selected='selected' value=" + BUSINESS_TYPE_LIST[i].unitCode + ">" + BUSINESS_TYPE_LIST[i].unitCodeName + "</option>";
+            } else {
+                option += "<option value=" + BUSINESS_TYPE_LIST[i].unitCode + ">" + BUSINESS_TYPE_LIST[i].unitCodeName + "</option>"
             }
         }
 
         htmlString.push(option);
         businessTypeArea.html(htmlString);
-
     };
 
     var selectBox = function () {
@@ -130,7 +128,7 @@
     var callbackUpdateProfile = function(data){
         console.log("update 완료!!! ");
         if(data.resultCode === RESULT_STATUS_SUCCESS) {
-            procMovePage("<%= SellerConstants.URI_WEB_SELLER_PROFILE_DETAIL %>".replace("{id}", data.id);
+            procMovePage("<%= SellerConstants.URI_WEB_SELLER_PROFILE_DETAIL %>".replace("{id}", data.id));
         } else {
             alert("작업 결과는 " + RESULT_STATUS_FAIL + "입니다.")
         }

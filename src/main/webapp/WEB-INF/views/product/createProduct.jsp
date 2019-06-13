@@ -68,9 +68,6 @@
    	<input type='hidden' id="_csrf" name="_csrf" value="${_csrf.token}">
    	<input type='hidden' id="_csrf_header" name="_csrf_header" value="${_csrf.headerName}">
    	<input type='submit' id="submit" value="등록하기">
-<!-- <div>
-    <button type="button" onclick="createFile();">등록하기</button>
-</div> -->
 </form>
 </body>
 </html>

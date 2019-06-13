@@ -2,9 +2,12 @@ package org.openpaas.paasta.marketplace.web.seller.profile;
 
 import org.openpaas.paasta.marketplace.web.seller.common.RestTemplateService;
 import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
+import org.openpaas.paasta.marketplace.web.seller.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 판매자 프로필 Service
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
  * @since 2019-05-07
  */
 @Service
+@Slf4j
 public class SellerProfileService {
 
     @Autowired
@@ -26,7 +30,14 @@ public class SellerProfileService {
      * @return SellerProfile
      */
     public SellerProfile getProfile(Long id) {
-        return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PROFILE + "/" + id, null, HttpMethod.GET, null, SellerProfile.class);
+        SellerProfile profile = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PROFILE + "/" + id, null, HttpMethod.GET, null, SellerProfile.class);
+        String createdDate = DateUtils.getConvertDate(profile.getCreateDate(), DateUtils.FORMAT_1);
+        String updatedDate = DateUtils.getConvertDate(profile.getCreateDate(), DateUtils.FORMAT_1);
+		log.info("createdDate: " + createdDate);
+        log.info("updatedDate: " + updatedDate);
+        profile.setStrCreateDate(createdDate);
+        profile.setStrUpdateDate(updatedDate);
+        return profile;
     }
 
     /**
@@ -34,7 +45,6 @@ public class SellerProfileService {
      *
      * @param sellerProfile the seller profile
      * @return SellerProfile
-     * @throws Exception 
      */
     public SellerProfile createProfile(SellerProfile sellerProfile) {
     	return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PROFILE, null, HttpMethod.POST, sellerProfile, SellerProfile.class);
