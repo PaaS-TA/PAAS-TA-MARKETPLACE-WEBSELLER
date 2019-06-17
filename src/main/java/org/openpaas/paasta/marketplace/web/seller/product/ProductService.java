@@ -53,16 +53,16 @@ public class ProductService {
 		Product product = new Product();
 		WebProduct webProduct = new WebProduct();
 		BeanUtils.copyProperties(request, webProduct);
-		log.info("product={}", product);
+		log.info("product={}", webProduct);
 		
 		// 등록자ID, 수정자ID
 		webProduct.setCreateId(request.getSellerId());
 		webProduct.setUpdateId(request.getSellerId());
 
 		// 파일 경로
-    	String filePath = uploadPath + SEPARATOR + product.getProductName() + SEPARATOR + product.getVersionInfo() + SEPARATOR;
+    	String filePath = uploadPath + SEPARATOR + webProduct.getProductName() + SEPARATOR + webProduct.getVersionInfo() + SEPARATOR;
     	log.info("File Path: " + filePath);
-    	product.setFilePath(filePath);
+    	webProduct.setFilePath(filePath);
 
     	try {
     		// 환경파일
@@ -120,7 +120,21 @@ public class ProductService {
     		return product;
     	}
 
-    	return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PRODUCT, null, HttpMethod.POST, product, Product.class);
+    	return marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PRODUCT, null, HttpMethod.POST, webProduct, Product.class);
+    }
+	
+	/**
+	 * 상품 수정
+	 * @param id
+	 * @param product
+	 * @return Product
+	 */
+	public Product updateProduct(Long id, Product updProduct) {
+		Product product = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PRODUCT + "/" + id, null, HttpMethod.PUT, updProduct, Product.class);
+		String createdDate = DateUtils.getConvertDate(product.getCreateDate(), DateUtils.FORMAT_1);
+		log.info("createdDate: " + createdDate);
+        product.setStrCreateDate(createdDate);
+        return product;
     }
 
 }

@@ -74,7 +74,6 @@
 
         htmlArray.push(option);
         businessTypeArea.html(htmlArray);
-
     };
 
     var selectBox = function () {

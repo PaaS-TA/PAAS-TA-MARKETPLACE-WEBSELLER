@@ -42,6 +42,10 @@
         <td>홈페이지 주소</td>
         <td><input type="text" id="homepageUrl"></td>
     </tr>
+    <tr>
+        <td>등록일자</td>
+        <td><span class="createDate"></span></td>
+    </tr>
 </table>
 <div>
     <button type="button" onclick="updateProfile();">저장</button>
@@ -68,7 +72,7 @@
         $('#managerName').val(data.managerName);
         $('#emailAddress').val(data.email);
         $('#homepageUrl').val(data.homepageUrl);
-
+        $('.createDate').html(data.strCreateDate);
     };
 
     var getBusinessType = function () {

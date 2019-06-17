@@ -50,7 +50,7 @@
         </td>
     </tr>
     <tr>
-        <td>등록일</td>
+        <td>등록일자</td>
         <td>
             <span class="createdDate"></span>
         </td>

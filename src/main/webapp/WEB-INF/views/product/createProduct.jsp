@@ -14,11 +14,13 @@
 	<table class="board_detail" border="1">
    		<tr>
    			<td>카테고리ID</td>
-   			<td><input type="text" id="categoryId" name="categoryId" value="3"></td>
+   			<td>
+   				<select onchange="selectBox();" id="categoryId" name="categoryId"></select>
+   			</td>
    		</tr>
    		<tr>
    			<td>버전정보</td>
-   			<td><input type="text" id="versionInfo" name="versionInfo" value="1.0"></td>
+   			<td><input type="text" id="versionInfo" name="versionInfo" value="2.0"></td>
    		</tr>
    		<tr>
    			<td>상품명</td>
@@ -62,7 +64,10 @@
    		</tr>
    		<tr>
    			<td>전시여부</td>
-    		<td><input type="text" id="displayYn" name="displayYn" value="Y"></td>
+    		<td>
+    			<input type="radio" id="displayYn" name="displayYn" value="Y" checked="checked">전시
+    			<input type="radio" id="displayYn" name="displayYn" value="N">미전시
+    		</td>
    		</tr>
    	</table>
    	<input type='hidden' id="_csrf" name="_csrf" value="${_csrf.token}">
@@ -72,35 +77,41 @@
 </body>
 </html>
 <script type="text/javascript">
-var createFile = function() {
-    var reqUrl = "/db/upload";
 
-/*     var filePath = $('#filePath').val();
-    var fileName = $('#fileName').val();
-    var icon = $('#iconFile').val(); */
-    var form = $('form')[0];
-    var formData = new FormData(form);
-    alert(JSON.stringify(formData));
-/*     var files = $('#screenshots').val();
-    var screenshots = [];
-    for (var i = 0; i < files.length; i++) {
-    	alert(files[i]);
-    	screenshots.push(files[i].name);
-    } */
+	var cateogryValue;
+	
+	var getCategory = function () {
+	    var reqUrl = "<%= SellerConstants.URI_DB_CATEGORY_LIST %>";
+	
+	    procCallAjax(reqUrl, "GET", null, null, callbackGetCategoryList);
+	};
+	
+	var callbackGetCategoryList = function (data) {
+	    console.log("카테고리 목록 :::" + JSON.stringify(data));
+	
+	    var categoryList = data.items;
+	
+	    var categoryArea = $("#categoryId");
+	    var htmlArray = [];
+	    var option = "<option selected='selected'>선택</option>";
+	
+	    for(var i = 0; i < categoryList.length; i++){
+	        option += "<option value=" + categoryList[i].id + ">" + categoryList[i].categoryName + "</option>"
+	    }
+	
+	    htmlArray.push(option);
+	    categoryArea.html(htmlArray);
+	};
+	
+	var selectBox = function () {
+		cateogryValue = $("#categoryId option:selected").val();
+	  	console.log("선택된 카테고리는? " + cateogryValue);
+	};
 
-/*     var param = {
-        "filePath": filePath,
-        "fileName": fileName,
-        "iconFile": icon,
-        "screenshots": screenshots
-    };
-    alert(JSON.stringify(param)); */
 
-    procCallAjax(reqUrl, "POST", JSON.stringify(formData), null, callbackCreateFile);
-};
+	// ON LOAD
+    $(document).ready(function() {
+    	getCategory();
+    });
 
-var callbackCreateFile = function(data){
-    console.log("저장 완료!!! " + JSON.stringify(data));
-    alert(JSON.stringify(data));
-};
 </script>

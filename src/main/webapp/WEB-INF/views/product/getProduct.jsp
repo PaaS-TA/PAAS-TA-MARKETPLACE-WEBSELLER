@@ -13,7 +13,7 @@
     <meta id="_csrf" name="_csrf" content="${_csrf.token}"/>
     <!-- default header name is X-CSRF-TOKEN -->
     <meta id="_csrf_header" name="_csrf_header" content="${_csrf.headerName}"/>
-    <title>프로필 상세 조회</title>
+    <title>상품 상세 조회</title>
 
     <%@include file="../common/commonLibs.jsp" %>
 </head>
@@ -75,10 +75,6 @@
    			<td>등록일자</td>
     		<td><span class="createDate"></span></td>
    		</tr>
-   		<tr>
-   			<td>수정일자</td>
-    		<td><span class="updateDate"></span></td>
-   		</tr>
    	</table>
 <div>
     <button type="button" id="updateBtn">수정</button>
@@ -101,7 +97,11 @@
         $('.versionInfo').html(data.versionInfo);
         $('.productName').html(data.productName);
         $('.iconFile').html(data.iconFileName);
-        $('.screenshotFiles').html(data.screenshots[0].screenshotFileName);
+        var htmlString = [];
+        for (var i = 0; i < data.screenshots.length; i++) {
+        	htmlString.push(data.screenshots[i].screenshotFileName + ",");
+        }
+        $('.screenshotFiles').html(htmlString);
         $('.simpleDescription').html(data.simpleDescription);
         $('.detailDescription').html(data.detailDescription);
         $('.productType').html(data.productType);
@@ -111,7 +111,6 @@
         $('.unitPrice').html(data.unitPrice);
         $('.displayYn').html(data.displayYn == 'Y'? '전시' : '미전시');
         $('.createDate').html(data.strCreateDate);
-        $('.updateDate').html(data.strUpdateDate);
     };
 
     $("#updateBtn").on("click", function () {
