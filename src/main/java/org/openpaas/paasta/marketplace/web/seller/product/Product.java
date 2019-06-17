@@ -8,6 +8,7 @@ import org.openpaas.paasta.marketplace.web.seller.profile.SellerProfile;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.openpaas.paasta.marketplace.web.seller.userProduct.UserProduct;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -24,6 +25,8 @@ public class Product extends BaseModel {
 
     // 파일경로
     private String filePath;
+
+    private List<UserProduct> userProducts;
 
     // 스크린샷 파일명 목록
     private List<Screenshot> screenshots;
