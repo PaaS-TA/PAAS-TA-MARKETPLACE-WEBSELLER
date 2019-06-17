@@ -1,10 +1,8 @@
 package org.openpaas.paasta.marketplace.web.seller.product;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class Screenshot {
 
     private Long id;
