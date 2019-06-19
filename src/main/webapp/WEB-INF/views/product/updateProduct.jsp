@@ -18,8 +18,7 @@
     <%@include file="../common/commonLibs.jsp" %>
 </head>
 <body>
-<%-- <form id="frm" method="post" action="'<%= SellerConstants.URI_WEB_SELLER_PRODUCT_UPDATE %>'.replace('{id}', '${id}')" enctype="multipart/form-data"> --%>
-<form id="frm" method="post" enctype="multipart/form-data">
+<form id="frm">
     <table class="board_detail" border="1">
    		<tr>
    			<td>카테고리명</td>
@@ -33,7 +32,7 @@
    		</tr>
    		<tr>
    			<td>상품명</td>
-    		<td><input type="text" id="productName" name="productName"></td>
+    		<td><span class="productName"></span></td>
    		</tr>
    		<tr>
    			<td>아이콘</td>
@@ -91,8 +90,10 @@
    	</table>
    	<input type='hidden' id="_csrf" name="_csrf" value="${_csrf.token}">
    	<input type='hidden' id="_csrf_header" name="_csrf_header" value="${_csrf.headerName}">
-   	<input type='submit' id="submit" value="수정하기">
 </form>
+<div>
+	<button type="button" onclick="updateProduct();">수정하기</button>
+</div>
 </body>
 </html>
 <script type="text/javascript">
@@ -113,7 +114,7 @@
         $('#categoryId').val(data.category.categoryName);
         orgCategory = data.category.id;
         $('.versionInfo').html(data.versionInfo);
-        $('#productName').val(data.productName);
+        $('.productName').html(data.productName);
         $('.iconFile').html(data.iconFileName);
         var htmlString = [];
         for (var i = 0; i < data.screenshots.length; i++) {
@@ -166,16 +167,34 @@
     	categoryValue = $("#categoryId option:selected").val();
         console.log("선택된 값은? " + categoryValue);
     };
+    
+    var updateProduct = function () {
+        var reqUrl = "<%= SellerConstants.URI_WEB_SELLER_PRODUCT_UPDATE %>".replace("{id}", "<c:out value='${id}'/>");
+        var form = $('#frm')[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+        	url : reqUrl,
+        	type : 'PUT',
+        	data : formData,
+        	contentType : false,
+        	processData : false
+        }).done(function(data) {
+        	console.log("update 완료!!! ");
+            if(data.resultCode === "SUCCESS") {
+                procMovePage("<%= SellerConstants.URI_WEB_SELLER_PRODUCT_DETAIL %>".replace("{id}", data.id));
+            } else {
+            	alert("오류 발생!!! : [" + data.resultMessage + "]");
+            	return;
+            }
+        });
+    };
 
 
     // ON LOAD
     $(document).ready(function() {
         getProduct();
         getCategory();
-        $("#frm").bind('submit', function(e) {
-        	e.preventDefault();
-        	$(this).attr('action', '');
-        });
     });
 
 </script>

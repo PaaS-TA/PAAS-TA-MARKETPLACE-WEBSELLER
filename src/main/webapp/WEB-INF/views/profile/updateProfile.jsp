@@ -131,10 +131,11 @@
 
     var callbackUpdateProfile = function(data){
         console.log("update 완료!!! ");
-        if(data.resultCode === RESULT_STATUS_SUCCESS) {
+        if(data.resultCode === "SUCCESS") {
             procMovePage("<%= SellerConstants.URI_WEB_SELLER_PROFILE_DETAIL %>".replace("{id}", data.id));
         } else {
-            alert("작업 결과는 " + RESULT_STATUS_FAIL + "입니다.")
+        	alert("오류 발생!!! : [" + data.resultMessage + "]");
+        	return;
         }
     };
 

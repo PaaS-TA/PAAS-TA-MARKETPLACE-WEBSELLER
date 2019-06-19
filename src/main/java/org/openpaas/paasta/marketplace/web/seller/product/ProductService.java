@@ -55,10 +55,6 @@ public class ProductService {
 		BeanUtils.copyProperties(request, webProduct);
 		log.info("product={}", webProduct);
 		
-		// 등록자ID, 수정자ID
-		webProduct.setCreateId(request.getSellerId());
-		webProduct.setUpdateId(request.getSellerId());
-
 		// 파일 경로
     	String filePath = uploadPath + SEPARATOR + webProduct.getProductName() + SEPARATOR + webProduct.getVersionInfo() + SEPARATOR;
     	log.info("File Path: " + filePath);
@@ -129,8 +125,54 @@ public class ProductService {
 	 * @param product
 	 * @return Product
 	 */
-	public Product updateProduct(Long id, Product updProduct) {
-		Product product = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PRODUCT + "/" + id, null, HttpMethod.PUT, updProduct, Product.class);
+	public Product updateProduct(Long id, RequestProduct request) {
+		Product product = new Product();
+		WebProduct updProduct = new WebProduct();
+		BeanUtils.copyProperties(request, updProduct);
+		log.info("product={}", updProduct);
+
+		// 파일 경로
+    	String filePath = uploadPath + SEPARATOR + updProduct.getProductName() + SEPARATOR + updProduct.getVersionInfo() + SEPARATOR;
+    	log.info("File Path: " + filePath);
+    	updProduct.setFilePath(filePath);
+
+    	try {
+	    	// 아이콘파일
+	    	MultipartFile iconFile = request.getIconFile();
+	    	if (iconFile.isEmpty() || !iconFile.getContentType().contains("image")) {
+	    		product.setResultCode(SellerConstants.RESULT_STATUS_FAIL);
+	    		product.setResultMessage("ICON FILE ERROR");
+	    		return product;
+	    	}
+	    	String iconFileName = FileUtils.fileUpload(filePath, request.getIconFile());
+	    	updProduct.setIconFileName(iconFileName);
+
+	    	// 스크린샷파일
+			List<MultipartFile> screenshotFiles = request.getScreenshotFiles();
+			if (screenshotFiles.isEmpty()) {
+				product.setResultCode(SellerConstants.RESULT_STATUS_FAIL);
+				product.setResultMessage("SCREENSHOT FILE ERROR");
+				return product;
+			}
+			List<String> screenshots = new ArrayList<String>();
+			for (MultipartFile screenshotFile : screenshotFiles) {
+				if (!screenshotFile.getContentType().contains("image")) {
+					product.setResultCode(SellerConstants.RESULT_STATUS_FAIL);
+					product.setResultMessage("SCREENSHOT FILE ERROR: Not a Image");
+					return product;
+				} else {
+					String screenshotFileName = FileUtils.fileUpload(filePath, screenshotFile);
+					screenshots.add(screenshotFileName);
+				}
+			}
+			updProduct.setScreenshotFileNames(screenshots);
+    	} catch(Exception e) {
+    		product.setResultCode(SellerConstants.RESULT_STATUS_FAIL);
+    		product.setResultMessage(e.getMessage());
+    		return product;
+    	}
+
+		product = marketApiRest.send(SellerConstants.TARGET_API_MARKET, SellerConstants.URI_API_SELLER_PRODUCT + "/" + id, null, HttpMethod.PUT, updProduct, Product.class);
 		String createdDate = DateUtils.getConvertDate(product.getCreateDate(), DateUtils.FORMAT_1);
 		log.info("createdDate: " + createdDate);
         product.setStrCreateDate(createdDate);

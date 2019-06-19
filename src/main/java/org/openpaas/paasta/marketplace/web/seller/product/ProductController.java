@@ -1,9 +1,6 @@
 package org.openpaas.paasta.marketplace.web.seller.product;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -71,17 +67,13 @@ public class ProductController {
 	 * @throws Exception
 	 */
 	@PostMapping(value = SellerConstants.URI_WEB_SELLER_PRODUCT_CREATE)
-    private void createProduct(@ModelAttribute RequestProduct request, HttpServletResponse response) {
+    private Product createProduct(@ModelAttribute RequestProduct request) {
     	String userId = SecurityUtils.getUserId();
     	request.setSellerId(userId);
+    	request.setCreateId(userId);
+    	request.setUpdateId(userId);
     	
-    	Product product = productService.createProduct(request);
-    	try {
-			response.sendRedirect(SellerConstants.URI_WEB_SELLER_PRODUCT_DETAIL.replace("{id}", String.valueOf(product.getId())));
-		} catch (IOException e) {
-			product.setResultCode(SellerConstants.RESULT_STATUS_FAIL);
-			product.setResultMessage(e.getMessage());
-		}
+    	return productService.createProduct(request);
     }
 	
 	/**
@@ -91,7 +83,7 @@ public class ProductController {
 	 * @return
 	 */
 	@GetMapping(value = SellerConstants.URI_WEB_SELLER_PRODUCT_UPDATE)
-    public ModelAndView getProductUpdatePage(HttpServletRequest httpServletRequest, @PathVariable Long id){
+    public ModelAndView getProductUpdatePage(HttpServletRequest httpServletRequest, @PathVariable Long id) {
         return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PRODUCT + "/updateProduct", new ModelAndView());
     }
 	
@@ -102,17 +94,11 @@ public class ProductController {
 	 * @return Product
 	 */
 	@PutMapping(value = SellerConstants.URI_WEB_SELLER_PRODUCT_UPDATE)
-    private void updateProfile(@PathVariable Long id, @ModelAttribute Product request, HttpServletResponse response){
+    private Product updateProduct(@PathVariable Long id, @ModelAttribute RequestProduct request) {
         String userId = SecurityUtils.getUserId();
         request.setUpdateId(userId);
 
-        Product product = productService.updateProduct(id, request);
-        try {
-			response.sendRedirect(SellerConstants.URI_WEB_SELLER_PRODUCT_DETAIL.replace("{id}", String.valueOf(id)));
-		} catch (IOException e) {
-			product.setResultCode(SellerConstants.RESULT_STATUS_FAIL);
-			product.setResultMessage(e.getMessage());
-		}
+        return productService.updateProduct(id, request);
     }
 
 }

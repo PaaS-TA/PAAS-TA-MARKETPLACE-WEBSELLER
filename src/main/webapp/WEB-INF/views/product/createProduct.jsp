@@ -10,7 +10,7 @@
 	<%@include file="../common/commonLibs.jsp" %>
 </head>
 <body>
-<form id="frm" method="post" action="<%= SellerConstants.URI_WEB_SELLER_PRODUCT_CREATE %>" enctype="multipart/form-data">
+<form id="frm">
 	<table class="board_detail" border="1">
    		<tr>
    			<td>카테고리ID</td>
@@ -72,13 +72,16 @@
    	</table>
    	<input type='hidden' id="_csrf" name="_csrf" value="${_csrf.token}">
    	<input type='hidden' id="_csrf_header" name="_csrf_header" value="${_csrf.headerName}">
-   	<input type='submit' id="submit" value="등록하기">
+   	<!-- <input type='submit' id="submit" value="등록하기"> -->
 </form>
+<div>
+	<button type="button" onclick="createProduct();">등록하기</button>
+</div>
 </body>
 </html>
 <script type="text/javascript">
 
-	var cateogryValue;
+	var categoryValue;
 	
 	var getCategory = function () {
 	    var reqUrl = "<%= SellerConstants.URI_DB_CATEGORY_LIST %>";
@@ -104,9 +107,32 @@
 	};
 	
 	var selectBox = function () {
-		cateogryValue = $("#categoryId option:selected").val();
-	  	console.log("선택된 카테고리는? " + cateogryValue);
+		categoryValue = $("#categoryId option:selected").val();
+	  	console.log("선택된 카테고리는? " + categoryValue);
 	};
+	
+    var createProduct = function () {
+        var reqUrl = "<%= SellerConstants.URI_WEB_SELLER_PRODUCT_CREATE %>";
+        var form = $('#frm')[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+        	url : reqUrl,
+        	type : 'POST',
+        	data : formData,
+        	contentType : false,
+        	processData : false
+        }).done(function(data) {
+            console.log("저장 완료!!! " + JSON.stringify(data));
+            /* alert(JSON.stringify(data)); */
+            if (data.resultCode === "SUCCESS") {
+            	procMovePage("<%= SellerConstants.URI_WEB_SELLER_PRODUCT_DETAIL %>".replace("{id}", data.id));
+            } else {
+            	alert("오류 발생!!! : [" + data.resultMessage + "]");
+            	return;
+            }
+        });
+    };
 
 
 	// ON LOAD

@@ -49,4 +49,10 @@ public class RequestProduct {
 
     // 전시여부
     private String displayYn;
+    
+    // 등록자ID
+    private String createId;
+    
+    // 수정자ID
+    private String updateId;
 }
