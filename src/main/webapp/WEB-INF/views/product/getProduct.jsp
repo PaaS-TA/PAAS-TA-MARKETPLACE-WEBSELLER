@@ -78,6 +78,7 @@
    	</table>
 <div>
     <button type="button" id="updateBtn">수정</button>
+	<button type="button" id="mainBtn">메인으로</button>
 </div>
 </body>
 </html>
@@ -116,6 +117,10 @@
     $("#updateBtn").on("click", function () {
        procMovePage("<%= SellerConstants.URI_WEB_SELLER_PRODUCT_UPDATE %>".replace("{id}", "<c:out value='${id}'/>"));
     });
+
+    $("#mainBtn").on("click", function () {
+		procMovePage("/seller");
+	});
 
 
     // ON LOAD

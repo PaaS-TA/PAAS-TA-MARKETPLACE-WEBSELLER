@@ -18,7 +18,8 @@
 <div>
     <h1>상품을 등록할 수 있답니다!!!</h1>
 </div>
-
+<a href="http://localhost:8779/market">사용자 포탈로 이동</a>
+<br/><br/>
 <a href="/seller/profile/create">프로필 등록</a>
 <br/><br/>
 <a href="/seller/profile/3/detail">프로필 상세</a>
