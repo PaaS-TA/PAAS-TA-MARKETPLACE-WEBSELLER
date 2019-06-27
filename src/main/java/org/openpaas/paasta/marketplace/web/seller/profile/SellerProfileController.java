@@ -42,7 +42,7 @@ public class SellerProfileController {
     @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE_DETAIL)
     public ModelAndView getProfilePage(HttpServletRequest httpServletRequest, @PathVariable(value = "id") Long id) {
     	// 화면 변수 처리
-    	return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/getProfile", new ModelAndView());
+    	return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/detail", new ModelAndView());
     }
 
     /**
@@ -97,7 +97,7 @@ public class SellerProfileController {
      */
     @GetMapping(value = SellerConstants.URI_WEB_SELLER_PROFILE_UPDATE)
     public ModelAndView getProfileUpdatePage(HttpServletRequest httpServletRequest, @PathVariable Long id){
-        return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/updateProfile", new ModelAndView());
+        return commonService.setPathVariables(httpServletRequest, SellerConstants.URI_VIEW_PROFILE + "/update", new ModelAndView());
     }
 
     /**
