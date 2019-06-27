@@ -1,8 +1,19 @@
 package org.openpaas.paasta.marketplace.web.seller.login;
 
+import java.net.URLEncoder;
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.openpaas.paasta.marketplace.web.seller.common.RestTemplateService;
+import org.openpaas.paasta.marketplace.web.seller.common.SellerConstants;
+import org.openpaas.paasta.marketplace.web.seller.profile.SellerProfile;
+import org.openpaas.paasta.marketplace.web.seller.util.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -10,10 +21,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * 로그인 화면
@@ -24,8 +31,8 @@ import java.util.Locale;
  */
 @Controller
 public class LoginController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
     /**
      * Index page model and view.
@@ -62,11 +69,17 @@ public class LoginController {
 //    }
 
 
-    @GetMapping(value = "/seller")
-    public ModelAndView main() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("/test/test");
-        return mv;
+	@GetMapping(value = "/seller")
+    public String main() {
+    	LOGGER.info("main()!!!:");
+    	// TO DO: 로그인 ID로 판매자 프로필 정보를 조회해서 있으면 상품목록화면으로, 없으면 판매자 프로필 등록화면으로 이동
+
+    	String move = "";
+//    	move = "redirect:" + SellerConstants.URI_WEB_SELLER_PROFILE_DETAIL.replace("{id}", String.valueOf(3));
+   		move = "redirect:" + SellerConstants.URI_WEB_SELLER_PROFILE_CREATE;
+//        ModelAndView mv = new ModelAndView();
+//        mv.setViewName("/test/test");
+        return move;
     }
 
 
@@ -115,7 +128,5 @@ public class LoginController {
 
         return model;
     }
-
-
 
 }
