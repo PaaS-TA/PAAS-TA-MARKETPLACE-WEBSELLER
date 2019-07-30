@@ -19,6 +19,7 @@ war {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -28,6 +29,7 @@ ext {
     jstlVersion = '1.2'
     gsonVersion = '2.8.5'
     springSecurityTagLibsVersion = '5.0.7.RELEASE'
+    marketVersion = '0.0.1-SNAPSHOT';
 }
 
 dependencies {
@@ -35,6 +37,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+    
+    // PAAS-TA-MARKETPLACE-DOMAIN dependency
+    compile "org.openpaas.paasta:PAAS-TA-MARKETPLACE-DOMAIN:${marketVersion}"
     compile group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: '2.1.6.RELEASE'
     compile group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.1.5.RELEASE'
 
