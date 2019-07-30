@@ -26,18 +26,18 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Service
 @Slf4j
-public class RestTemplateService extends Common {
-	
+public class RestTemplateService {
+
     private final PropertyService property;
-	
+
     private final RestTemplate restTemplate;
-    
+
 	@Autowired
-	public RestTemplateService(PropertyService property, RestTemplate restTemplate) {
+	public RestTemplateService(PropertyService property) {
 		this.property = property;
-		this.restTemplate = restTemplate;
+		this.restTemplate = new RestTemplate();
 	}
-	
+
 	public <T> T send(String targetApi, String restUrl, String token, HttpMethod httpMethod, Object bodyObject, Class<T> responseType) {
 		Map<String, String> requestMap = setApiUrlAuthorization(targetApi, token);
 		String apiFullUrl = requestMap.get("apiUrl") + restUrl;
@@ -62,23 +62,23 @@ public class RestTemplateService extends Common {
 	        } else {
 	            log.info("Response Type: {}", "response body is null");
 	        }
-	
+
 			return resEntity.getBody();
 		} catch (Exception e) {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 	        resultMap.put("resultCode", SellerConstants.RESULT_STATUS_FAIL);
 	        resultMap.put("resultMessage", e.getMessage());
 	        ObjectMapper mapper = new ObjectMapper();
-	
+
 	        log.error("Error resultMap : {}", resultMap);
-	
+
 	        return mapper.convertValue(resultMap, responseType);
 		}
 	}
-	
+
 	/**
 	 * 전송용 헤더 생성
-	 * 
+	 *
 	 * @param targetApi
 	 * @return
 	 */
@@ -87,15 +87,15 @@ public class RestTemplateService extends Common {
 
         // Cf API
         if (SellerConstants.TARGET_API_CF.equals(targetApi)) {
-            requestMap.put("apiUrl", property.getCfJavaClientApiUri());
+            //requestMap.put("apiUrl", property.getCfJavaClientApiUri());
             requestMap.put("authorizationCf", "bearer " + token);
-            requestMap.put("authorizationBasic", "Basic " + Base64Utils.encodeToString((property.getCfJavaClientApiUsername() + ":" + property.getCfJavaClientApiPassword()).getBytes(StandardCharsets.UTF_8)));
+            //requestMap.put("authorizationBasic", "Basic " + Base64Utils.encodeToString((property.getCfJavaClientApiUsername() + ":" + property.getCfJavaClientApiPassword()).getBytes(StandardCharsets.UTF_8)));
         }
 
         // Market API
         if (SellerConstants.TARGET_API_MARKET.equals(targetApi)) {
             requestMap.put("apiUrl", property.getMarketApiUri());
-            requestMap.put("authorizationBasic", "Basic " + Base64Utils.encodeToString((property.getMarketApiUsername() + ":" + property.getMarketApiPassword()).getBytes(StandardCharsets.UTF_8)));
+            //requestMap.put("authorizationBasic", "Basic " + Base64Utils.encodeToString((property.getMarketApiUsername() + ":" + property.getMarketApiPassword()).getBytes(StandardCharsets.UTF_8)));
         }
 
         return requestMap;

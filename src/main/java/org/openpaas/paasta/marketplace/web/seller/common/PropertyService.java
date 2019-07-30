@@ -10,16 +10,16 @@ import lombok.Data;
 public class PropertyService {
 
 	// market
-	@Value("${market.place.api.uri}")
+	@Value("${marketplace.api}")
     private String marketApiUri;
-	
-    @Value("${market.place.api.authorization.username}")
-    private String marketApiUsername;
 
-    @Value("${market.place.api.authorization.password}")
-    private String marketApiPassword;
+//    @Value("${marketplace.api.authorization.username}")
+//    private String marketApiUsername;
+//
+//    @Value("${marketplace.api.authorization.password}")
+//    private String marketApiPassword;
     
-
+/*
 	// PaaS-TA CF
     @Value("${cf.java.client.api.uri}")
     private String cfJavaClientApiUri;
@@ -52,6 +52,6 @@ public class PropertyService {
     private String cfClientId;
 
     @Value("${cf.uaa.oauth.client.secret}")
-    private String cfClientSecret;
+    private String cfClientSecret;*/
 
 }
