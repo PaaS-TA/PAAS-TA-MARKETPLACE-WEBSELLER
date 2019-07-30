@@ -10,7 +10,7 @@ import lombok.Data;
 public class PropertyService {
 
 	// market
-	@Value("${marketplace.api}")
+	@Value("${marketplace.api.url}")
     private String marketApiUri;
 
 //    @Value("${marketplace.api.authorization.username}")
