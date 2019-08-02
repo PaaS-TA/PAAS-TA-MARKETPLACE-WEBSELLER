@@ -14,11 +14,12 @@
 <div class="rightCnt" layout:fragment="content">
     <!-- title area -->
     <div class="titWrap">
-        <h2 class="h2">상품목록</h2>
+        <h2 class="h2">사용현황</h2>
         <div class="breadWrap">
             <ol class="breadcrumb">
                 <li><a href="#">Home</a></li>
-                <li class="active">상품목록</li><!-- 마지막 li -->
+                <li><a href="#">사용현황</a></li>
+                <li class="active">상품 현황</li><!-- 마지막 li -->
             </ol>
         </div>
     </div>
@@ -26,22 +27,43 @@
 
     <!-- content -->
     <div class="content">
-        <!-- Top 비주얼 -->
-        <div class="top_visualWrap">
-            <div class="top_visual">
-                <p class="top_title">Welcome to PaaS-TA Market place</p>
-                <p class="top_stitle">
-                    Thanks to our partnership with PaaS-TA, we have the ability to gain new revenues, and our customers will gain<br />
-                    access to all the new technologies and benefits those technologies bring. They are exceptionally forward thinking.<br />
-                    they've built their business around the cloud.
-                </p>
-            </div>
+        <!-- 사용현황 -->
+        <div class="statusBox">
+            <ul>
+                <li>
+                    <div class="inWrap bg01">
+                        <span class="tit">등록 상품 수</span>
+                        <div class="in_txtBox">
+                            <span class="count">50</span>
+                            <p class="txt">Total number of registered product</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="inWrap bg02">
+                        <span class="tit">사용 상품 수</span>
+                        <div class="in_txtBox">
+                            <span class="count">18</span>
+                            <p class="txt">Number of product in use</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="inWrap bg03">
+                        <span class="tit">전체 사용자 수</span>
+                        <div class="in_txtBox">
+                            <span class="count">54</span>
+                            <p class="txt">Total Users</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
         </div>
-        <!-- //Top 비주얼 -->
+        <!-- //사용현황 -->
 
         <!-- 검색 Form -->
         <div class="searchWrap">
-            <div class="searchBox fm-row-2"><!--검색폼 두줄일 때 class="fm-row-2"-->
+            <div class="searchBox">
                 <!-- Form 그룹 -->
                 <div class="form-group">
                     <div class="form-group-area">
@@ -76,52 +98,13 @@
                     </div>
                 </div>
                 <!-- //Form 그룹 -->
-                <!-- Form 그룹 -->
-                <div class="form-group">
-                    <div class="form-group-area">
-                        <div class="fm_label"><label for="" class="label">승인상태</label></div>
-                        <div class="fm_box">
-                            <select id="" name="">
-                                <option value="">전체</option>
-                                <option value="">보안</option>
-                                <option value="">ERP</option>
-                                <option value="">게임</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <!-- //Form 그룹 -->
-                <!-- Form 그룹 -->
-                <div class="form-group">
-                    <div class="form-group-area">
-                        <div class="fm_label"><label for="" class="label">전시여부</label></div>
-                        <div class="fm_box">
-                            <select id="" name="">
-                                <option value="">전체</option>
-                                <option value="">Y</option>
-                                <option value="">N</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <!-- //Form 그룹 -->
-                <!-- Form 그룹 -->
-                <div class="form-group">
-                    <div class="form-group-area">
-                        <div class="fm_label"><label for="" class="label">상품명</label></div>
-                        <div class="fm_box">
-                            <input type="text" placeholder="검색어를 입력해 주세요." style="width:400px;">
-                        </div>
-                    </div>
-                </div>
-                <!-- //Form 그룹 -->
                 <button type="button" name="button" class="btn btn-sch" title="검색"><span class="ico">검색</span></button>
             </div>
         </div>
         <!-- //검색 Form -->
 
         <div class="cont-titWrap mt30">
-            <h3 class="h-tit3">총 건수 <span class="point4">(50)</span></h3>
+            <h3 class="h-tit3">총 건수 <span class="point4">(10)</span></h3>
         </div>
 
         <!-- 테이블 -->
@@ -135,7 +118,6 @@
                     <col style="width:10%;">
                     <col style="width:10%;">
                     <col style="width:10%;">
-                    <col style="width:10%;">
                 </colgroup>
                 <thead>
                 <tr>
@@ -144,9 +126,8 @@
                     <th scope="col">상품 명</th>
                     <th scope="col">버전</th>
                     <th scope="col">등록일</th>
-                    <th scope="col">전시여부</th>
-                    <th scope="col">승인여부</th>
                     <th scope="col">승인일</th>
+                    <th scope="col">사용자 수</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -156,9 +137,8 @@
                     <td>Magic FIDO</td>
                     <td>1.0</td>
                     <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>승인</td>
                     <td>2019-04-02</td>
+                    <td>15명</td>
                 </tr>
                 <tr>
                     <td>9</td>
@@ -166,9 +146,8 @@
                     <td>테드폴허브</td>
                     <td>1.5</td>
                     <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>승인</td>
                     <td>2019-04-02</td>
+                    <td>15명</td>
                 </tr>
                 <tr>
                     <td>8</td>
@@ -176,9 +155,8 @@
                     <td>스마트닥터</td>
                     <td>1.2</td>
                     <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>반려</td>
                     <td>2019-04-02</td>
+                    <td>15명</td>
                 </tr>
                 <tr>
                     <td>7</td>
@@ -186,9 +164,8 @@
                     <td>영카트</td>
                     <td>2.0</td>
                     <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>대기</td>
                     <td>2019-04-02</td>
+                    <td>15명</td>
                 </tr>
                 <tr>
                     <td>6</td>
@@ -196,9 +173,8 @@
                     <td>마젠토</td>
                     <td>1.7</td>
                     <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>승인</td>
                     <td>2019-04-02</td>
+                    <td>15명</td>
                 </tr>
                 <tr>
                     <td>5</td>
@@ -206,9 +182,8 @@
                     <td>세일즈포인트</td>
                     <td>2.3</td>
                     <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>반려</td>
                     <td>2019-04-02</td>
+                    <td>15명</td>
                 </tr>
                 <tr>
                     <td>4</td>
@@ -216,9 +191,8 @@
                     <td>알림톡,친구톡</td>
                     <td>2.5</td>
                     <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>승인</td>
                     <td>2019-04-02</td>
+                    <td>15명</td>
                 </tr>
                 <tr>
                     <td>3</td>
@@ -226,9 +200,8 @@
                     <td>핑거세일즈</td>
                     <td>3.0</td>
                     <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>승인</td>
                     <td>2019-04-02</td>
+                    <td>15명</td>
                 </tr>
                 <tr>
                     <td>2</td>
@@ -236,9 +209,8 @@
                     <td>마케팅크래프트 리포트</td>
                     <td>2.8</td>
                     <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>대기</td>
                     <td>2019-04-02</td>
+                    <td>15명</td>
                 </tr>
                 <tr>
                     <td>1</td>
@@ -246,9 +218,8 @@
                     <td>PalyCon</td>
                     <td>1.5</td>
                     <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>승인</td>
                     <td>2019-04-02</td>
+                    <td>15명</td>
                 </tr>
                 </tbody>
             </table>

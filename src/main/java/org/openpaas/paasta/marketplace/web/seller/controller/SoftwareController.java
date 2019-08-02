@@ -28,9 +28,9 @@ public class SoftwareController {
     @GetMapping
     public String getSoftwares(Model model, @AuthenticationPrincipal OAuth2User oauth2User, HttpSession httpSession, SoftwareSpecification spec, Authentication authentication) {
 //        httpSession.setAttribute("yourName", oauth2User.getAttributes().get("user_name"));
-        model.addAttribute("categories", softwareService.getCategories());
-        model.addAttribute("spec", new SoftwareSpecification());
-        model.addAttribute("softwares", softwareService.getSoftwares(spec).getContent());
+        //model.addAttribute("categories", softwareService.getCategories());
+        //model.addAttribute("spec", new SoftwareSpecification());
+        //model.addAttribute("softwares", softwareService.getSoftwares(spec).getContent());
         return "contents/software-list";
     }
 
@@ -56,13 +56,13 @@ public class SoftwareController {
         return "redirect:/softwares/" + id;
     }
 
-//    @GetMapping(value = "/create")
-//    public String createSoftwareHtml(Model model, HttpSession httpSession, @ModelAttribute Software software) {
+    @GetMapping(value = "/create")
+    public String createSoftwareHtml(Model model, HttpSession httpSession, @ModelAttribute Software software) {
 //        model.addAttribute("types", Type.values());
 //        model.addAttribute("yns", Yn.values());
 //        model.addAttribute("categories", softwareService.getCategories());
-//        return "contents/software-create";
-//    }
+        return "contents/software-create";
+    }
 
     @PostMapping
     public String createSoftware(@Valid Software software, BindingResult bindingResult, @RequestParam(value = "screenshots") MultipartFile[] screenshots, @RequestParam(value = "iconFile") MultipartFile iconFile,
@@ -79,5 +79,15 @@ public class SoftwareController {
 
         softwareService.createSoftware(software);
         return "redirect:/softwares";
+    }
+
+    /**
+     * 상품 현황 리스트 조회 페이지 이동
+     *
+     * @return String
+     */
+    @GetMapping(value = "/report")
+    public String getSoftwareUseStatus() {
+        return "contents/software-report";
     }
 }
