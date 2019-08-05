@@ -4,9 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openpaas.paasta.marketplace.api.domain.Category;
+import org.openpaas.paasta.marketplace.api.domain.CustomPage;
 import org.openpaas.paasta.marketplace.api.domain.Software;
-import org.openpaas.paasta.marketplace.api.domain.SoftwareSpecification;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -22,21 +25,23 @@ public class SoftwareService {
 
     @SneakyThrows
     public void createSoftware(Software software) {
-        Object response = paasApiRest.postForObject("http://localhost:8000/softwares", software, Void.class);
+        Object response = paasApiRest.postForObject("http://localhost:8777/softwares", software, Void.class);
     }
 
     @SneakyThrows
     public List<Category> getCategories() {
-        return paasApiRest.getForObject("http://localhost:8000/categories", List.class);
+        return paasApiRest.getForObject("/categories", List.class);
     }
 
-    public Page<Software> getSoftwares(SoftwareSpecification spec) {
-        String url = UriComponentsBuilder.newInstance().path("/softwares/page")
-                .queryParam("categoryId", spec.getCategoryId())
-                .queryParam("nameLike", spec.getNameLike())
-                .build().encode()
-                .toString();
-        return null;
+
+    public CustomPage<Software> getSoftwareList(String queryParamString) {
+        ResponseEntity<CustomPage<Software>> responseEntity = paasApiRest.exchange("/softwares/my/page" + queryParamString, HttpMethod.GET, null, new ParameterizedTypeReference<CustomPage<Software>>() {});
+        CustomPage<Software> customPage = responseEntity.getBody();
+        Page<Software> page = customPage.toPage();
+
+        System.out.println("우헤헤헤헤헿 ::: " + customPage.getContent());
+        System.out.println("total software count ::: " + customPage.getTotalElements());
+        return customPage;
     }
 
 
@@ -57,4 +62,6 @@ public class SoftwareService {
 
         paasApiRest.put(url, software);
     }
+
+
 }

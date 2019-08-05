@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-registrant}">
 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta th:name="_csrf" th:content="${_csrf.token}"/>
+<meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 <!-- index.html 고유 CSS 추가 -->
 <th:block layout:fragment="css">
 </th:block>
@@ -41,7 +44,9 @@
 
         <!-- 검색 Form -->
         <div class="searchWrap">
-            <div class="searchBox fm-row-2"><!--검색폼 두줄일 때 class="fm-row-2"-->
+            <!--<form th:action="@{/softwares}" th:object="${spec}" action="#" id="searchSoftwaresForm" method="get">-->
+            <div th:object="${spec}" id="searchSoftwaresForm">
+                <div class="searchBox fm-row-2"><!--검색폼 두줄일 때 class="fm-row-2"-->
                 <!-- Form 그룹 -->
                 <div class="form-group">
                     <div class="form-group-area">
@@ -66,11 +71,12 @@
                     <div class="form-group-area">
                         <div class="fm_label"><label for="" class="label">카테고리</label></div>
                         <div class="fm_box">
-                            <select id="" name="">
-                                <option value="">전체</option>
-                                <option value="">보안</option>
-                                <option value="">ERP</option>
-                                <option value="">게임</option>
+                            <select th:field="*{categoryId}" id="categoryList">
+                                <option value="">선택</option>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:utext="${category.name}">
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -81,11 +87,12 @@
                     <div class="form-group-area">
                         <div class="fm_label"><label for="" class="label">승인상태</label></div>
                         <div class="fm_box">
-                            <select id="" name="">
+                            <select th:field="*{status}" id="statusOption">
                                 <option value="">전체</option>
-                                <option value="">보안</option>
-                                <option value="">ERP</option>
-                                <option value="">게임</option>
+                                <option th:each="statusOne : ${status}"
+                                        th:value="${statusOne.name()}"
+                                        th:utext="${statusOne.getName()}">
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -96,10 +103,10 @@
                     <div class="form-group-area">
                         <div class="fm_label"><label for="" class="label">전시여부</label></div>
                         <div class="fm_box">
-                            <select id="" name="">
+                            <select th:field="*{inUse}">
                                 <option value="">전체</option>
-                                <option value="">Y</option>
-                                <option value="">N</option>
+                                <option value="Y">Y</option>
+                                <option value="N">N</option>
                             </select>
                         </div>
                     </div>
@@ -110,18 +117,23 @@
                     <div class="form-group-area">
                         <div class="fm_label"><label for="" class="label">상품명</label></div>
                         <div class="fm_box">
-                            <input type="text" placeholder="검색어를 입력해 주세요." style="width:400px;">
+                            <input type="text" placeholder="검색어를 입력해 주세요." th:field="*{nameLike}" id="search_keyword" name="search_keyword" style="width:400px;">
                         </div>
                     </div>
                 </div>
                 <!-- //Form 그룹 -->
-                <button type="button" name="button" class="btn btn-sch" title="검색"><span class="ico">검색</span></button>
+                    <!--th:onclick="'searchProductBtn(\'' + ${categoryId} + '\')'"-->
+                <button type="button" class="btn btn-sch" title="검색" id="searchProductBtn">
+                    <span class="ico">검색</span>
+                </button>
             </div>
+            </div>
+            <!--</form>-->
         </div>
         <!-- //검색 Form -->
 
         <div class="cont-titWrap mt30">
-            <h3 class="h-tit3">총 건수 <span class="point4">(50)</span></h3>
+            <h3 class="h-tit3">총 건수 <span class="point4" id="totalElements"></span></h3>
         </div>
 
         <!-- 테이블 -->
@@ -149,107 +161,7 @@
                     <th scope="col">승인일</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>10</td>
-                    <td><span class="pn_cate type5">보안</span></td>
-                    <td>Magic FIDO</td>
-                    <td>1.0</td>
-                    <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>승인</td>
-                    <td>2019-04-02</td>
-                </tr>
-                <tr>
-                    <td>9</td>
-                    <td><span class="pn_cate type5">보안</span></td>
-                    <td>테드폴허브</td>
-                    <td>1.5</td>
-                    <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>승인</td>
-                    <td>2019-04-02</td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td><span class="pn_cate type3">의료</span></td>
-                    <td>스마트닥터</td>
-                    <td>1.2</td>
-                    <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>반려</td>
-                    <td>2019-04-02</td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td><span class="pn_cate type4">커머스</span></td>
-                    <td>영카트</td>
-                    <td>2.0</td>
-                    <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>대기</td>
-                    <td>2019-04-02</td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td><span class="pn_cate type4">커머스</span></td>
-                    <td>마젠토</td>
-                    <td>1.7</td>
-                    <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>승인</td>
-                    <td>2019-04-02</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td><span class="pn_cate type1">CRM</span></td>
-                    <td>세일즈포인트</td>
-                    <td>2.3</td>
-                    <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>반려</td>
-                    <td>2019-04-02</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td><span class="pn_cate type1">CRM</span></td>
-                    <td>알림톡,친구톡</td>
-                    <td>2.5</td>
-                    <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>승인</td>
-                    <td>2019-04-02</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td><span class="pn_cate type1">CRM</span></td>
-                    <td>핑거세일즈</td>
-                    <td>3.0</td>
-                    <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>승인</td>
-                    <td>2019-04-02</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td><span class="pn_cate type4">마케팅</span></td>
-                    <td>마케팅크래프트 리포트</td>
-                    <td>2.8</td>
-                    <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>대기</td>
-                    <td>2019-04-02</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td><span class="pn_cate type4">방송</span></td>
-                    <td>PalyCon</td>
-                    <td>1.5</td>
-                    <td>2019-04-01</td>
-                    <td>Y</td>
-                    <td>승인</td>
-                    <td>2019-04-02</td>
-                </tr>
+                <tbody id="myProductArea">
                 </tbody>
             </table>
         </div>
@@ -276,5 +188,80 @@
         <!-- //page -->
     </div>
     <!-- //content -->
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+    <script type="text/javascript">
+
+        var getMySoftwareList = function() {
+            var selectedCategory = $("#categoryList option:selected").val();
+            var searchKeyword = $("#search_keyword").val();
+            var selectedStatus = $("#statusOption option:selected").val();
+
+            console.log("선택된 카테고리는? ::: " + selectedCategory + " ::: 검색 키워드는? ::: " + searchKeyword);
+
+            if (selectedCategory === 'ALL' || selectedCategory === '') {
+                selectedCategory = '';
+            }
+
+            if(searchKeyword === null || searchKeyword === '') {
+                searchKeyword = '';
+            }
+
+            if(selectedStatus === '') {
+                selectedStatus = '';
+            }
+
+            var reqUrl = "/softwares" + "?categoryId=" + selectedCategory + "&nameLike=" + searchKeyword + "&status=" + selectedStatus;
+            procCallAjax(reqUrl, "GET", null, null, callbackGetMySoftwareList);
+
+        };
+
+
+        // 상품 목록 CALLBACK
+        var callbackGetMySoftwareList = function(data) {
+            $("#totalElements").text("(" + data.totalElements + ")");
+
+            var myProductList = $("#myProductArea");
+            var htmlString = [];
+            var productList = data.content;
+
+
+            var listLength = productList.length;
+
+            if(listLength > 0){
+                for(var i = 0; i < listLength; i++){
+                    //var goDetailUrl = "<%=UserConstants.URI_WEB_USER_PRODUCT_DETAIL%>".replace("{id}", USER_PRODUCT_LIST[i].id);
+                    htmlString.push(
+                        "<tr>"
+                        + "<td>" + productList[i].id + "</td>"
+                        + "<td><span class=\"pn_cate type5\">" + productList[i].category.name + "</span></td>"
+                        + "<td>" + productList[i].name + "</td>"
+                        + "<td>" + productList[i].version + "</td>"
+                        + "<td>" + productList[i].createdDate + "</td>"
+                        + "<td>" + productList[i].inUse + "</td>"
+                        + "<td>" + productList[i].confirmComment + "</td>"
+                        + "<td>" + productList[i].statusModifiedDate + "</td>"
+                        +"</tr>"
+                    );
+                }
+            }else{
+                htmlString = "<tr>"
+                    + "<td colspan='8'><p class='user_p'>상품이 존재하지 않습니다.</p></td>" + "</tr>"
+            }
+
+            myProductList.html(htmlString);
+        };
+
+
+        $("#searchProductBtn").on("click", function () {
+            getMySoftwareList();
+        });
+
+        // ON LOAD
+        $(document).ready(function() {
+            getMySoftwareList();
+        });
+
+    </script>
 </div>
 </html>

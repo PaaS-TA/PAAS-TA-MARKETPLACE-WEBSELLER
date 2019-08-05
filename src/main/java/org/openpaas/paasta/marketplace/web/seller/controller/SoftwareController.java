@@ -2,8 +2,10 @@ package org.openpaas.paasta.marketplace.web.seller.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.openpaas.paasta.marketplace.api.domain.CustomPage;
 import org.openpaas.paasta.marketplace.api.domain.Software;
 import org.openpaas.paasta.marketplace.api.domain.SoftwareSpecification;
+import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.service.SoftwareService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -24,15 +27,31 @@ import javax.validation.Valid;
 public class SoftwareController {
 
     private final SoftwareService softwareService;
+    private final CommonService commonService;
 
-    @GetMapping
+    @GetMapping(value = "/list")
     public String getSoftwares(Model model, @AuthenticationPrincipal OAuth2User oauth2User, HttpSession httpSession, SoftwareSpecification spec, Authentication authentication) {
 //        httpSession.setAttribute("yourName", oauth2User.getAttributes().get("user_name"));
-        //model.addAttribute("categories", softwareService.getCategories());
-        //model.addAttribute("spec", new SoftwareSpecification());
-        //model.addAttribute("softwares", softwareService.getSoftwares(spec).getContent());
+        model.addAttribute("categories", softwareService.getCategories());
+        model.addAttribute("spec", new SoftwareSpecification());
+        model.addAttribute("status", Software.Status.values());
+
         return "contents/software-list";
     }
+
+
+    /**
+     * 판매자의 상품 목록 조회
+     *
+     * @param httpServletRequest the httpServletRequest
+     * @return CustomPage<Software>
+     */
+    @GetMapping
+    @ResponseBody
+    public CustomPage<Software> getSoftwareList(HttpServletRequest httpServletRequest){
+        return softwareService.getSoftwareList(commonService.setParameters(httpServletRequest));
+    }
+
 
     @GetMapping(value = "/{id}")
     public String getSoftware(Model model, @PathVariable Long id) {
