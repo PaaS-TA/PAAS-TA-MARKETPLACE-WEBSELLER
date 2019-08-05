@@ -29,6 +29,16 @@ public class SoftwareController {
     private final SoftwareService softwareService;
     private final CommonService commonService;
 
+    /**
+     * 판매자의 상품 목록 조회 페이지 이동
+     *
+     * @param model
+     * @param oauth2User
+     * @param httpSession
+     * @param spec
+     * @param authentication
+     * @return
+     */
     @GetMapping(value = "/list")
     public String getSoftwares(Model model, @AuthenticationPrincipal OAuth2User oauth2User, HttpSession httpSession, SoftwareSpecification spec, Authentication authentication) {
 //        httpSession.setAttribute("yourName", oauth2User.getAttributes().get("user_name"));
@@ -53,6 +63,13 @@ public class SoftwareController {
     }
 
 
+    /**
+     * 판매자의 상품 상세 조회
+     *
+     * @param model
+     * @param id
+     * @return
+     */
     @GetMapping(value = "/{id}")
     public String getSoftware(Model model, @PathVariable Long id) {
         model.addAttribute("software", softwareService.getSoftware(id));

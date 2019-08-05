@@ -51,7 +51,7 @@
                 <div class="form-group">
                     <div class="form-group-area">
                         <div class="fm_box w_auto pr10">
-                            <select id="" name="">
+                            <select id="datePeriod" name="">
                                 <option value="">등록일</option>
                                 <option value="">승인일</option>
                             </select>
@@ -71,7 +71,7 @@
                     <div class="form-group-area">
                         <div class="fm_label"><label for="" class="label">카테고리</label></div>
                         <div class="fm_box">
-                            <select th:field="*{categoryId}" id="categoryList">
+                            <select class="selectField" th:field="*{categoryId}" id="categoryList">
                                 <option value="">선택</option>
                                 <option th:each="category : ${categories}"
                                         th:value="${category.id}"
@@ -87,7 +87,7 @@
                     <div class="form-group-area">
                         <div class="fm_label"><label for="" class="label">승인상태</label></div>
                         <div class="fm_box">
-                            <select th:field="*{status}" id="statusOption">
+                            <select class="selectField" th:field="*{status}" id="statusOption">
                                 <option value="">전체</option>
                                 <option th:each="statusOne : ${status}"
                                         th:value="${statusOne.name()}"
@@ -103,7 +103,7 @@
                     <div class="form-group-area">
                         <div class="fm_label"><label for="" class="label">전시여부</label></div>
                         <div class="fm_box">
-                            <select th:field="*{inUse}">
+                            <select class="selectField" th:field="*{inUse}" id="useYn">
                                 <option value="">전체</option>
                                 <option value="Y">Y</option>
                                 <option value="N">N</option>
@@ -117,12 +117,11 @@
                     <div class="form-group-area">
                         <div class="fm_label"><label for="" class="label">상품명</label></div>
                         <div class="fm_box">
-                            <input type="text" placeholder="검색어를 입력해 주세요." th:field="*{nameLike}" id="search_keyword" name="search_keyword" style="width:400px;">
+                            <input type="text" placeholder="검색어를 입력해 주세요." th:field="*{nameLike}" onkeypress="if(event.keyCode==13) {search();}" id="search_keyword" name="search_keyword" style="width:400px;">
                         </div>
                     </div>
                 </div>
                 <!-- //Form 그룹 -->
-                    <!--th:onclick="'searchProductBtn(\'' + ${categoryId} + '\')'"-->
                 <button type="button" class="btn btn-sch" title="검색" id="searchProductBtn">
                     <span class="ico">검색</span>
                 </button>
@@ -169,7 +168,7 @@
 
         <!-- page -->
         <nav class="pagiWrap">
-            <ul class="pagination">
+            <ul class="pagination" id="pageNumberList">
                 <li class="first disabled"><a href="#">맨 처음</a></li>
                 <li class="prev"><a href="#">이전</a></li>
                 <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
@@ -196,6 +195,7 @@
             var selectedCategory = $("#categoryList option:selected").val();
             var searchKeyword = $("#search_keyword").val();
             var selectedStatus = $("#statusOption option:selected").val();
+            var selectedUseYn = $("#useYn option:selected").val();
 
             console.log("선택된 카테고리는? ::: " + selectedCategory + " ::: 검색 키워드는? ::: " + searchKeyword);
 
@@ -211,7 +211,11 @@
                 selectedStatus = '';
             }
 
-            var reqUrl = "/softwares" + "?categoryId=" + selectedCategory + "&nameLike=" + searchKeyword + "&status=" + selectedStatus;
+            if(selectedUseYn === '') {
+                selectedUseYn = '';
+            }
+
+            var reqUrl = "/softwares" + "?categoryId=" + selectedCategory + "&nameLike=" + searchKeyword + "&status=" + selectedStatus + "&inUse=" + selectedUseYn;
             procCallAjax(reqUrl, "GET", null, null, callbackGetMySoftwareList);
 
         };
@@ -219,27 +223,32 @@
 
         // 상품 목록 CALLBACK
         var callbackGetMySoftwareList = function(data) {
+            // Todo::: 페이징 처리. size:20 으로 돼있는데 이게 한 페이지당 20개라는 것?
+            var pageNumberList = $("#pageNumberList");
+            var htmlString = [];
+            var pageTotalNumber = data.totalElements;
+
+
             $("#totalElements").text("(" + data.totalElements + ")");
 
             var myProductList = $("#myProductArea");
             var htmlString = [];
             var productList = data.content;
 
-
             var listLength = productList.length;
 
             if(listLength > 0){
                 for(var i = 0; i < listLength; i++){
-                    //var goDetailUrl = "<%=UserConstants.URI_WEB_USER_PRODUCT_DETAIL%>".replace("{id}", USER_PRODUCT_LIST[i].id);
+                    var goDetailUrl = "/softwares/{id}".replace("{id}", productList[i].id);
                     htmlString.push(
                         "<tr>"
                         + "<td>" + productList[i].id + "</td>"
-                        + "<td><span class=\"pn_cate type5\">" + productList[i].category.name + "</span></td>"
-                        + "<td>" + productList[i].name + "</td>"
+                        + "<td><span class=\"pn_cate type"+ productList[i].category.id +"\">" + productList[i].category.name + "</span></td>"
+                        + "<td><a href='javascript:void(0);' onclick=\"procMovePage(\'" + goDetailUrl + "')\">" + productList[i].name + "</a></td>"
                         + "<td>" + productList[i].version + "</td>"
                         + "<td>" + productList[i].createdDate + "</td>"
                         + "<td>" + productList[i].inUse + "</td>"
-                        + "<td>" + productList[i].confirmComment + "</td>"
+                        + "<td>" + productList[i].status + "</td>"
                         + "<td>" + productList[i].statusModifiedDate + "</td>"
                         +"</tr>"
                     );
@@ -253,9 +262,22 @@
         };
 
 
+        // // multi select
+        // $(".selectField").change(function() {
+        //     // Add action of select option
+        //     console.log("여기 타야된다잉!!! 잉??! 잉?!!! 하고 롱드가 말했다...");
+        //     getMySoftwareList();
+        // });
+
+        // search button
         $("#searchProductBtn").on("click", function () {
             getMySoftwareList();
         });
+
+        // search enter
+        var search = function() {
+            getMySoftwareList();
+        };
 
         // ON LOAD
         $(document).ready(function() {

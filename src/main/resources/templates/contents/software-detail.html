@@ -129,19 +129,19 @@
                             <tbody>
                             <tr>
                                 <th scope="row">상태</th>
-                                <td>반려</td>
+                                <td th:text="${software.status}"></td>
                             </tr>
                             <tr>
                                 <th scope="row">반려사유</th>
                                 <td>
                                     <div class="tbw_inner_txt">
-                                        <pre>보안 취약</pre>
+                                        <pre th:text="${software.confirmComment}"></pre>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">처리일자</th>
-                                <td>2018.12.24</td>
+                                <td th:text="${software.statusModifiedDate}"></td>
                             </tr>
                             </tbody>
                         </table>
