@@ -99,7 +99,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">판매가격</th>
-                                <td><span class="price" th:text="'가격 :' + ${software.pricePerDay} + ' 월/일'"></span></td>
+                                <td><span class="price" th:text="${software.pricePerDay} + ' 원 / 일'"></span></td>
                             </tr>
                             <tr>
                                 <th scope="row">전시여부</th>
@@ -212,7 +212,7 @@
             <div class="pull-right">
 <!--                <a th:href="@{'/softwares/' + ${software.id}}"  th:onclick="'location.href=\'\/softwares\''+ ${software.id} + '/update'">-->
                 <button name="button" class="btn btn-color7 btn-md" type="button" th:onclick="'location.href = \'' + @{/softwares/{id}(id=${software.id})} + '/update\''">수정</button>
-                <button name="button" class="btn btn-color1 btn-md" type="button" onclick="location.href='/softwares'">목록</button>
+                <button name="button" class="btn btn-color1 btn-md" type="button" onclick="location.href='/softwares/list'">목록</button>
             </div>
         </div>
     </div>

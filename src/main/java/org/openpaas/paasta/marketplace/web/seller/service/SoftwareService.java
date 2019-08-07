@@ -20,12 +20,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class SoftwareService {
+    private final int PAGING_SIZE = 10;
+    private final String SORT = "id,asc";
 
     private final RestTemplate paasApiRest;
 
     @SneakyThrows
-    public void createSoftware(Software software) {
-        Object response = paasApiRest.postForObject("http://localhost:8777/softwares", software, Void.class);
+    public Software createSoftware(Software software) {
+        return paasApiRest.postForObject("/softwares", software, Software.class);
     }
 
     @SneakyThrows
@@ -35,12 +37,15 @@ public class SoftwareService {
 
 
     public CustomPage<Software> getSoftwareList(String queryParamString) {
-        ResponseEntity<CustomPage<Software>> responseEntity = paasApiRest.exchange("/softwares/my/page" + queryParamString, HttpMethod.GET, null, new ParameterizedTypeReference<CustomPage<Software>>() {});
+        String url = UriComponentsBuilder.newInstance().path("/softwares/my/page" + queryParamString)
+                .queryParam("size", PAGING_SIZE)
+                .queryParam("sort", SORT)
+                .build().encode()
+                .toString();
+
+        ResponseEntity<CustomPage<Software>> responseEntity = paasApiRest.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<CustomPage<Software>>() {});
         CustomPage<Software> customPage = responseEntity.getBody();
         Page<Software> page = customPage.toPage();
-
-        System.out.println("우헤헤헤헤헿 ::: " + customPage.getContent());
-        System.out.println("total software count ::: " + customPage.getTotalElements());
         return customPage;
     }
 
@@ -54,13 +59,15 @@ public class SoftwareService {
         return paasApiRest.getForObject(url, Software.class);
     }
 
-    public void updateSoftware(Software software) {
+    public Software updateSoftware(Software software) {
         String url = UriComponentsBuilder.newInstance().path("/softwares/{id}")
                 .build()
                 .expand(software.getId())
                 .toString();
 
         paasApiRest.put(url, software);
+
+        return getSoftware(software.getId());
     }
 
 

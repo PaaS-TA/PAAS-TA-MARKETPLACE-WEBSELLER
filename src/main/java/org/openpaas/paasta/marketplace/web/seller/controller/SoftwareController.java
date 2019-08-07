@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openpaas.paasta.marketplace.api.domain.CustomPage;
 import org.openpaas.paasta.marketplace.api.domain.Software;
 import org.openpaas.paasta.marketplace.api.domain.SoftwareSpecification;
+import org.openpaas.paasta.marketplace.api.domain.Yn;
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.service.SoftwareService;
 import org.springframework.security.core.Authentication;
@@ -77,29 +78,62 @@ public class SoftwareController {
         return "contents/software-detail";
     }
 
-//    @GetMapping(value = "/{id}/update")
-//    public String updateSoftwareHtml(Model model, @PathVariable Long id) {
-//        model.addAttribute("software", softwareService.getSoftware(id));
-//        model.addAttribute("types", Type.values());
-//        model.addAttribute("yns", Yn.values());
-//        model.addAttribute("categories", softwareService.getCategories());
-//        return "contents/software-update";
-//    }
-
-    @PutMapping(value = "/{id}")
-    public String updateSoftware(@PathVariable Long id, @Valid Software software) {
-        softwareService.updateSoftware(software);
-        return "redirect:/softwares/" + id;
+    /**
+     * 판매자가 등록한 상품 수정 페이지 이동
+     *
+     * @param model
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/{id}/update")
+    public String updateSoftwareHtml(Model model, @PathVariable Long id) {
+        model.addAttribute("software", softwareService.getSoftware(id));
+        model.addAttribute("types", Software.Type.values());
+        model.addAttribute("yns", Yn.values());
+        model.addAttribute("categories", softwareService.getCategories());
+        return "contents/software-update";
     }
 
+    /**
+     * 판매자가 등록한 상품 수정
+     *
+     * @param id
+     * @param software
+     * @return
+     */
+    @PutMapping(value = "/{id}")
+    public Software updateSoftware(@PathVariable Long id, @Valid Software software) {
+        return softwareService.updateSoftware(software);
+    }
+
+
+    /**
+     * 판매자 상품 등록 페이지 이동
+     *
+     * @param model
+     * @param httpSession
+     * @param software
+     * @return
+     */
     @GetMapping(value = "/create")
     public String createSoftwareHtml(Model model, HttpSession httpSession, @ModelAttribute Software software) {
-//        model.addAttribute("types", Type.values());
-//        model.addAttribute("yns", Yn.values());
-//        model.addAttribute("categories", softwareService.getCategories());
+        model.addAttribute("types", Software.Type.values());
+        model.addAttribute("yns", Yn.values());
+        model.addAttribute("categories", softwareService.getCategories());
         return "contents/software-create";
     }
 
+    /**
+     * 판매자 상품 등록
+    *
+     * @param software
+     * @param bindingResult
+     * @param screenshots
+     * @param iconFile
+     * @param productFile
+     * @param environmentFile
+     * @return
+     */
     @PostMapping
     public String createSoftware(@Valid Software software, BindingResult bindingResult, @RequestParam(value = "screenshots") MultipartFile[] screenshots, @RequestParam(value = "iconFile") MultipartFile iconFile,
                                  @RequestParam(value = "productFile") MultipartFile productFile, @RequestParam(value = "environmentFile") MultipartFile environmentFile) {
@@ -113,8 +147,10 @@ public class SoftwareController {
         software.setManifest(environmentFile.getOriginalFilename());
 //        software.setScreenshotList();
 
-        softwareService.createSoftware(software);
-        return "redirect:/softwares";
+        Software newSoftware = softwareService.createSoftware(software);
+        System.out.println("생성된 소프트웨어 ::: " + newSoftware.getName());
+
+        return "redirect:/softwares/list";
     }
 
     /**
