@@ -45,6 +45,7 @@ public class SoftwareController {
 //        httpSession.setAttribute("yourName", oauth2User.getAttributes().get("user_name"));
         model.addAttribute("categories", softwareService.getCategories());
         model.addAttribute("spec", new SoftwareSpecification());
+        model.addAttribute("yns", Yn.values());
         model.addAttribute("status", Software.Status.values());
 
         return "contents/software-list";

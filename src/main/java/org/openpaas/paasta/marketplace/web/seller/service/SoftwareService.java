@@ -20,8 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class SoftwareService {
-    private final int PAGING_SIZE = 10;
-    private final String SORT = "id,asc";
 
     private final RestTemplate paasApiRest;
 
@@ -37,15 +35,8 @@ public class SoftwareService {
 
 
     public CustomPage<Software> getSoftwareList(String queryParamString) {
-        String url = UriComponentsBuilder.newInstance().path("/softwares/my/page" + queryParamString)
-                .queryParam("size", PAGING_SIZE)
-                .queryParam("sort", SORT)
-                .build().encode()
-                .toString();
-
-        ResponseEntity<CustomPage<Software>> responseEntity = paasApiRest.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<CustomPage<Software>>() {});
+        ResponseEntity<CustomPage<Software>> responseEntity = paasApiRest.exchange("/softwares/my/page" + queryParamString, HttpMethod.GET, null, new ParameterizedTypeReference<CustomPage<Software>>() {});
         CustomPage<Software> customPage = responseEntity.getBody();
-        Page<Software> page = customPage.toPage();
         return customPage;
     }
 
