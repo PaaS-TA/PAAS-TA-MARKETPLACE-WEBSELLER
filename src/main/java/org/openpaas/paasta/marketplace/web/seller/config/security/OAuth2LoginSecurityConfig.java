@@ -13,14 +13,18 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.servlet.http.HttpServletRequest;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 
 /**
  * Spring Security를 정의한 Class
@@ -39,11 +43,26 @@ public class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/**", "/login/**", "/error/**", "/static/**")
                 .permitAll()
-                .anyRequest().authenticated().and()
-                .oauth2Login().loginPage("/login").defaultSuccessUrl("/softwares", true).permitAll()
-                .and().logout().logoutSuccessUrl("/login");
+                .and().csrf().disable().cors().configurationSource(corsConfiguration());
+//                .anyRequest().authenticated().and()
+//                .oauth2Login().loginPage("/login").defaultSuccessUrl("/softwares", true).permitAll()
+//                .and().logout().logoutSuccessUrl("/login");
     }
 
+
+    private CorsConfigurationSource corsConfiguration(){
+        return new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedHeaders(Collections.singletonList("*"));
+                config.setAllowedMethods(Collections.singletonList("*"));
+                config.addAllowedOrigin("*");
+                config.setAllowCredentials(true);
+                return config;
+            }
+        };
+    }
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {

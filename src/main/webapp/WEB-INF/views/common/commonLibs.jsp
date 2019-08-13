@@ -34,9 +34,6 @@
     var RESULT_STATUS_SUCCESS  = "<%= SellerConstants.RESULT_STATUS_SUCCESS %>";
     var RESULT_STATUS_FAIL     = "<%= SellerConstants.RESULT_STATUS_FAIL %>";
 
-    var _csrf_token = document.getElementsByName("_csrf")[0].getAttribute("content");
-    var _csrf_header = document.getElementsByName("_csrf_header")[0].getAttribute("content");
-
 </script>
 
 <script type="text/javascript" src='<c:url value="/resources/js/common.js"/>'></script>
