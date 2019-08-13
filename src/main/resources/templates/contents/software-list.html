@@ -227,20 +227,36 @@
             console.log("종료 날짜 ::: "  + endDate);
 
 
-            if((startDate === "" || startDate === undefined) && (endDate === "" || endDate === undefined)) {
-                dateParameter = "&createdDateAfter=" + '' + "&createdDateBefore=" + '';
-            }else{
-                if(DATE_DIVISION === $("#createdDateOpt").val()){
-                    dateParameter = "&createdDateAfter=" + startDate + "T00:00:00.000Z" + "&createdDateBefore=" + endDate + "T23:59:59.000Z";
+            // if((startDate === "" || startDate === undefined) && (endDate === "" || endDate === undefined)) {
+            //     dateParameter = "&createdDateAfter=" + '' + "&createdDateBefore=" + '';
+            // }else{
+            //     if(DATE_DIVISION === $("#createdDateOpt").val()){
+            //         dateParameter = "&createdDateAfter=" + startDate + "T00:00:00.000Z" + "&createdDateBefore=" + endDate + "T23:59:59.000Z";
+            //     }else{
+            //         dateParameter = "&statusModifiedDateAfter=" + startDate + "T00:00:00.000Z" + "&statusModifiedDateBefore=" + endDate + "T23:59:59.000Z";
+            //     }
+            // }
+
+
+
+            if(DATE_DIVISION === $("#createdDateOpt").val()){
+                if((startDate === "" || startDate === undefined) && (endDate === "" || endDate === undefined)) {
+                    dateParameter = "&createdDateAfter=" + '' + "&createdDateBefore=" + '';
                 }else{
-                    dateParameter = "&statusModifiedDateAfter=";
+                    dateParameter = "&createdDateAfter=" + startDate + "T00:00:00.000Z" + "&createdDateBefore=" + endDate + "T23:59:59.000Z";
+                }
+            }else{
+                if((startDate === "" || startDate === undefined) && (endDate === "" || endDate === undefined)) {
+                    dateParameter = "&statusModifiedDateAfter=" + '' + "&statusModifiedDateBefore=" + '';
+                }else{
+                    dateParameter = "&statusModifiedDateAfter=" + startDate + "T00:00:00.000Z" + "&statusModifiedDateBefore=" + endDate + "T23:59:59.000Z";
                 }
             }
 
 
             // 전체 상품 목록 조회 url
             var reqUrl = "/softwares" + "?categoryId=" + selectedCategory + "&nameLike=" + searchKeyword + "&status=" + selectedStatus + "&inUse=" + selectedUseYn + "&size=" + PAGING_SIZE + "&sort=" + SORT + dateParameter;
-
+            console.log("전체 경로 ::: "  + reqUrl);
             procCallAjax(reqUrl, "GET", null, null, callbackGetMySoftwareList);
 
         };
