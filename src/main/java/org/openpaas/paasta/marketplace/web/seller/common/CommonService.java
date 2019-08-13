@@ -157,7 +157,15 @@ public class CommonService {
         /**
          * Parameters sort parameters list.
          */
-        PARAMETERS_SORT("sort");
+        PARAMETERS_SORT("sort"),
+        /**
+         * Parameters start date parameters list.
+         */
+        PARAMETERS_START_DATE("createdDateAfter"),
+        /**
+         * Parameters end date parameters list.
+         */
+        PARAMETERS_END_DATE("createdDateBefore");
 
         private String actualValue;
 

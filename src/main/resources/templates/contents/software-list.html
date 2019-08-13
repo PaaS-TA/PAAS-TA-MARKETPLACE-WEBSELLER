@@ -49,16 +49,16 @@
                 <div class="form-group">
                     <div class="form-group-area">
                         <div class="fm_box w_auto pr10">
-                            <select id="datePeriod" name="">
-                                <option value="">등록일</option>
-                                <option value="">승인일</option>
+                            <select id="datePeriod" name="" th:onchange="selectBox()">
+                                <option id="createdDateOpt" value="createdDateOpt" selected="selected">등록일</option>
+                                <option id="approveDateOpt" value="approveDateOpt">승인일</option>
                             </select>
                         </div>
                         <div class="fm_box w_auto">
                             <div class="dateWrap">
-                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD"></div>
+                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD" id="startDatePicker" value=""></div>
                                 <span class="wave">~</span>
-                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD"></div>
+                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD" id="endDatePicker" value=""></div>
                             </div>
                         </div>
                     </div>
@@ -192,13 +192,15 @@
         var PAGING_SIZE = 10;
         var SORT = "id,asc";
 
+        // default ::: 등록일
+        var DATE_DIVISION = $("#datePeriod option:selected").val();
+
         var getMySoftwareList = function() {
             var selectedCategory = $("#categoryList option:selected").val();
             var searchKeyword = $("#search_keyword").val();
             var selectedStatus = $("#statusOption option:selected").val();
             var selectedUseYn = $("#useYn option:selected").val();
-
-            console.log("선택된 카테고리는? ::: " + selectedCategory + " ::: 검색 키워드는? ::: " + searchKeyword);
+            var dateParameter;
 
             if (selectedCategory === 'ALL' || selectedCategory === '') {
                 selectedCategory = '';
@@ -216,7 +218,29 @@
                 selectedUseYn = '';
             }
 
-            var reqUrl = "/softwares" + "?categoryId=" + selectedCategory + "&nameLike=" + searchKeyword + "&status=" + selectedStatus + "&inUse=" + selectedUseYn + "&size=" + PAGING_SIZE + "&sort=" + SORT;
+
+            // datepicker 기간 내 날짜 조회
+            var startDate = $("#startDatePicker").datepicker('option', 'dateFormat', 'yy-mm-dd').val();
+            console.log("시작 날짜 ::: "  + startDate);
+
+            var endDate = $("#endDatePicker").datepicker('option', 'dateFormat', 'yy-mm-dd').val();
+            console.log("종료 날짜 ::: "  + endDate);
+
+
+            if((startDate === "" || startDate === undefined) && (endDate === "" || endDate === undefined)) {
+                dateParameter = "&createdDateAfter=" + '' + "&createdDateBefore=" + '';
+            }else{
+                if(DATE_DIVISION === $("#createdDateOpt").val()){
+                    dateParameter = "&createdDateAfter=" + startDate + "T00:00:00.000Z" + "&createdDateBefore=" + endDate + "T23:59:59.000Z";
+                }else{
+                    dateParameter = "&statusModifiedDateAfter=";
+                }
+            }
+
+
+            // 전체 상품 목록 조회 url
+            var reqUrl = "/softwares" + "?categoryId=" + selectedCategory + "&nameLike=" + searchKeyword + "&status=" + selectedStatus + "&inUse=" + selectedUseYn + "&size=" + PAGING_SIZE + "&sort=" + SORT + dateParameter;
+
             procCallAjax(reqUrl, "GET", null, null, callbackGetMySoftwareList);
 
         };
@@ -257,7 +281,7 @@
                     var goDetailUrl = "/softwares/{id}".replace("{id}", productList[i].id);
                     htmlString.push(
                         "<tr>"
-                        + "<td>" + productList[i].id + "</td>"
+                        + "<td>" + (i+1) + "</td>"
                         + "<td><span class=\"pn_cate type"+ productList[i].category.id +"\">" + productList[i].category.name + "</span></td>"
                         + "<td><a href='javascript:void(0);' onclick=\"procMovePage(\'" + goDetailUrl + "')\">" + productList[i].name + "</a></td>"
                         + "<td>" + productList[i].version + "</td>"
@@ -292,6 +316,15 @@
         // search enter
         var search = function() {
             getMySoftwareList();
+        };
+
+
+        // SORT(date range classification)
+        var selectBox = function () {
+            var selectedValue = $("#datePeriod option:selected").val();
+            console.log("등록일 or 승인일 ::: " + selectedValue);
+            DATE_DIVISION = selectedValue;
+
         };
 
         // ON LOAD

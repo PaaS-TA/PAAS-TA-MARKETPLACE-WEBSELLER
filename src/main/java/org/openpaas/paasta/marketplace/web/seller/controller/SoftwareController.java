@@ -75,7 +75,6 @@ public class SoftwareController {
     @GetMapping(value = "/{id}")
     public String getSoftware(Model model, @PathVariable Long id) {
         model.addAttribute("software", softwareService.getSoftware(id));
-        softwareService.getCategories();
         return "contents/software-detail";
     }
 
