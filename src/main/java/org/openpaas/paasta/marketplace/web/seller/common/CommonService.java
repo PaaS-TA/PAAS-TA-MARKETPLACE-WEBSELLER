@@ -17,7 +17,7 @@ import java.util.Map;
 @Service
 public class CommonService {
 
-    public String setParameters(HttpServletRequest httpServletRequest) {
+    public static String setParameters(HttpServletRequest httpServletRequest) {
         Map<String, String[]> parametersMap = httpServletRequest.getParameterMap();
         String[] parametersObject;
         String parametersKey;

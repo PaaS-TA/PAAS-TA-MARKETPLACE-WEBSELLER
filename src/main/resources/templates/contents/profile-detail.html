@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-registrant}">
+
+<!-- index.html 고유 CSS 추가 -->
+<th:block layout:fragment="css">
+</th:block>
+
+<!-- index.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+
+</th:block>
+
+<div class="rightCnt" layout:fragment="content">
+    <!-- title area -->
+    <div class="titWrap">
+        <h2 class="h2">프로필 관리</h2>
+        <div class="breadWrap">
+            <ol class="breadcrumb">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">프로필 관리</a></li>
+                <li class="active">프로필 정보</li><!-- 마지막 li -->
+            </ol>
+        </div>
+    </div>
+    <!-- //title area -->
+
+    <!-- content -->
+    <div class="content">
+        <!-- //form -->
+        <form th:action="@{/profiles}" th:object="${profile}" action="#" id="ProfileListForm" method="get" enctype="multipart/form-data">
+            <!-- cBox1 -->
+            <div class="cBox type1 appCnt-info">
+                <div class="cBox-hd">
+                    <h4 class="c-tit">프로필 정보</h4>
+                </div>
+                <div class="cBox-cnt">
+                    <!-- inner -->
+                    <div class="in pd0 d_block">
+                        <!-- table -->
+                        <div class="tbw type1">
+                            <table class="table">
+                                <colgroup>
+                                    <col style="width:15%;">
+                                    <col style="width:auto;">
+                                </colgroup>
+                                <tbody id="profileArea">
+                                <tr>
+                                    <th scope="row">판매자명</th>
+                                    <td th:text="${profiles.name}">
+                                </tr>
+                                </tr>
+                                <tr>
+                                    <th scope="row">유형</th>
+                                    <td th:text="${profiles.type}"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">담당자명</th>
+                                    <td th:text="${profiles.manager}"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">메일주소</th>
+                                    <td th:text="${profiles.email}"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">홈페이지주소</th>
+                                    <td th:text="${profiles.siteUrl}"></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">등록일</th>
+                                    <td th:text="${profiles.createdDate}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- //table -->
+                    </div>
+                    <!-- //inner -->
+                </div>
+            </div>
+            <!-- //cBox1 -->
+        </form>
+        <div class="cont_btnBox" th:each="profile : ${profiles}">
+<!--            th:onclick="'location.href = \'' + @{/profiles/{id}(id=${profiles.name})} + '\''"-->
+<!--            th:onclick="'moveProfiles(\'' + ${profiles.name} + '\')'"-->
+            <button name="updateBtn" class="btn btn-color1 btn-md" type="submit" th:if="${profiles.id != null}" onclick="updateBtn()">수정</button>
+            <button name="createBtn" class="btn btn-color1 btn-md" type="submit" th:if="${profiles.id == null}" onclick="createBtn()">등록</button>
+        </div>
+    </div>
+    <!-- //content -->
+    <script type="text/javascript">
+        /*<![CDATA[*/
+        /*profiles*/
+        var profiles = "[[${profiles}]]";
+        var profilesId = "[[${profiles.id}]]";
+
+        $(document).ready(function() {
+            console.log('::/profiles/list::');
+        });
+
+        var createBtn = function() {
+            procMovePage("/profiles/create");
+        };
+
+        var updateBtn = function() {
+            // procMovePage("/profiles?id="+profilesId);
+            procMovePage("/profiles/update/{id}".replace("{id}", profilesId));
+        };
+
+        /*]]>*/
+    </script>
+</div>
+</html>

@@ -27,8 +27,7 @@
 
     <!-- content -->
     <div class="content">
-        <!-- //form -->
-        <form th:object="${profile}" action="#" id="createProfileForm" method="post" enctype="multipart/form-data">
+<!--        <form th:action="@{/profiles}" th:object="${profiles}" action="#" id="createProfileForm" method="post" enctype="multipart/form-data">-->
             <!-- cBox1 -->
             <div class="cBox type1 appCnt-info">
                 <div class="cBox-hd">
@@ -52,43 +51,33 @@
                                     <col style="width:15%;">
                                     <col style="width:auto;">
                                 </colgroup>
-                                <tbody id="profilesTable">
+                                <tbody>
                                 <tr>
                                     <th scope="row">판매자명<i class="i_star">필수입력</i></th>
-                                    <td>
-                                        <input class="form-control" type="text" th:field="*{name}">
-                                    </td>
+                                    <td><input class="form-control" type="text" th:value="${profile.name}" id="profilesName"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">유형<i class="i_star">필수입력</i></th>
                                     <td>
-                                        <select th:field="*{type}" id="type">
+                                        <select th:field="*{types}" id="profilesTypes">
                                             <option value="">선택</option>
-                                            <option th:each="profile : ${profile}"
-                                                    th:value="${profile.type}"
-                                                    th:utext="${profile.type}">
-                                            </option>
+                                            <option th:each="type : ${types}"
+                                                    th:value="${type}"
+                                                    th:utext="${type}"></option>
                                         </select>
-
                                     </td>
                                 </tr>
                                 <tr>
                                     <th scope="row">담당자명</th>
-                                    <td>
-                                        <input class="form-control" type="text" name="manager" th:value="${profile.manager}">
-                                    </td>
+                                    <td><input class="form-control" type="text" th:value="${profile.manager}" id="profilesManager"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">메일주소<i class="i_star">필수입력</i></th>
-                                    <td>
-                                        <input class="form-control" type="text" name="email" th:value="${profile.email}">
-                                    </td>
+                                    <td><input class="form-control" type="text" th:value="${profile.email}" id="profilesEmail"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">홈페이지주소</th>
-                                    <td>
-                                        <input class="form-control" type="text" name="siteUrl"  th:value="${profile.siteUrl}">
-                                    </td>
+                                    <td><input class="form-control" type="text" th:value="${profile.siteUrl}" id="profilesSiteUrl"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -99,27 +88,59 @@
                 </div>
             </div>
             <!-- //cBox1 -->
-        </form>
+            <div class="cont_btnBox">
+                <button name="button" class="btn btn-color1 btn-md" type="submit" id="createBtn">등록</button>
+            </div>
+<!--        </form>-->
         <!-- //form -->
-        <div class="cont_btnBox" th:each="profile : ${profile}">
-<!--            <button name="button" class="btn btn-color1 btn-md" type="button" onclick="createBtn()">등록</button>-->
-            <button name="updateBtn" class="btn btn-color1 btn-md" onclick="updateBtn()" type="button" th:if="${profile.name != null}">수정</button>
-            <button name="createBtn" class="btn btn-color1 btn-md" type="button" th:if="${profile.name == null}">등록</button>
-        </div>
+
     </div>
     <!-- //content -->
     <script type="text/javascript">
         /*<![CDATA[*/
+        var profile = "[[${profile}]]";
+        var profileId= "[[${profile.id}]]";
+        var REST_URL= "/profiles";
+
+        var users = "[[${users}]]";
 
         $(document).ready(function() {
-            console.log('::Profile List,Create::');
+            console.log("profile-create");
         });
 
-        var updateBtn = function() {
-            alert("updateBtn" + id);
-            // procMovePage("/profile/list/{id}".replace("{id}", id));
+        $("#createBtn").on("click", function () {
+            createProfiles();
+        });
+
+        var createProfiles = function () {
+
+            var profilesName = $("#profilesName").val();
+            var profilesTypes = $("#profilesTypes option:selected").val();
+            var profilesManager = $("#profilesManager").val();
+            var profilesEmail = $("#profilesEmail").val();
+            var profilesSiteUrl = $("#profilesSiteUrl").val();
+
+            var reqParam = {
+                "id" : profilesName,
+                "name" : profilesName,
+                "type" : profilesTypes,
+                "manager" : profilesManager,
+                "email" : profilesEmail,
+                "siteUrl" : profilesSiteUrl
+            }
+
+            alert(REST_URL);
+
+            console.log(JSON.stringify(reqParam));
+            console.log(profileId);
+
+            procCallAjax(REST_URL, "POST", JSON.stringify(reqParam), null, callbackCreateProfiles);
         }
 
+        var callbackCreateProfiles = function(data) {
+            console.log("::callbackModifyProfiles DATA:: " + data);
+            procMovePage("/profiles/{id}".replace("{id}",  $("#profilesName").val()));
+        };
 
         /*]]>*/
     </script>
