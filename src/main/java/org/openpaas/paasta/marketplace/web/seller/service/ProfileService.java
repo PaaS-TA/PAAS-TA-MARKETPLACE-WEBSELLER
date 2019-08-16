@@ -44,9 +44,14 @@ public class ProfileService {
 
     @SneakyThrows
     public Profile createProfiles(Profile profile) {
-        log.info("createProfiles.profiles :: " + Profile.class.toString());
-        return paasApiRest.postForObject("/profiles", profile, Profile.class);
+
+        if(profile.getId() == null){
+           profile.setId(profile.getName());
+        }
+
+        return paasApiRest.postForObject("/profiles" , profile, Profile.class);
     }
+
 
 
     public Profile getProfile(String id) {
