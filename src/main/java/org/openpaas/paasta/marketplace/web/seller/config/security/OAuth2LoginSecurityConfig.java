@@ -43,7 +43,7 @@ public class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
         http.antMatcher("/**")
 //                .cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/**", "/login/**", "/error/**", "/static/**")
+                .antMatchers("/", "/login/**", "/error/**", "/static/**")
                 .permitAll()
                 .anyRequest().authenticated().and()
                 .oauth2Login().loginPage("/login").defaultSuccessUrl("/index", true).permitAll()

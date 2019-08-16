@@ -30,7 +30,7 @@ public class ProfileController {
      *
      * @return
      */
-    @GetMapping(value = "/")
+    @GetMapping(value = "/page")
     //@ResponseBody
     public String getProfile() {
         log.info("> into getProfile");
