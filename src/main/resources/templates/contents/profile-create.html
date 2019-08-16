@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-registrant}">
 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <!-- index.html 고유 CSS 추가 -->
 <th:block layout:fragment="css">
 </th:block>
@@ -27,7 +28,7 @@
 
     <!-- content -->
     <div class="content">
-<!--        <form th:action="@{/profiles}" th:object="${profiles}" action="#" id="createProfileForm" method="post" enctype="multipart/form-data">-->
+        <form th:action="@{/profiles}" th:object="${profile}" action="#" id="createProfileForm" method="post">
             <!-- cBox1 -->
             <div class="cBox type1 appCnt-info">
                 <div class="cBox-hd">
@@ -54,30 +55,34 @@
                                 <tbody>
                                 <tr>
                                     <th scope="row">판매자명<i class="i_star">필수입력</i></th>
-                                    <td><input class="form-control" type="text" th:value="${profile.name}" id="profilesName"></td>
+                                    <td>
+                                        <input class="form-control" type="text" th:field="*{name}" id="profilesName">
+                                        <p class="i_star" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th scope="row">유형<i class="i_star">필수입력</i></th>
                                     <td>
-                                        <select th:field="*{types}" id="profilesTypes">
+                                        <select th:field="*{type}" id="profilesTypes">
                                             <option value="">선택</option>
                                             <option th:each="type : ${types}"
                                                     th:value="${type}"
-                                                    th:utext="${type}"></option>
+                                                    th:utext="${type}">
+                                            </option>
                                         </select>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th scope="row">담당자명</th>
-                                    <td><input class="form-control" type="text" th:value="${profile.manager}" id="profilesManager"></td>
+                                    <td><input class="form-control" type="text" th:field="${profile.manager}" id="profilesManager"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">메일주소<i class="i_star">필수입력</i></th>
-                                    <td><input class="form-control" type="text" th:value="${profile.email}" id="profilesEmail"></td>
+                                    <td><input class="form-control" type="text" th:field="${profile.email}" id="profilesEmail"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">홈페이지주소</th>
-                                    <td><input class="form-control" type="text" th:value="${profile.siteUrl}" id="profilesSiteUrl"></td>
+                                    <td><input class="form-control" type="text" th:field="${profile.siteUrl}" id="profilesSiteUrl"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -89,60 +94,59 @@
             </div>
             <!-- //cBox1 -->
             <div class="cont_btnBox">
-                <button name="button" class="btn btn-color1 btn-md" type="submit" id="createBtn">등록</button>
+                <button name="button" class="btn btn-color1 btn-md" type="submit">등록</button>
             </div>
-<!--        </form>-->
+        </form>
         <!-- //form -->
 
     </div>
     <!-- //content -->
-    <script type="text/javascript">
-        /*<![CDATA[*/
-        var profile = "[[${profile}]]";
-        var profileId= "[[${profile.id}]]";
-        var REST_URL= "/profiles";
+<!--    <script type="text/javascript">-->
+<!--        /*<![CDATA[*/-->
+<!--        var profile = "[[${profile}]]";-->
+<!--        var profileId= "[[${profile.id}]]";-->
+<!--        var REST_URL= "/profiles";-->
 
-        var users = "[[${users}]]";
+<!--        var users = "[[${users}]]";-->
 
-        $(document).ready(function() {
-            console.log("profile-create");
-        });
+<!--        $(document).ready(function() {-->
+<!--            console.log("profile-create");-->
+<!--        });-->
 
-        $("#createBtn").on("click", function () {
-            createProfiles();
-        });
+<!--        $("#createBtn").on("click", function () {-->
+<!--            createProfiles();-->
+<!--        });-->
 
-        var createProfiles = function () {
+<!--        var createProfiles = function () {-->
 
-            var profilesName = $("#profilesName").val();
-            var profilesTypes = $("#profilesTypes option:selected").val();
-            var profilesManager = $("#profilesManager").val();
-            var profilesEmail = $("#profilesEmail").val();
-            var profilesSiteUrl = $("#profilesSiteUrl").val();
+<!--            var profilesName = $("#profilesName").val();-->
+<!--            var profilesTypes = $("#profilesTypes option:selected").val();-->
+<!--            var profilesManager = $("#profilesManager").val();-->
+<!--            var profilesEmail = $("#profilesEmail").val();-->
+<!--            var profilesSiteUrl = $("#profilesSiteUrl").val();-->
 
-            var reqParam = {
-                "id" : profilesName,
-                "name" : profilesName,
-                "type" : profilesTypes,
-                "manager" : profilesManager,
-                "email" : profilesEmail,
-                "siteUrl" : profilesSiteUrl
-            }
+<!--            var reqParam = {-->
+<!--                "id" : profilesName.toString(),-->
+<!--                "name" : profilesName,-->
+<!--                "type" : profilesTypes,-->
+<!--                "manager" : profilesManager,-->
+<!--                "email" : profilesEmail,-->
+<!--                "siteUrl" : profilesSiteUrl-->
+<!--            }-->
 
-            alert(REST_URL);
+<!--            alert(REST_URL);-->
 
-            console.log(JSON.stringify(reqParam));
-            console.log(profileId);
+<!--            console.log(JSON.stringify(reqParam));-->
 
-            procCallAjax(REST_URL, "POST", JSON.stringify(reqParam), null, callbackCreateProfiles);
-        }
+<!--            procCallAjax(REST_URL, "POST", JSON.stringify(reqParam), null, callbackCreateProfiles);-->
+<!--        }-->
 
-        var callbackCreateProfiles = function(data) {
-            console.log("::callbackModifyProfiles DATA:: " + data);
-            procMovePage("/profiles/{id}".replace("{id}",  $("#profilesName").val()));
-        };
+<!--        var callbackCreateProfiles = function(data) {-->
+<!--            console.log("::callbackModifyProfiles DATA:: " + data);-->
+<!--            procMovePage("/profiles/{id}".replace("{id}",  $("#profilesName").val()));-->
+<!--        };-->
 
-        /*]]>*/
-    </script>
+<!--        /*]]>*/-->
+<!--    </script>-->
 </div>
 </html>
