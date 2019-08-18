@@ -273,7 +273,7 @@
 
         // 스크린샷
         var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
-            console.log(html.files);
+            console.log("target ::: " + $target + " & countNum ::: " + countNum);
             if (html.files && html.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
@@ -295,7 +295,7 @@
                 var labelId = "screenshot_image_list" + count;
                 var pointLabelId = "#screenshot_image_list" + count;
                 //<label for ="image_plus_'+index+'"></label>\<input type="file" id="image_plus_'+index+'">
-                div.innerHTML = '<div class="fileUploadWrap selected_sshot"><input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreviewScreenshot(this, $(pointLabelId), count)">'+ '<div class="bootstrap-filestyle input-group"><span tabindex="0" class="group-span-filestyle input-group-btn"><label class="btn btn-default " for="screenshotFileInput" id=' + labelId + '><span class="ico ico_fileupload">파일찾기</span></label></span></div>';
+                div.innerHTML = '<div class="fileUploadWrap selected_sshot"><input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreviewScreenshot(this, $('+ "\'" + pointLabelId + "')" + ', ' + count +')>"' + '<div class="bootstrap-filestyle input-group"><span tabindex="0" class="group-span-filestyle input-group-btn"><label class="btn btn-default " for="screenshotFileInput" id=' + labelId + '><span class="ico ico_fileupload">파일찾기</span></label></span></div>';
 
                 // 추가
                 var li_name = "#li_" + countNum;
