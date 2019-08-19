@@ -29,6 +29,7 @@ ext {
     gsonVersion = '2.8.5'
     springSecurityTagLibsVersion = '5.0.7.RELEASE'
     marketVersion = '0.0.1-SNAPSHOT';
+    jossVersion = '0.10.1'
 }
 
 dependencies {
@@ -58,6 +59,12 @@ dependencies {
 
     // for using Page class
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
+
+    //Java Client for OpenStack Storage
+    compile ("org.javaswift:joss:${jossVersion}")
+    compile('junit:junit:4.12')
+    // https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api
+    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1'
     
     compileOnly 'org.projectlombok:lombok:1.18.8'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
