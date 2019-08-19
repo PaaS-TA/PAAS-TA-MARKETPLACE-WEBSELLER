@@ -47,6 +47,7 @@ public class SoftwareController {
         model.addAttribute("spec", new SoftwareSpecification());
         model.addAttribute("yns", Yn.values());
         model.addAttribute("status", Software.Status.values());
+        model.addAttribute("statusApprove", Software.Status.Approval);
 
         return "contents/software-list";
     }

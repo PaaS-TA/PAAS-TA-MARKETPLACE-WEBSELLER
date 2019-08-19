@@ -246,6 +246,7 @@
                     dateParameter = "&createdDateAfter=" + startDate + "T00:00:00.000Z" + "&createdDateBefore=" + endDate + "T23:59:59.000Z";
                 }
             }else{
+                selectedStatus = "[[${statusApprove}]]";
                 if((startDate === "" || startDate === undefined) && (endDate === "" || endDate === undefined)) {
                     dateParameter = "&statusModifiedDateAfter=" + '' + "&statusModifiedDateBefore=" + '';
                 }else{
