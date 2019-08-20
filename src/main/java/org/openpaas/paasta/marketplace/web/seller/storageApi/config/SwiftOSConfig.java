@@ -44,7 +44,7 @@ public class SwiftOSConfig extends ObjectStorageConfig {
         final String preferredRegion = env.getRequiredProperty( SwiftOSConstants.SwiftOSEnvironmentKeys.OBJECT_STORAGE_PREFERRED_REGION );
 
         AccountConfig accountConfig = new AccountConfig();
-        accountConfig.setTenantName(tenantName);
+        //accountConfig.setTenantName(tenantName);
         accountConfig.setUsername(username);
         accountConfig.setPassword(password);
         accountConfig.setAuthUrl(authUrl);

@@ -29,7 +29,7 @@ ext {
     gsonVersion = '2.8.5'
     springSecurityTagLibsVersion = '5.0.7.RELEASE'
     marketVersion = '0.0.1-SNAPSHOT';
-    jossVersion = '0.10.1'
+    jossVersion = '0.10.3'
 }
 
 dependencies {

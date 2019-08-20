@@ -33,25 +33,25 @@ public class RootController {
     String preferredRegion;
 
 
-    @RequestMapping(value = {"/", "/info", "/index"}, method = {RequestMethod.GET})
-    @ResponseBody
-    public Map index() throws Exception {
-
-        Map map = new HashMap();
-
-        Map objectStorage = new HashMap();
-        objectStorage.put("username", authUrl);
-        objectStorage.put("tenantName", tenantName);
-        objectStorage.put("username", username);
-        objectStorage.put("authMethod", authMethod);
-        objectStorage.put("container", container);
-        objectStorage.put("preferredRegion", preferredRegion);
-
-
-        map.put("objectStorage", objectStorage);
-
-        map.put("name", "PaaS-TA Storage API");
-        return map;
-    }
+//    @RequestMapping(value = {"/", "/info", "/index"}, method = {RequestMethod.GET})
+//    @ResponseBody
+//    public Map index() throws Exception {
+//
+//        Map map = new HashMap();
+//
+//        Map objectStorage = new HashMap();
+//        objectStorage.put("username", authUrl);
+//        objectStorage.put("tenantName", tenantName);
+//        objectStorage.put("username", username);
+//        objectStorage.put("authMethod", authMethod);
+//        objectStorage.put("container", container);
+//        objectStorage.put("preferredRegion", preferredRegion);
+//
+//
+//        map.put("objectStorage", objectStorage);
+//
+//        map.put("name", "PaaS-TA Storage API");
+//        return map;
+//    }
 
 }

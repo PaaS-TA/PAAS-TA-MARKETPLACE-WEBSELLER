@@ -8,6 +8,9 @@ import org.openpaas.paasta.marketplace.api.domain.SoftwareSpecification;
 import org.openpaas.paasta.marketplace.api.domain.Yn;
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.service.SoftwareService;
+import org.openpaas.paasta.marketplace.web.seller.storageApi.store.swift.SwiftOSFileInfo;
+import org.openpaas.paasta.marketplace.web.seller.storageApi.store.swift.SwiftOSService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -20,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @RequestMapping(value = "/softwares")
@@ -29,6 +33,9 @@ public class SoftwareController {
 
     private final SoftwareService softwareService;
     private final CommonService commonService;
+
+    @Autowired
+    SwiftOSService swiftOSService;
 
     /**
      * 판매자의 상품 목록 조회 페이지 이동
@@ -137,7 +144,7 @@ public class SoftwareController {
      */
     @PostMapping
     public String createSoftware(@Valid Software software, BindingResult bindingResult, @RequestParam(value = "screenshots") MultipartFile[] screenshots, @RequestParam(value = "iconFile") MultipartFile iconFile,
-                                 @RequestParam(value = "productFile") MultipartFile productFile, @RequestParam(value = "environmentFile") MultipartFile environmentFile) {
+                                 @RequestParam(value = "productFile") MultipartFile productFile, @RequestParam(value = "environmentFile") MultipartFile environmentFile) throws IOException {
         if (bindingResult.hasErrors()) {
             return "contents/software-create";
         }
@@ -146,6 +153,10 @@ public class SoftwareController {
         software.setIcon(iconFile.getOriginalFilename());
         software.setApp(productFile.getOriginalFilename());
         software.setManifest(environmentFile.getOriginalFilename());
+
+        SwiftOSFileInfo fileInfo = swiftOSService.putObject( productFile );
+        log.info(fileInfo.getFileURL());
+
 //        software.setScreenshotList();
 
         Software newSoftware = softwareService.createSoftware(software);
@@ -163,4 +174,9 @@ public class SoftwareController {
     public String getSoftwareUseStatus() {
         return "contents/software-report";
     }
+
+
+
+
+
 }
