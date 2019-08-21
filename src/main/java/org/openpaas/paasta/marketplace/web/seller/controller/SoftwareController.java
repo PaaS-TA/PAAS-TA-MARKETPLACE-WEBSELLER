@@ -8,7 +8,6 @@ import org.openpaas.paasta.marketplace.api.domain.SoftwareSpecification;
 import org.openpaas.paasta.marketplace.api.domain.Yn;
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.service.SoftwareService;
-import org.openpaas.paasta.marketplace.web.seller.storageApi.store.swift.SwiftOSFileInfo;
 import org.openpaas.paasta.marketplace.web.seller.storageApi.store.swift.SwiftOSService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -24,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 @Controller
 @RequestMapping(value = "/softwares")
@@ -36,7 +36,6 @@ public class SoftwareController {
 
     @Autowired
     SwiftOSService swiftOSService;
-
     /**
      * 판매자의 상품 목록 조회 페이지 이동
      *
@@ -150,17 +149,21 @@ public class SoftwareController {
         }
 
         log.info("소프토 웨아! {}", software);
+
+
         software.setIcon(iconFile.getOriginalFilename());
         software.setApp(productFile.getOriginalFilename());
         software.setManifest(environmentFile.getOriginalFilename());
-
-        SwiftOSFileInfo fileInfo = swiftOSService.putObject( productFile );
-        log.info(fileInfo.getFileURL());
+        software.setAppPath(URLDecoder.decode(swiftOSService.putObject(productFile).getFileURL(), "UTF-8"));
+        software.setIconPath(URLDecoder.decode(swiftOSService.putObject(iconFile).getFileURL(), "UTF-8"));
+        software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(environmentFile).getFileURL(), "UTF-8"));
+        log.info(software.toString());
 
 //        software.setScreenshotList();
 
         Software newSoftware = softwareService.createSoftware(software);
         System.out.println("생성된 소프트웨어 ::: " + newSoftware.getName());
+
 
         return "redirect:/softwares/list";
     }

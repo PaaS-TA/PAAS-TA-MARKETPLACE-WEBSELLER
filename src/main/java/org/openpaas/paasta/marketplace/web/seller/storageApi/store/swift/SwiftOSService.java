@@ -41,12 +41,14 @@ public class SwiftOSService extends ObjectStorageService<SwiftOSFileInfo> {
     }
 
     public String convertContentType(String filename, String content_type) {
-        if (filename.indexOf("png") > -1) {
+        if (filename.toLowerCase().indexOf("png") > -1) {
             content_type = "image/png";
-        } else if (filename.indexOf("jpg") > -1) {
+        } else if (filename.toLowerCase().indexOf("jpg") > -1) {
             content_type = "image/jpg";
-        } else if (filename.indexOf("gif") > -1) {
+        } else if (filename.toLowerCase().indexOf("gif") > -1) {
             content_type = "image/gif";
+        } else if(filename.toLowerCase().indexOf(".yml") > -1){
+            content_type = "Application/json";
         }
         return content_type;
     }
