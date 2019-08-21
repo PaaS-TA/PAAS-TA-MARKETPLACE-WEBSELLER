@@ -58,13 +58,11 @@
                                 <tr>
                                     <th scope="row">유형<i class="i_star">필수입력</i></th>
                                     <td>
-                                        <select th:field="*{types}" id="profilesTypes">
-                                            <option value="">선택</option>
+                                        <select th:field="*{profiles.type}" id="profilesTypes">
                                             <option th:each="type : ${types}"
                                                     th:value="${type}"
-                                                    th:utext="${type}"></option>
+                                                    th:text="${type}"></option>
                                         </select>
-                                    </td>
                                 </tr>
                                 <tr>
                                     <th scope="row">담당자명</th>
@@ -101,6 +99,11 @@
 
         $(document).ready(function() {
             console.log("profiles-update");
+        });
+
+        $("#profilesTypes").change(function() {
+            // Add action of select option
+            console.log($("#profilesTypes option:selected").val());
         });
 
         $("#saveBtn").on("click", function () {
