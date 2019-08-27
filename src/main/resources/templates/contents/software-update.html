@@ -11,213 +11,6 @@
 
 </th:block>
 
-<!--<div class="rightCnt" layout:fragment="content">
-    &lt;!&ndash; title area &ndash;&gt;
-    <div class="titWrap">
-        <h2 class="h2">상품 상세</h2>
-        <div class="breadWrap">
-            <ol class="breadcrumb">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">등록 상품</a></li>
-                <li class="active">상품 상세</li>&lt;!&ndash; 마지막 li &ndash;&gt;
-            </ol>
-        </div>
-    </div>
-    &lt;!&ndash; //title area &ndash;&gt;
-
-    &lt;!&ndash; content &ndash;&gt;
-    <div class="content">
-
-        &lt;!&ndash; cBox1 &ndash;&gt;
-        <div class="cBox type1 appCnt-info">
-            <div class="cBox-hd">
-                <h4 class="c-tit pl60" th:text="${software.name}"><img class="logo" alt="" src="/images/thum_ico08.png"></h4>
-            </div>
-            <div class="cBox-cnt">
-                &lt;!&ndash; inner &ndash;&gt;
-                <div class="in d_block">
-                    &lt;!&ndash; table &ndash;&gt;
-                    <div class="tbw type1">
-                        <table class="table">
-                            <colgroup>
-                                <col style="width:15%;">
-                                <col style="width:auto;">
-                            </colgroup>
-                            <tbody>
-                            <tr>
-                                <th scope="row">카테고리</th>
-                                <td th:text="${software.category.name}"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">개요</th>
-                                <td>
-                                    <div class="tbw_inner_txt">
-                                        <pre th:text="${software.summary}"></pre>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">스크린샷</th>
-                                <td>
-                                    <div class="slideWrap">
-                                        <div class="slide_list">
-                                            <div class="scrtabs-tab-container" style="visibility: visible;"><div class="scrtabs-tab-scroll-arrow scrtabs-tab-scroll-arrow-left"><span class="ico btn-left"></span></div><div class="scrtabs-tabs-fixed-container" style="width: 494px;"><div class="scrtabs-tabs-movable-container" style="width: 2501px;"><ul class="nav nav-tabs">
-                                                <li><a href=""><img src="/images/thum_test01.png" alt=""></a></li>
-                                                <li><a href=""><img src="/images/thum_test02.png" alt=""></a></li>
-                                                <li><a href="" class="video"><img src="/images/thum_test03.png" alt=""></a></li>
-                                                <li><a href=""><img src="/images/thum_test04.png" alt=""></a></li>
-                                                <li><a href=""><img src="/images/thum_test05.png" alt=""></a></li>
-                                                <li><a href=""><img src="/images/thum_test03.png" alt=""></a></li>
-                                                <li><a href=""><img src="/images/thum_test01.png" alt=""></a></li>
-                                                <li><a href=""><img src="/images/thum_test02.png" alt=""></a></li>
-                                                <li><a href=""><img src="/images/thum_test03.png" alt=""></a></li>
-                                                <li><a href=""><img src="/images/thum_test04.png" alt=""></a></li>
-                                            </ul></div></div><div class="scrtabs-tab-scroll-arrow scrtabs-tab-scroll-arrow-right"><span class="ico btn-right"></span></div></div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">상세설명</th>
-                                <td>
-                                    <div class="tbw_inner_txt">
-                                        <pre th:text="${software.description}"></pre>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">파일유형</th>
-                                <td th:text="${software.type}"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">상품파일</th>
-                                <td th:text="${software.app}"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">환경파일</th>
-                                <td th:text="${software.manifest}"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">판매가격</th>
-                                <td><span class="price" th:text="'가격 :' + ${software.pricePerDay} + ' 월/일'"></span></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">전시여부</th>
-                                <td th:text="${software.inUse}"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">버전</th>
-                                <td th:text="${software.version}"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">등록일자</th>
-                                <td th:text="${software.createdDate}"></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    &lt;!&ndash; //table &ndash;&gt;
-
-                    <h4 class="c-tit-in">승인정보</h4>
-                    &lt;!&ndash; table &ndash;&gt;
-                    <div class="tbw type1">
-                        <table class="table">
-                            <colgroup>
-                                <col style="width:15%;">
-                                <col style="width:auto;">
-                            </colgroup>
-                            <tbody>
-                            <tr>
-                                <th scope="row">상태</th>
-                                <td>반려</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">반려사유</th>
-                                <td>
-                                    <div class="tbw_inner_txt">
-                                        <pre>보안 취약</pre>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">처리일자</th>
-                                <td>2018.12.24</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    &lt;!&ndash; //table &ndash;&gt;
-                </div>
-                &lt;!&ndash; //inner &ndash;&gt;
-            </div>
-        </div>
-        &lt;!&ndash; //cBox1 &ndash;&gt;
-        <div class="cont_btnBox">
-            <div class="pull-left">
-                <button name="button" class="btn btn-color1 btn-md" type="button" data-toggle="modal" data-target="#myModal">수정이력</button>
-
-                &lt;!&ndash; Modal &ndash;&gt;
-                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">&lt;!&ndash; 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  &ndash;&gt;
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                <h4 class="modal-title" id="myModalLabel">상품 수정 이력</h4>
-                            </div>
-                            <div class="modal-body">
-                                &lt;!&ndash; table &ndash;&gt;
-                                <div class="tbl type1">
-                                    <table class="table">
-                                        <colgroup>
-                                            <col style="width:15%;">
-                                            <col style="width:30%;">
-                                            <col style="width:55%;">
-                                        </colgroup>
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">No.</th>
-                                            <th scope="col">수정일자</th>
-                                            <th scope="col">처리자</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>2019-03-30</td>
-                                            <td>관리자</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>2019-01-15</td>
-                                            <td>홍길동</td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>2018-11-21</td>
-                                            <td>홍길동</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                &lt;!&ndash; //table &ndash;&gt;
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                &lt;!&ndash; //Modal &ndash;&gt;
-            </div>
-            <div class="pull-right">
-&lt;!&ndash;                <a th:href="@{'/softwares/' + ${software.id}}"  th:onclick="'location.href=\'\/softwares\''+ ${software.id} + '/update'">&ndash;&gt;
-                <button name="button" class="btn btn-color7 btn-md" type="button" th:onclick="'location.href = \'' + @{/softwares/{id}(id=${software.id})} + '/update\''">수정</button>
-                <button name="button" class="btn btn-color1 btn-md" type="button" onclick="location.href='/softwares'">목록</button>
-            </div>
-        </div>
-    </div>
-    &lt;!&ndash; //content &ndash;&gt;
-</div>-->
 <div class="rightCnt" layout:fragment="content">
     <!-- title area -->
     <div class="titWrap">
@@ -260,36 +53,36 @@
                             <tbody>
                             <tr>
                                 <th scope="row">상품명<i class="i_star">필수입력</i></th>
-                                <td><input class="form-control" type="text" value=""></td>
+                                <td><input class="form-control" type="text" th:value="${software.name}" id="softwareName"></td>
                             </tr>
                             <tr>
                                 <th scope="row">카테고리<i class="i_star">필수입력</i></th>
                                 <td>
-                                    <select>
-                                        <option value="">선택</option>
-                                        <option value="">항목1</option>
-                                        <option value="">항목2</option>
-                                        <option value="">항목3</option>
+                                    <select id="softwareCategory">
+                                        <option th:each="category : ${categories}"
+                                                th:value="${category.id}"
+                                                th:utext="${category.name}"
+                                                th:selected="${category.id} == ${software.category.id}">
+                                        </option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">개요<i class="i_star">필수입력</i></th>
-                                <td><textarea name="name" style="height:150px;"></textarea></td>
+                                <td><input class="form-control" style="height:50px;" type="text" th:value="${software.summary}" id="softwareSummary"></td>
                             </tr>
                             <tr>
                                 <th scope="row">아이콘<i class="i_star">필수입력</i></th>
                                 <td>
                                     <!-- 첨부파일 -->
                                     <div class="fileUploadWrap selected_ico" style="width:50%;">
-                                        <input tabindex="-1" class="form-control" id="fileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="">
+                                        <input tabindex="-1" class="form-control" id="fileInput" name="fileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreview(this, $('#icon_image'))">
                                         <div class="bootstrap-filestyle input-group">
-														<span tabindex="0" class="group-span-filestyle input-group-btn">
-															<label class="btn btn-default " for="fileInput">
-																<!-- <img src="../common/images/thum_ico06.png" alt="" /> --> <!--파일업로드 후 첨부한 이미지 넣는 영역-->
-																<span class="ico ico_fileupload">파일찾기</span>
-															</label>
-														</span>
+                                            <span tabindex="0" class="group-span-filestyle input-group-btn">
+                                                <label class="btn btn-default " for="fileInput" id="icon_image">
+                                                    <span class="ico ico_fileupload">파일찾기</span>
+                                                </label>
+                                            </span>
                                             <div class="input-form-group">
                                                 <input name="userfile" disabled="" class="form-control" id="userfile" type="text" placeholder="아이콘으로 등록할 이미지를 선택하세요.">
                                             </div>
@@ -306,56 +99,58 @@
                                             <ul>
                                                 <li>
                                                     <div class="sshot_in">
-                                                        <img src="../common/images/thum_test01.png" alt="">
-                                                        <a href=""><span class="ico ico_delete">X</span></a>
+                                                        <img src="/static/images/thum_test01.png" alt="">
+                                                        <a href="" data-toggle="modal" data-target="#myModal_del"><span class="ico ico_delete">X</span></a>
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="myModal_del" tabindex="-1" role="dialog" aria-labelledby="modalLabel_del" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content modal-sm"><!-- 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  -->
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                        <h4 class="modal-title" id="modalLabel_del">스크린 샷 삭제</h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="only-text">
+                                                                            삭제 하시겠습니까?
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" name="button" class="btn btn-color1" th:onclick="'javascript:deleteSoftwareBtn(\''+ ${software.id} +'\');'">확인</button>
+                                                                        <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Modal -->
                                                     </div>
                                                 </li>
-                                                <li>
-                                                    <div class="sshot_in">
-                                                        <img src="../common/images/thum_test02.png" alt="">
-                                                        <a href=""><span class="ico ico_delete">X</span></a>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="sshot_in">
-                                                        <img src="../common/images/thum_test03.png" alt="">
-                                                        <a href=""><span class="ico ico_delete">X</span></a>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="sshot_in">
-                                                        <img src="../common/images/thum_test04.png" alt="">
-                                                        <a href=""><span class="ico ico_delete">X</span></a>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="sshot_in">
-                                                        <img src="../common/images/thum_test05.png" alt="">
-                                                        <a href=""><span class="ico ico_delete">X</span></a>
-                                                    </div>
-                                                </li>
-                                                <li>
+                                                <li id="li_body">
                                                     <!-- 첨부파일 -->
                                                     <div class="fileUploadWrap selected_sshot">
-                                                        <input tabindex="-1" class="form-control" id="fileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="">
+                                                        <input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreviewScreenshot(this, $('#screenshot_image_list'), 0)">
                                                         <div class="bootstrap-filestyle input-group">
-																		<span tabindex="0" class="group-span-filestyle input-group-btn">
-																			<label class="btn btn-default " for="fileInput">
-																				<span class="ico ico_fileupload">파일찾기</span>
-																			</label>
-																		</span>
+                                                            <span tabindex="0" class="group-span-filestyle input-group-btn">
+                                                                <label class="btn btn-default " for="screenshotFileInput" id="screenshot_image_list">
+                                                                    <span class="ico ico_fileupload">파일찾기</span>
+                                                                </label>
+                                                            </span>
                                                         </div>
                                                     </div>
                                                     <!-- //첨부파일 -->
                                                 </li>
+
                                             </ul>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">상세설명<i class="i_star">필수입력</i></th>
-                                <td><textarea name="name" style="height:150px;"></textarea></td>
+                                <th scope="row">상세설명</th>
+                                <td>
+                                    <div class="tbw_inner_txt">
+                                        <input class="form-control" style="height:150px;" type="text" th:value="${software.description}" id="softwareDescription">
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <th scope="row">파일 유형</th>
@@ -366,16 +161,17 @@
                                 <td>
                                     <!-- 첨부파일 -->
                                     <div class="fileUploadWrap" style="width:50%;">
-                                        <input tabindex="-1" class="form-control" id="fileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="">
+                                        <input tabindex="-1" class="form-control" id="appfileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="">
                                         <div class="bootstrap-filestyle input-group">
-                                            <input name="userfile" disabled="" class="form-control" id="userfile" type="text">
+                                            <input class="form-control" type="text" th:value="${software.app}" id="softwareApp" name="softwareApp">
                                             <span tabindex="0" class="group-span-filestyle input-group-btn">
-															<label class="btn btn-default" for="fileInput">
-																<span class="btn btn-md btn-color1">파일찾기</span>
-															</label>
-														</span>
+                                                <label class="btn btn-default" for="fileInput">
+                                                    <span class="btn btn-md btn-color1">파일찾기</span>
+                                                </label>
+                                            </span>
                                         </div>
                                     </div>
+
 
                                     <div class="checkbox checkbox-inline">
                                         <input id="check-id4" type="checkbox">
@@ -389,14 +185,14 @@
                                 <td>
                                     <!-- 첨부파일 -->
                                     <div class="fileUploadWrap" style="width:50%;">
-                                        <input tabindex="-1" class="form-control" id="fileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="">
+                                        <input tabindex="-1" class="form-control" id="manifestfileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="">
                                         <div class="bootstrap-filestyle input-group">
-                                            <input name="userfile" disabled="" class="form-control" id="userfile" type="text">
+                                            <input class="form-control" type="text" th:value="${software.manifest}" id="softwareManifest">
                                             <span tabindex="0" class="group-span-filestyle input-group-btn">
-															<label class="btn btn-default" for="fileInput">
-																<span class="btn btn-md btn-color1">파일찾기</span>
-															</label>
-														</span>
+                                                <label class="btn btn-default" for="fileInput">
+                                                    <span class="btn btn-md btn-color1">파일찾기</span>
+                                                </label>
+                                            </span>
                                         </div>
                                     </div>
 
@@ -408,38 +204,49 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">판매가격<i class="i_star">필수입력</i></th>
-                                <td>
-                                    <div class="form-group">
-                                        <select title="검색 구분 선택">
-                                            <option value="">선택</option>
-                                            <option value="">-</option>
-                                            <option value="">-</option>
-                                        </select>
-                                        <input style="width:100px;" type="text"> 원 / 일
-                                    </div>
+                                <th scope="row" style="height:50px;">판매가격</th>
+                                <td style="text-align:center;">
+<!--                                    <input class="form-control" style="width:100px;" type="text" th:value="${software.pricePerDay + ' 원'}" id="softwarePricePerDay" readonly>-->
+                                    <table>
+                                        <thead>
+                                        <th style="width:200px;">
+                                            <button type="button" name="button" class="btn btn-color2" onclick="delete_row()" >&nbsp; - &nbsp;</button>
+                                            &nbsp; 카탈로그 &nbsp;
+                                            <button type="button" name="button" class="btn btn-color2" onclick="add_row()">&nbsp; + &nbsp;</button>
+                                        </th>
+                                        <th>CPU</th>
+                                        <th>Memory</th>
+                                        <th>Disk</th>
+                                        <th>가격</th>
+                                        </thead>
+                                        <tbody id="pricePerDay_body"></tbody>
+                                    </table>
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">전시여부<i class="i_star">필수입력</i></th>
+                                <th scope="row">전시여부</th>
                                 <td>
-                                    <div class="radio radio-inline">
-                                        <input name="radio19" id="radio1-9" type="radio">
-                                        <label class="label" for="radio1-9">Y</label>
-                                    </div>
-                                    <div class="radio radio-inline">
-                                        <input name="radio19" id="radio1-10" type="radio">
-                                        <label class="label" for="radio1-10">N</label>
+                                    <div class="radio radio-inline" th:each="yn : ${yns}">
+                                        <input name="softwareInUse" th:id="'radio1-' + ${yn}" type="radio" th:value="${yn}" th:checked="${software.inUse} == ${yn}">
+                                        <label class="label" th:for="'radio1-' + ${yn}" th:text="${yn}"></label>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">버전</th>
-                                <td>1.0</td>
+                                <td><input class="form-control" style="width:100px;" type="text" th:value="${software.version}" id="softwareVersion" readonly></td>
                             </tr>
                             <tr>
                                 <th scope="row">등록일자</th>
-                                <td>2018.12.23</td>
+                                <td><input class="form-control" type="text" th:value="${software.createdDate}" id="softwareCreatedDate" readonly></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><input type="checkbox" name="chk_info" value="Y"> 변경사항 메모</th>
+                                <td>
+                                    <div class="tbw_inner_txt">
+                                        <pre><input class="form-control" type="text" th:value="${software.confirmComment}" id="softwareConfirmComment" readonly></pre>
+                                    </div>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -452,53 +259,246 @@
         </div>
         <!-- //cBox1 -->
         <div class="cont_btnBox">
-            <button name="button" class="btn btn-color7 btn-md" type="button" data-toggle="modal" data-target="#myModal_cancel">취소</button>
-            <!-- Modal -->
-            <div class="modal fade" id="myModal_cancel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content modal-sm"><!-- 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  -->
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            <h4 class="modal-title" id="myModalLabel">수정 취소</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="only-text">
-                                취소 하시겠습니까?
+            <div class="pull-right">
+                <button name="button" class="btn btn-color1 btn-md" type="button" data-toggle="modal" data-target="#myModal_ok">저장</button>
+                <!-- Modal -->
+                <div class="modal fade" id="myModal_ok" tabindex="-1" role="dialog" aria-labelledby="modalLabel_update" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-sm"><!-- 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  -->
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="modalLabel_update">상품 수정</h4>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" name="button" class="btn btn-color1">확인</button>
-                            <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
+                            <div class="modal-body">
+                                <div class="only-text">
+                                    상품을 수정하시겠습니까?
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" name="button" class="btn btn-color1"  th:onclick="'javascript:saveBtn(\''+ ${software.id} +'\');'">확인</button>
+                                <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- //Modal -->
-
-            <button name="button" class="btn btn-color1 btn-md" type="button" data-toggle="modal" data-target="#myModal_ok">저장</button>
-            <!-- Modal -->
-            <div class="modal fade" id="myModal_ok" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content modal-sm"><!-- 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  -->
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            <h4 class="modal-title" id="myModalLabel">상품 수정</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="only-text">
-                                상품을 수정하시겠습니까?
+                <!-- //Modal -->
+                <button name="button" class="btn btn-color7 btn-md" type="button" data-toggle="modal" data-target="#myModal_cancel">취소</button>
+                <!-- Modal -->
+                <div class="modal fade" id="myModal_cancel" tabindex="-1" role="dialog" aria-labelledby="modalLabel_cancel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-sm"><!-- 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  -->
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                <h4 class="modal-title" id="modalLabel_cancel">수정 취소</h4>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" name="button" class="btn btn-color1">확인</button>
-                            <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
+                            <div class="modal-body">
+                                <div class="only-text">
+                                    취소 하시겠습니까?
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" name="button" class="btn btn-color1"  th:onclick="'location.href = \'' + @{/softwares/{id}(id=${software.id})} + '\''">확인</button>
+                                <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <!-- Modal -->
             </div>
-            <!-- //Modal -->
         </div>
     </div>
     <!-- //content -->
+    <script th:inline="javascript" type="text/javascript">
+        /*<![CDATA[*/
+        var count = 0;
+        var PAGING_SIZE = 10;
+        var SORT = "id,asc";
+
+        // ON LOAD
+        $(document).ready(function() {
+            console.log("software-update init");
+        });
+
+        // save
+        var saveBtn = function(id) {
+            console.log("ID : " + id);
+            modifySoftware(id);
+        };
+
+        var modifySoftware = function (id) {
+            //상품명
+            var softwareName = $("#softwareName").val();
+            //카테고리
+            var softwareCategory = $("#softwareCategory option:selected").val();
+            //개요&간단설명
+            var softwareSummary = $("#softwareSummary").val();
+            //아이콘
+            var fileInput = $("#fileInput").val();
+            //스크린샷
+            var screenshotFileInput = $("#screenshotFileInput").val();
+            //상세설명
+            var softwareDescription = $("#softwareDescription").val();
+            //파일유형
+            var softwareType = $("#softwareType").val();
+            //상품파일
+            var softwareApp = $("#softwareApp").val();
+            //환경파일
+            var softwareManifest  = $("#softwareManifest").val();
+            //판매가격
+            var pricePerDay = $("#pricePerDay").val();
+            //전시여부
+            var softwareInUse  = $('input:radio[name="softwareInUse"]:checked').val();
+            //버전
+            var softwareVersion = $("#softwareVersion").val();
+            //상태
+            var softwareStatus =  $('input:radio[name="softwareStatus"]:checked').val();
+            //반려사유
+            var softwareConfirmComment = $("#softwareConfirmComment").val();
+            //등록일자
+            var softwareCreatedDate = $("#softwareCreatedDate").val();
+            //처리일자
+            var softwareStatusModifiedDate = $("#softwareStatusModifiedDate").val();
+
+
+            if(softwareConfirmComment === null || softwareConfirmComment === '') {
+                softwareConfirmComment = '';
+            }
+
+            var reqParam = {
+                "inUse" : softwareInUse,
+                "name" : softwareName,
+                "category" : {
+                    "id" : softwareCategory
+                },
+                "app" : softwareApp,
+                "manifest" : softwareManifest,
+                "summary" : softwareSummary,
+                "description" : softwareDescription,
+                "status" : softwareStatus,
+                "pricePerDay" : pricePerDay,
+                "confirmComment" : softwareConfirmComment
+            };
+
+            var reqUrl = "/softwares/" + id;
+
+            //console.log
+            console.log(JSON.stringify(reqParam));
+            console.log("REST_URL: " + reqUrl);
+
+            procCallAjax(reqUrl, "PUT", JSON.stringify(reqParam), null, callbackModifySoftware);
+        };
+
+        var callbackModifySoftware = function (data) {
+            console.log("modify data ::: " + JSON.stringify(data));
+            // procMovePage("/softwares/{id}".replace("{id}", data.id));
+
+        };
+
+        //icon
+        var getThumbnailPreview = function (html, $target) {
+            if (html.files && html.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $target.css('display', '');
+                    $target.html('<img src="' + e.target.result + '" border="0" alt="" />');
+                };
+                reader.readAsDataURL(html.files[0]);
+            }
+
+        };
+
+        // Screenshot
+        var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
+            if (html.files && html.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $target.css('display', '');
+                    $target.html('<img class="btn btn-default" src="' + e.target.result + '" border="0" alt="" />');
+                };
+                reader.readAsDataURL(html.files[0]);
+
+                console.log(countNum);
+                count = countNum + 1;
+                console.log(count);
+
+                //Event cols
+                var div = document.createElement('li');
+                div.id = "li_" + count;
+
+                var labelId = "screenshot_image_list" + count;
+                var pointLabelId = "#screenshot_image_list" + count;
+                div.innerHTML = '<div class="fileUploadWrap selected_sshot"><input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreviewScreenshot(this, $(' + "\'" + pointLabelId + "')" + ', ' + count + ')>"' + '<div class="bootstrap-filestyle input-group"><span tabindex="0" class="group-span-filestyle input-group-btn"><label class="btn btn-default " for="screenshotFileInput" id=' + labelId + '><span class="ico ico_fileupload">파일찾기</span></label></span></div>';
+
+                var li_name = "#li_" + countNum;
+                $(li_name).after(div);
+            }
+        }
+
+
+        //Event Rows
+        function add_row() {
+            var pricePerDay_body = document.getElementById('pricePerDay_body');
+            // var row = pricePerDay_body.insertRow(0); // 상단에 추가
+            var row = pricePerDay_body.insertRow(pricePerDay_body.rows.length); // 하단에 추가
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            cell1.innerHTML = '<div class="checkbox checkbox-inline">'
+                +'<input id="check-id4" type="checkbox">'
+                +'<label></label>'
+                +'</div>';
+            cell2.innerHTML = '<input class="form-control" type="text" placeholder="Small (1CPU/2GB1/GB).">';
+            cell3.innerHTML = '<input class="form-control" type="text" style="text-align:right;" placeholder="1,000">';
+            cell4.innerHTML = '<input class="form-control" type="text" style="text-align:right;" placeholder="1,000">';
+            cell5.innerHTML = '<input class="form-control" type="text" style="text-align:right;" placeholder="3,000">';
+
+        }
+
+        //delete Software ScreenshotBtn
+        var deleteSoftwareBtn = function(id) {
+            console.log("ID : " + id);
+            // procCallAjax("/softwares/" + id, "DELETE", null, null, callbackDeleteSoftware);
+        };
+
+        //delete Software ScreenshotBtn callback
+        var callbackDeleteSoftware = function(data) {
+            console.log("modify data ::: " + JSON.stringify(data));
+            procMovePage("/softwares/{id}".replace("{id}", data.id));
+        };
+
+
+        //Event Rows
+        function add_row() {
+            var pricePerDay_body = document.getElementById('pricePerDay_body');
+            // var row = pricePerDay_body.insertRow(0); // 상단에 추가
+            var row = pricePerDay_body.insertRow(pricePerDay_body.rows.length); // 하단에 추가
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            cell1.innerHTML = '<div class="checkbox checkbox-inline">'
+                                +'<input id="check-id4" type="checkbox">'
+                                +'<label></label>'
+                                +'</div>';
+            cell2.innerHTML = '<input class="form-control" type="text" placeholder="Small (1CPU/2GB1/GB).">';
+            cell3.innerHTML = '<input class="form-control" type="text" style="text-align:right;" placeholder="1,000">';
+            cell4.innerHTML = '<input class="form-control" type="text" style="text-align:right;" placeholder="1,000">';
+            cell5.innerHTML = '<input class="form-control" type="text" style="text-align:right;" placeholder="3,000">';
+
+        }
+
+        function delete_row() {
+            var pricePerDay_body = document.getElementById('pricePerDay_body');
+            if (pricePerDay_body.rows.length < 1) return;
+            // pricePerDay_body.deleteRow(0); // 상단부터 삭제
+            pricePerDay_body.deleteRow( pricePerDay_body.rows.length-1 ); // 하단부터 삭제
+        }
+
+
+        /*]]>*/
+    </script>
 </div>
 </html>

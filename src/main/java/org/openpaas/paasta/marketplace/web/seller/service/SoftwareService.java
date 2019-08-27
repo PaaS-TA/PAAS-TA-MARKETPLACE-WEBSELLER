@@ -50,15 +50,16 @@ public class SoftwareService {
         return paasApiRest.getForObject(url, Software.class);
     }
 
-    public Software updateSoftware(Software software) {
+    public Software updateSoftware(Long id, Software software) {
         String url = UriComponentsBuilder.newInstance().path("/softwares/{id}")
                 .build()
-                .expand(software.getId())
+                .expand(id)
                 .toString();
 
-        paasApiRest.put(url, software);
+        log.info("updateSoftware url :: " + url + " Software " + software.toString());
 
-        return getSoftware(software.getId());
+        paasApiRest.put(url, software);
+        return getSoftware(id);
     }
 
 

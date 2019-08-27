@@ -73,48 +73,6 @@ public class SoftwareController {
 
 
     /**
-     * 판매자의 상품 상세 조회
-     *
-     * @param model
-     * @param id
-     * @return
-     */
-    @GetMapping(value = "/{id}")
-    public String getSoftware(Model model, @PathVariable Long id) {
-        model.addAttribute("software", softwareService.getSoftware(id));
-        return "contents/software-detail";
-    }
-
-    /**
-     * 판매자가 등록한 상품 수정 페이지 이동
-     *
-     * @param model
-     * @param id
-     * @return
-     */
-    @GetMapping(value = "/{id}/update")
-    public String updateSoftwareHtml(Model model, @PathVariable Long id) {
-        model.addAttribute("software", softwareService.getSoftware(id));
-        model.addAttribute("types", Software.Type.values());
-        model.addAttribute("yns", Yn.values());
-        model.addAttribute("categories", softwareService.getCategories());
-        return "contents/software-update";
-    }
-
-    /**
-     * 판매자가 등록한 상품 수정
-     *
-     * @param id
-     * @param software
-     * @return
-     */
-    @PutMapping(value = "/{id}")
-    public Software updateSoftware(@PathVariable Long id, @Valid Software software) {
-        return softwareService.updateSoftware(software);
-    }
-
-
-    /**
      * 판매자 상품 등록 페이지 이동
      *
      * @param model
@@ -130,9 +88,10 @@ public class SoftwareController {
         return "contents/software-create";
     }
 
+
     /**
      * 판매자 상품 등록
-    *
+     *
      * @param software
      * @param bindingResult
      * @param screenshots
@@ -148,9 +107,6 @@ public class SoftwareController {
             return "contents/software-create";
         }
 
-        log.info("소프토 웨아! {}", software);
-
-
         software.setIcon(iconFile.getOriginalFilename());
         software.setApp(productFile.getOriginalFilename());
         software.setManifest(environmentFile.getOriginalFilename());
@@ -159,14 +115,10 @@ public class SoftwareController {
         software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(environmentFile).getFileURL(), "UTF-8"));
         log.info(software.toString());
 
-//        software.setScreenshotList();
-
         Software newSoftware = softwareService.createSoftware(software);
-        System.out.println("생성된 소프트웨어 ::: " + newSoftware.getName());
-
-
         return "redirect:/softwares/list";
     }
+
 
     /**
      * 상품 현황 리스트 조회 페이지 이동
@@ -179,7 +131,69 @@ public class SoftwareController {
     }
 
 
+    /**
+     * 판매자의 상품 상세 조회
+     *
+     * @param model
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/{id}")
+    public String getSoftware(Model model, @PathVariable Long id) {
+        model.addAttribute("software", softwareService.getSoftware(id));
+        return "contents/software-detail";
+    }
 
 
+    /**
+     * 판매자가 등록한 상품 수정 페이지 이동
+     *
+     * @param model
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/{id}/update")
+    public String updateSoftwareHtml(Model model, @PathVariable Long id) {
+        model.addAttribute("software", softwareService.getSoftware(id));
+        model.addAttribute("spec", new SoftwareSpecification());
+        model.addAttribute("yns", Yn.values());
+        model.addAttribute("types", Software.Type.values());
+        model.addAttribute("status", Software.Status.values());
+        model.addAttribute("categories", softwareService.getCategories());
+        return "contents/software-update";
+    }
+
+
+    /**
+     * 판매자가 등록한 상품 수정
+     *
+     * @param software
+     * @param id
+     * @return
+     */
+
+    @PutMapping(value = "/{id}")
+    @ResponseBody
+    public Software updateSoftware(@PathVariable Long id, @Valid @RequestBody Software software) {
+        log.info(">> updateSoftware " + software.toString());
+        Software updateSoftware = softwareService.getSoftware(id);
+        updateSoftware.setId(software.getId());
+        updateSoftware.setName(software.getName());
+        updateSoftware.setCategory(software.getCategory());
+        updateSoftware.setInUse(software.getInUse());
+        updateSoftware.setStatus(software.getStatus());
+        updateSoftware.setConfirmComment(software.getConfirmComment());
+        return softwareService.updateSoftware(id, software);
+    }
+
+/*
+    @PutMapping(value = "/{id}")
+    @ResponseBody
+    public Software updateProfiles(@PathVariable Long id, @Valid @RequestBody Software software){
+        log.info(">> updateSoftware " + software.toString());
+        return softwareService.updateSoftware(id, software);
+    }
+
+ */
 
 }
