@@ -97,32 +97,10 @@
                                     <div class="screenShotBox">
                                         <div class="sshotWrap">
                                             <ul>
-                                                <li name="li_in">
-                                                    <div class="sshot_in" name="sshot_in">
+                                                <li name="li_in" id="li_in">
+                                                    <div class="sshot_in">
                                                         <img src="/static/images/thum_test01.png" alt="" id="image_form_url"/>
                                                         <a href="" data-toggle="modal" data-target="#myModal_del"><span class="ico ico_delete" name="ico_delete">X</span></a>
-                                                        <!-- Modal -->
-                                                        <div class="modal fade" id="myModal_del" tabindex="-1" role="dialog" aria-labelledby="modalLabel_del" aria-hidden="true">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content modal-sm"><!-- 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  -->
-                                                                    <div class="modal-header">
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                                        <h4 class="modal-title" id="modalLabel_del">스크린 샷 삭제</h4>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="only-text">
-                                                                            삭제 하시겠습니까?
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-<!--                                                                        <button type="button" name="button" class="btn btn-color1" th:onclick="'javascript:deleteSoftwareBtn(\''+ ${software.id} +'\');'">확인</button>-->
-                                                                        <button type="button" name="button" id="deleteSoftwareBtn" class="btn btn-color1">확인</button>
-                                                                        <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- Modal -->
                                                     </div>
                                                 </li>
                                                 <li id="li_0">
@@ -144,6 +122,8 @@
                                     </div>
                                 </td>
                             </tr>
+
+
                             <tr>
                                 <th scope="row">상세설명</th>
                                 <td>
@@ -195,21 +175,7 @@
                             <tr>
                                 <th scope="row" style="height:50px;">판매가격<i class="i_star">필수입력</i></th>
                                 <td style="text-align:center;">
-<!--                                    <input class="form-control" style="width:100px;" type="text" th:value="${software.pricePerDay + ' 원'}" id="softwarePricePerDay" readonly>-->
-                                    <table>
-                                        <thead>
-                                        <th style="width:200px;">
-                                            <button type="button" name="button" class="btn btn-color2" onclick="delete_row()" >&nbsp; - &nbsp;</button>
-                                            &nbsp; 카탈로그 &nbsp;
-                                            <button type="button" name="button" class="btn btn-color2" onclick="add_row()">&nbsp; + &nbsp;</button>
-                                        </th>
-                                        <th>CPU</th>
-                                        <th>Memory</th>
-                                        <th>Disk</th>
-                                        <th>가격</th>
-                                        </thead>
-                                        <tbody id="pricePerDay_body"></tbody>
-                                    </table>
+                                    <input class="form-control" style="width:100px;" type="text" th:value="${software.pricePerDay + ' 원'}" id="softwarePricePerDay">
                                 </td>
                             </tr>
                             <tr>
@@ -228,14 +194,6 @@
                             <tr>
                                 <th scope="row">등록일자</th>
                                 <td><input class="form-control" type="text" th:value="${software.createdDate}" id="softwareCreatedDate" readonly></td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><input type="checkbox" name="chk_info" value="Y"> 변경사항 메모</th>
-                                <td>
-                                    <div class="tbw_inner_txt">
-                                        <pre><input class="form-control" type="text" th:value="${software.confirmComment}" id="softwareConfirmComment" readonly></pre>
-                                    </div>
-                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -296,14 +254,33 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal_del" tabindex="-1" role="dialog" aria-labelledby="modalLabel_del" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content modal-sm"><!-- 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="modalLabel_del">스크린 샷 삭제</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="only-text">
+                        삭제 하시겠습니까?
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="button" id="deleteSoftwareBtn" class="btn btn-color1" onclick="deleteSoftwareBtn()" data-dismiss="modal">확인</button>
+                    <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+
     <!-- //content -->
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
-        var count = 0;
-        var PAGING_SIZE = 10;
-        var SORT = "id,asc";
 
-        // ON LOAD
         $(document).ready(function() {
             console.log("software-update init");
         });
@@ -378,8 +355,7 @@
         };
 
         var callbackModifySoftware = function (data) {
-            console.log("modify data ::: " + JSON.stringify(data));
-            // procMovePage("/softwares/{id}".replace("{id}", data.id));
+            procMovePage("/softwares/{id}".replace("{id}", data.id));
 
         };
 
@@ -393,7 +369,6 @@
                 };
                 reader.readAsDataURL(html.files[0]);
             }
-
         };
 
         // Screenshot
@@ -403,7 +378,10 @@
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     $target.css('display', '');
-                    $target.html('<img class="btn btn-default" src="' + e.target.result + '" border="0" alt="" />');
+                    $target.html('<div class="sshot_in">'
+                        + '<img class="btn btn-default" src="' + e.target.result + '" alt="" id="image_form_url" border="0">'
+                        + '<a href="" data-toggle="modal" data-target="#myModal_del"><span class="ico ico_delete" name="ico_delete">X</span></a>'
+                        + '</div>')
                 };
                 reader.readAsDataURL(html.files[0]);
 
@@ -429,64 +407,9 @@
                     + '</div>';
 
                 var li_name = "#li_" + countNum;
-
                 $(li_name).after(div);
             }
         }
-
-        //delete Software ScreenshotBtn
-        $('button').click(function(e) {
-           console.log("delete Software ScreenshotBtn");
-           //TODO: Bootstrap Filestyle
-           //  $('span[name=ico_delete]').filestyle('clear');
-            $('li[name=li_in]').hide();
-            //img src 변경
-            $("#image_form_url").attr("src", "");
-
-        });
-
-
-        //delete Software ScreenshotBtn
-        var deleteSoftwareBtn = function(id) {
-            console.log("ID : " + id);
-            // procCallAjax("/softwares/" + id, "DELETE", null, null, callbackDeleteSoftware);
-        };
-
-        //delete Software ScreenshotBtn callback
-        var callbackDeleteSoftware = function(data) {
-            console.log("modify data ::: " + JSON.stringify(data));
-            procMovePage("/softwares/{id}".replace("{id}", data.id));
-        };
-
-
-        //Event Rows
-        function add_row() {
-            var pricePerDay_body = document.getElementById('pricePerDay_body');
-            // var row = pricePerDay_body.insertRow(0); // 상단에 추가
-            var row = pricePerDay_body.insertRow(pricePerDay_body.rows.length); // 하단에 추가
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
-            var cell4 = row.insertCell(3);
-            var cell5 = row.insertCell(4);
-            cell1.innerHTML = '<div class="checkbox checkbox-inline">'
-                                +'<input id="check-id4" type="checkbox">'
-                                +'<label></label>'
-                                +'</div>';
-            cell2.innerHTML = '<input class="form-control" type="text" placeholder="Small (1CPU/2GB1/GB).">';
-            cell3.innerHTML = '<input class="form-control" type="text" style="text-align:right;" placeholder="1,000">';
-            cell4.innerHTML = '<input class="form-control" type="text" style="text-align:right;" placeholder="1,000">';
-            cell5.innerHTML = '<input class="form-control" type="text" style="text-align:right;" placeholder="3,000">';
-
-        }
-
-        function delete_row() {
-            var pricePerDay_body = document.getElementById('pricePerDay_body');
-            if (pricePerDay_body.rows.length < 1) return;
-            // pricePerDay_body.deleteRow(0); // 상단부터 삭제
-            pricePerDay_body.deleteRow( pricePerDay_body.rows.length-1 ); // 하단부터 삭제
-        }
-
         /*]]>*/
     </script>
 </div>
