@@ -171,29 +171,25 @@ public class SoftwareController {
      * @param id
      * @return
      */
-
     @PutMapping(value = "/{id}")
     @ResponseBody
     public Software updateSoftware(@PathVariable Long id, @Valid @RequestBody Software software) {
         log.info(">> updateSoftware " + software.toString());
         Software updateSoftware = softwareService.getSoftware(id);
-        updateSoftware.setId(software.getId());
         updateSoftware.setName(software.getName());
         updateSoftware.setCategory(software.getCategory());
+        updateSoftware.setApp(software.getApp());
+        updateSoftware.setManifest(software.getManifest());
+        updateSoftware.setScreenshotList(software.getScreenshotList());
+        updateSoftware.setSummary(software.getSummary());
+        updateSoftware.setDescription(software.getDescription());
         updateSoftware.setInUse(software.getInUse());
-        updateSoftware.setStatus(software.getStatus());
-        updateSoftware.setConfirmComment(software.getConfirmComment());
+        updateSoftware.setType(software.getType());
+        updateSoftware.setPricePerDay(software.getPricePerDay());
+        updateSoftware.setVersion(software.getVersion());
         return softwareService.updateSoftware(id, software);
     }
 
-/*
-    @PutMapping(value = "/{id}")
-    @ResponseBody
-    public Software updateProfiles(@PathVariable Long id, @Valid @RequestBody Software software){
-        log.info(">> updateSoftware " + software.toString());
-        return softwareService.updateSoftware(id, software);
-    }
 
- */
 
 }
