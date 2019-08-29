@@ -2,10 +2,7 @@ package org.openpaas.paasta.marketplace.web.seller.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.openpaas.paasta.marketplace.api.domain.CustomPage;
-import org.openpaas.paasta.marketplace.api.domain.Software;
-import org.openpaas.paasta.marketplace.api.domain.SoftwareSpecification;
-import org.openpaas.paasta.marketplace.api.domain.Yn;
+import org.openpaas.paasta.marketplace.api.domain.*;
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.service.SoftwareService;
 import org.openpaas.paasta.marketplace.web.seller.storageApi.store.swift.SwiftOSService;
@@ -22,8 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/softwares")
@@ -163,7 +162,6 @@ public class SoftwareController {
         return "contents/software-update";
     }
 
-
     /**
      * 판매자가 등록한 상품 수정
      *
@@ -173,21 +171,35 @@ public class SoftwareController {
      */
     @PutMapping(value = "/{id}")
     @ResponseBody
-    public Software updateSoftware(@PathVariable Long id, @Valid @RequestBody Software software) {
-        log.info(">> updateSoftware " + software.toString());
-        Software updateSoftware = softwareService.getSoftware(id);
-        updateSoftware.setName(software.getName());
-        updateSoftware.setCategory(software.getCategory());
-        updateSoftware.setApp(software.getApp());
-        updateSoftware.setManifest(software.getManifest());
-        updateSoftware.setScreenshotList(software.getScreenshotList());
-        updateSoftware.setSummary(software.getSummary());
-        updateSoftware.setDescription(software.getDescription());
-        updateSoftware.setInUse(software.getInUse());
-        updateSoftware.setType(software.getType());
-        updateSoftware.setPricePerDay(software.getPricePerDay());
-        updateSoftware.setVersion(software.getVersion());
+    public Software updateSoftware(@Valid @RequestBody Software software, @PathVariable Long id, @RequestParam(value = "screenshots") MultipartFile[] screenshots, @RequestParam(value = "iconFile") MultipartFile iconFile,
+                                   @RequestParam(value = "softwareAppFile") MultipartFile softwareAppFile, @RequestParam(value = "softwareManifest") MultipartFile softwareManifest) throws IOException {
+
+        log.info(">> updateSoftware Init (1) " + software.toString());
+        software.setIcon(iconFile.getOriginalFilename());
+        software.setApp(softwareAppFile.getOriginalFilename());
+        software.setManifest(softwareManifest.getOriginalFilename());
+
+        software.setIconPath(URLDecoder.decode(swiftOSService.putObject(iconFile).getFileURL(), "UTF-8"));
+        software.setAppPath(URLDecoder.decode(swiftOSService.putObject(softwareAppFile).getFileURL(), "UTF-8"));
+        software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(softwareManifest).getFileURL(), "UTF-8"));
+
+
+        log.info(">> updateSoftware (2) " + software.toString());
+
         return softwareService.updateSoftware(id, software);
+    }
+
+    /**
+     * 상품 수정이력 조회
+     *
+     * @param id
+     * @param httpServletRequest
+     * @return
+     */
+    @GetMapping(value = "/{id}/histories")
+    @ResponseBody
+    public List<SoftwareHistory> getHistoryList(@NotNull @PathVariable Long id, HttpServletRequest httpServletRequest) {
+        return softwareService.getHistoryList(id, commonService.setParameters(httpServletRequest));
     }
 
 
