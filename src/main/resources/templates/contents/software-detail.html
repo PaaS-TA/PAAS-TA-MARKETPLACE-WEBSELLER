@@ -31,7 +31,8 @@
         <!-- cBox1 -->
         <div class="cBox type1 appCnt-info">
             <div class="cBox-hd">
-                <h4 class="c-tit pl60" th:text="${software.name}"><img class="logo" alt="" src="/images/thum_ico08.png"></h4>
+                <img class="logo" alt="" th:src="${software.iconPath}" />
+                <h4 class="c-tit pl60" th:text="${software.name}"></h4>
             </div>
             <div class="cBox-cnt">
                 <!-- inner -->
@@ -57,13 +58,25 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">스크린샷</th>
+                                <th scope="row">스크린샷00</th>
                                 <td>
                                     <div class="slideWrap">
                                         <div class="slide_list">
-                                            <div class="scrtabs-tab-container" style="visibility: visible;"><div class="scrtabs-tab-scroll-arrow scrtabs-tab-scroll-arrow-left"><span class="ico btn-left"></span></div><div class="scrtabs-tabs-fixed-container" style="width: 494px;"><div class="scrtabs-tabs-movable-container" style="width: 2501px;"><ul class="nav nav-tabs">
-                                                <li><a href=""><img src="/static/images/thum_test01.png" alt=""></a></li>
-                                            </ul></div></div><div class="scrtabs-tab-scroll-arrow scrtabs-tab-scroll-arrow-right"><span class="ico btn-right"></span></div></div>
+                                            <div class="scrtabs-tab-container" style="visibility: visible;">
+                                                <div class="scrtabs-tab-scroll-arrow scrtabs-tab-scroll-arrow-left">
+                                                    <span class="ico btn-left"></span>
+                                                </div>
+                                                <div class="scrtabs-tabs-fixed-container" style="width: 494px;">
+                                                    <div class="scrtabs-tabs-movable-container" style="width: 2501px;">
+                                                        <ul class="nav nav-tabs">
+                                                            <li th:each="screenshot : ${software.screenshotList}">
+                                                                <a href=""><img th:src="${screenshot}" alt=""></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="scrtabs-tab-scroll-arrow scrtabs-tab-scroll-arrow-right"><span class="ico btn-right"></span></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </td>
