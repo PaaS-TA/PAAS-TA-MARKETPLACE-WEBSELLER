@@ -22,6 +22,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.List;
 
 @Controller
@@ -109,6 +111,13 @@ public class SoftwareController {
         software.setIcon(iconFile.getOriginalFilename());
         software.setApp(productFile.getOriginalFilename());
         software.setManifest(environmentFile.getOriginalFilename());
+
+        List<String> screenshotList = new ArrayList<>();
+        for(int i = 0; i < screenshots.length; i++) {
+            screenshotList.add(URLDecoder.decode(swiftOSService.putObject(screenshots[i]).getFileURL(), "UTF-8"));
+        }
+        software.setScreenshotList(screenshotList);
+
         software.setAppPath(URLDecoder.decode(swiftOSService.putObject(productFile).getFileURL(), "UTF-8"));
         software.setIconPath(URLDecoder.decode(swiftOSService.putObject(iconFile).getFileURL(), "UTF-8"));
         software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(environmentFile).getFileURL(), "UTF-8"));
@@ -161,6 +170,7 @@ public class SoftwareController {
         model.addAttribute("categories", softwareService.getCategories());
         return "contents/software-update";
     }
+
 
     /**
      * 판매자가 등록한 상품 수정
