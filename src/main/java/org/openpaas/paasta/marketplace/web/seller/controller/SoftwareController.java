@@ -129,17 +129,6 @@ public class SoftwareController {
 
 
     /**
-     * 상품 현황 리스트 조회 페이지 이동
-     *
-     * @return String
-     */
-    @GetMapping(value = "/report")
-    public String getSoftwareUseStatus() {
-        return "contents/software-report";
-    }
-
-
-    /**
      * 판매자의 상품 상세 조회
      *
      * @param model

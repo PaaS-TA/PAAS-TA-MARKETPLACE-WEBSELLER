@@ -127,7 +127,20 @@
 
         <!-- page -->
         <nav class="pagiWrap">
-            <ul class="pagination" id="pageNumberList">
+            <ul class="pagination">
+                <li class="first disabled"><a href="#">맨 처음</a></li>
+                <li class="prev"><a href="#">이전</a></li>
+                <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                <li class=" disabled"><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">6</a></li>
+                <li><a href="#">7</a></li>
+                <li><a href="#">8</a></li>
+                <li><a href="#">9</a></li>
+                <li class="next"><a href="#">다음</a></li>
+                <li class="end"><a href="#">맨 끝</a></li>
             </ul>
         </nav>
         <!-- //page -->
@@ -197,24 +210,6 @@
             }
 
             statsSoftwareList.html(htmlString);
-
-            //::page::
-            var pageNumberList = $("#pageNumberList");
-            var htmlStringPage = "<li class='first disabled'><a href='#'>맨 처음</a></li>" + "<li class='prev'><a href='#'>이전</a></li>";
-            var pageTotalNumber = data.totalElements;
-            var pageSize = data.size;
-
-            var pageCount = Math.ceil(pageTotalNumber/pageSize);
-            console.log("::pageCount :: " + pageCount);
-
-            if(pageCount > 0){
-                for(var page = 0; page < pageCount; page++){
-                    htmlStringPage += "<li class='active'><a href='javascript:void(0);' onclick=moveSoftwareListPage('"+ page +"')>" + (page + 1) + "<span class='sr-only'>(current)</span></a></li>"
-                }
-            }
-            htmlStringPage += "<li class='next'><a href='#'>다음</a></li>" + "<li class='end'><a href='#'>맨 끝</a></li>";
-            pageNumberList.html(htmlStringPage);
-
         };
 
 
@@ -224,15 +219,9 @@
 
         //eventBtn
         $("#searchBtn").on("click", function () {
-            alert("searchBtn");
-            getStatsSoftwareList();
+            alert("statsSoftware will be distributed shortly");
         });
 
-
-        // search enter
-        var search = function() {
-            getStatsSoftwareList();
-        };
 
 
         /*]]>*/

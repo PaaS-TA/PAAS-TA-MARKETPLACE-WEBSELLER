@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-registrant}">
+
+<!-- index.html 고유 CSS 추가 -->
+<th:block layout:fragment="css">
+</th:block>
+
+<!-- index.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+
+</th:block>
+
+<div class="rightCnt" layout:fragment="content">
+    <!-- title area -->
+    <div class="titWrap">
+        <h2 class="h2">상품 현황 상세</h2>
+        <div class="breadWrap">
+            <ol class="breadcrumb">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">사용현황</a></li>
+                <li class="active">상품 현황 상세</li><!-- 마지막 li -->
+            </ol>
+        </div>
+    </div>
+    <!-- //title area -->
+
+    <!-- content -->
+    <div class="content">
+
+        <!-- cBox1 -->
+        <div class="cBox type1 appCnt-info">
+            <div class="cBox-hd">
+                <h4 class="c-tit">상품별 현황 상세</h4>
+            </div>
+            <div class="cBox-cnt">
+                <!-- inner -->
+                <div class="in pd0 d_block">
+                    <!-- table -->
+                    <div class="tbw type1">
+                        <table class="table">
+                            <colgroup>
+                                <col style="width:15%;">
+                                <col style="width:auto;">
+                                <col style="width:15%;">
+                                <col style="width:auto;">
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <td>상품명</td>
+                                <td colspan="3" th:text="${software.name}"></td>
+                            </tr>
+                            <tr>
+                                <td>버전</td>
+                                <td th:text="${software.version}"></td>
+                                <td>카테고리</td>
+                                <td th:text="${software.category.name}"></td>
+                            </tr>
+                            <tr>
+                                <td>가격</td>
+                                <td th:text="${software.pricePerDay}"></td>
+                                <td>판매자</td>
+                                <td th:text="${software.createdBy}"></td>
+                            </tr>
+                            <tr>
+                                <td>등록일</td>
+                                <td th:text="${software.createdDate}"></td>
+                                <td>승인일</td>
+                                <td th:text="${software.statusModifiedDate}"></td>
+                            </tr>
+                            <tr>
+                                <td>개요</td>
+                                <td colspan="3" th:text="${software.summary}"></td>
+                            </tr>
+                            <tr>
+                                <td>사용자 수</td>
+                                <td colspan="3"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- //table -->
+
+                    <!--사용추이 차트-->
+                    <div class="cht_area_wrap">
+                        <span class="cht_tit text-left mt50">사용자 추이<span class="s_txt">(2019년도 기준)</span></span>
+                        <div id="useStatusProdDetail" class="cht_area"></div>
+                    </div>
+                    <!--//사용추이 차트-->
+
+                </div>
+                <!-- //inner -->
+            </div>
+        </div>
+        <!-- //cBox1 -->
+
+        <div class="cont_btnBox">
+            <div class="pull-right">
+                <button name="button" class="btn btn-color1 btn-md" type="button" onclick="location.href='/stats/softwares'">목록</button>
+            </div>
+        </div>
+    </div>
+    <!-- //content -->
+
+    <script type="text/javascript">
+        /*<![CDATA[*/
+        var PAGING_SIZE = 10;
+        var SORT = "id,asc";
+
+
+        // ON LOAD
+        $(document).ready(function() {
+            console.log('::StatsSoftwareDetail Init::');
+        });
+
+        /*]]>*/
+    </script>
+</div>
+</html>
