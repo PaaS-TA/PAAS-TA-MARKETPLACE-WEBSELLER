@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -77,6 +74,25 @@ public class StatsController {
     @GetMapping(value = "/softwares/{id}")
     public String getSoftwareStats(Model model, @PathVariable Long id) {
         model.addAttribute("software", softwareService.getSoftware(id));
+
+        // 단일 상품에 대한 총 사용자 수
+        List<Long> idIn = new ArrayList<>();
+        idIn.add(id);
+
+        Map<Long, Long> result = statsService.getCountsOfInsts(idIn);
+        Iterator iter = result.keySet().iterator();
+        Object usedSwCount = null;
+
+        if(result.size() > 0) {
+            while(iter.hasNext()){
+                Object key = iter.next();
+                usedSwCount = result.get(key);
+            }
+        }else {
+            usedSwCount = 0;
+        }
+
+        model.addAttribute("usedSwCountSum", usedSwCount);
         return "contents/software-statusdetail";
     }
 

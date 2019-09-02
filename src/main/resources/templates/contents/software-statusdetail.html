@@ -31,7 +31,7 @@
         <!-- cBox1 -->
         <div class="cBox type1 appCnt-info">
             <div class="cBox-hd">
-                <h4 class="c-tit">상품별 현황 상세</h4>
+                <h4 class="c-tit">상품 현황 상세</h4>
             </div>
             <div class="cBox-cnt">
                 <!-- inner -->
@@ -45,60 +45,107 @@
                                 <col style="width:15%;">
                                 <col style="width:auto;">
                             </colgroup>
+<!--                            <tbody id="softwareStatusArea">-->
                             <tbody>
                             <tr>
-                                <td>상품명</td>
+                                <th scope="row">상품명</th>
                                 <td colspan="3" th:text="${software.name}"></td>
                             </tr>
                             <tr>
-                                <td>버전</td>
+                                <th scope="row">버전</th>
                                 <td th:text="${software.version}"></td>
-                                <td>카테고리</td>
+                                <th scope="row">카테고리</th>
                                 <td th:text="${software.category.name}"></td>
                             </tr>
                             <tr>
-                                <td>가격</td>
-                                <td th:text="${software.pricePerDay}"></td>
-                                <td>판매자</td>
+                                <th scope="row">가격</th>
+                                <td th:text="${software.pricePerDay}">원/월</td>
+                                <th scope="row">판매자</th>
                                 <td th:text="${software.createdBy}"></td>
                             </tr>
                             <tr>
-                                <td>등록일</td>
+                                <th scope="row">등록일</th>
                                 <td th:text="${software.createdDate}"></td>
-                                <td>승인일</td>
+                                <th scope="row">승인일</th>
                                 <td th:text="${software.statusModifiedDate}"></td>
                             </tr>
                             <tr>
-                                <td>개요</td>
-                                <td colspan="3" th:text="${software.summary}"></td>
+                                <th scope="row">개요</th>
+                                <td colspan="3" th:text="${software.description}"></td>
                             </tr>
                             <tr>
-                                <td>사용자 수</td>
-                                <td colspan="3"></td>
+                                <th scope="row">사용자 수</th>
+                                <td colspan="3" th:text="${usedSwCountSum}"></td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                     <!-- //table -->
-
-                    <!--사용추이 차트-->
-                    <div class="cht_area_wrap">
-                        <span class="cht_tit text-left mt50">사용자 추이<span class="s_txt">(2019년도 기준)</span></span>
-                        <div id="useStatusProdDetail" class="cht_area"></div>
-                    </div>
-                    <!--//사용추이 차트-->
-
                 </div>
                 <!-- //inner -->
             </div>
         </div>
         <!-- //cBox1 -->
 
-        <div class="cont_btnBox">
-            <div class="pull-right">
-                <button name="button" class="btn btn-color1 btn-md" type="button" onclick="location.href='/stats/softwares'">목록</button>
+        <div class="searchWrap mt50">
+            <div class="searchBox"><!--검색폼 두줄일 때 class="fm-row-2"-->
+                <!-- Form 그룹 -->
+                <div class="form-group">
+                    <div class="form-group-area">
+                        <div class="fm_label"><label for="" class="label">등록일</label></div>
+                        <div class="fm_box w_auto">
+                            <div class="dateWrap">
+                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD" id="startDatePicker" value=""></div>
+                                <span class="wave">~</span>
+                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD" id="endDatePicker" value=""></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- //Form 그룹 -->
+                <button type="button" name="button" class="btn btn-sch" title="검색"><span class="ico">검색</span></button>
             </div>
         </div>
+
+        <div class="cont-titWrap mt30">
+            <div class="pull-left">
+                <h3 class="h-tit3">사용자 수 <span class="point4" th:text="${'('+usedSwCountSum + ')'}"></span></h3>
+            </div>
+            <div class="pull-right">
+                <button name="button" class="btn btn-color2 btn-md" type="button" id="searchStatsBtn">사용자 추이</button>
+            </div>
+        </div>
+
+        <!-- 테이블 -->
+        <div class="tbl type1 pt20">
+            <table class="table">
+                <colgroup>
+                    <col style="width:10%;">
+                    <col style="width:20%;">
+                    <col style="width:auto;">
+                    <col style="width:18%;">
+                    <col style="width:18%;">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">사용자 이름</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">구매일</th>
+                    <th scope="col">사용연월</th>
+                </tr>
+                </thead>
+                <tbody id="softwareArea">
+                </tbody>
+            </table>
+        </div>
+        <!-- //테이블 -->
+        <!-- page -->
+        <nav class="pagiWrap">
+            <ul class="pagination" id="pageNumberList">
+            </ul>
+        </nav>
+        <!-- //page -->
     </div>
     <!-- //content -->
 
@@ -107,10 +154,14 @@
         var PAGING_SIZE = 10;
         var SORT = "id,asc";
 
-
         // ON LOAD
         $(document).ready(function() {
             console.log('::StatsSoftwareDetail Init::');
+        });
+
+        //eventBtn
+        $("#searchStatsBtn").on("click", function () {
+            alert("userStatsSoftware will be distributed shortly");
         });
 
         /*]]>*/

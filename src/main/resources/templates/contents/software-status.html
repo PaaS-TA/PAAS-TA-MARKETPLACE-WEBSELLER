@@ -60,24 +60,19 @@
             </ul>
         </div>
         <!-- //사용현황 -->
-
+        <form th:object="${spec}" action="#" id="SoftwareStatusForm" method="get">
         <!-- 검색 Form -->
         <div class="searchWrap">
             <div class="searchBox">
                 <!-- Form 그룹 -->
                 <div class="form-group">
                     <div class="form-group-area">
-                        <div class="fm_box w_auto pr10">
-                            <select id="" name="">
-                                <option value="">등록일</option>
-                                <option value="">승인일</option>
-                            </select>
-                        </div>
+                        <div class="fm_label"><label for="" class="label">등록일자</label></div>
                         <div class="fm_box w_auto">
                             <div class="dateWrap">
-                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD"></div>
+                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD" th:value="*{createdDateAfter}" id="createdDateAfter"></div>
                                 <span class="wave">~</span>
-                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD"></div>
+                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD" th:value="*{createdDateBefore}" id="createdDateBefore"></div>
                             </div>
                         </div>
                     </div>
@@ -103,7 +98,7 @@
             </div>
         </div>
         <!-- //검색 Form -->
-
+        </form>
         <div class="cont-titWrap mt30">
             <h3 class="h-tit3">전체 상품 / 판매 상품 / 사용자<span class="point4" id="totalCount"></span></h3>
         </div>
@@ -166,14 +161,30 @@
         });
 
         var getSoftwareStatsList = function (pageNum) {
+            var dateParameter;                                              //날짜
             var categoryId = $("#categoryId option:selected").val();        //카테고리
 
             if (categoryId === 'ALL' || categoryId === '') {
                 categoryId = '';
             }
 
-            var reqUrl = "/softwares" + "?categoryId=" + categoryId + "&page=" + pageNum + "&size=" + PAGING_SIZE + "&sort=" + SORT;
-            console.log("reqUrl :" + reqUrl);
+            var createdDateAfter = $("#createdDateAfter").datepicker('option', 'dateFormat', 'yy-mm-dd').val();
+            var createdDateBefore = $("#createdDateBefore").datepicker('option', 'dateFormat', 'yy-mm-dd').val();
+
+
+            if((createdDateAfter === "" || createdDateAfter === undefined) && (createdDateBefore === "" || createdDateBefore === undefined)) {
+                dateParameter = "&createdDateAfter=" + '' + "&createdDateBefore=" + '';
+            }else{
+                dateParameter = "&createdDateAfter=" + createdDateAfter + "T00:00:00.000Z" + "&createdDateBefore=" + createdDateBefore + "T23:59:59.000Z";
+            }
+
+
+            console.log("createdDateAfter ::: "  + createdDateAfter);
+            console.log("createdDateBefore ::: "  + createdDateBefore);
+
+            var reqUrl = "/softwares" + "?categoryId=" + categoryId + "&page=" + pageNum + "&size=" + PAGING_SIZE + "&sort=" + SORT + dateParameter;
+
+            console.log("dateParameter ::: "  + dateParameter);
 
             procCallAjax(reqUrl, "GET", null, null, callbackSoftwareStatsList);
         };
