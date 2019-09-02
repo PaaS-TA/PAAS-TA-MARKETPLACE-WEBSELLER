@@ -178,6 +178,13 @@ public class SoftwareController {
         software.setApp(softwareAppFile.getOriginalFilename());
         software.setManifest(softwareManifest.getOriginalFilename());
 
+
+        List<String> screenshotList = new ArrayList<>();
+        for(int i = 0; i < screenshots.length; i++) {
+            screenshotList.add(URLDecoder.decode(swiftOSService.putObject(screenshots[i]).getFileURL(), "UTF-8"));
+        }
+        software.setScreenshotList(screenshotList);
+
         software.setIconPath(URLDecoder.decode(swiftOSService.putObject(iconFile).getFileURL(), "UTF-8"));
         software.setAppPath(URLDecoder.decode(swiftOSService.putObject(softwareAppFile).getFileURL(), "UTF-8"));
         software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(softwareManifest).getFileURL(), "UTF-8"));
@@ -186,6 +193,7 @@ public class SoftwareController {
         log.info(">> updateSoftware (2) " + software.toString());
 
         return softwareService.updateSoftware(id, software);
+
     }
 
     /**

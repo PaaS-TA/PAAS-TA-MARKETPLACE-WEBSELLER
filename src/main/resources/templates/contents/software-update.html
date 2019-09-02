@@ -71,6 +71,8 @@
                                 <th scope="row">개요<i class="i_star">필수입력</i></th>
                                 <td><input class="form-control" style="height:50px;" type="text" th:value="${software.summary}" id="softwareSummary"></td>
                             </tr>
+
+
                             <tr>
                                 <th scope="row">아이콘<i class="i_star">필수입력</i></th>
                                 <td>
@@ -79,7 +81,8 @@
                                         <input tabindex="-1" class="form-control" id="iconFileInput" name="iconFile" multiple style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreview(this, $('#icon_image'))">
                                         <div class="bootstrap-filestyle input-group">
                                             <span tabindex="0" class="group-span-filestyle input-group-btn">
-                                                <label class="btn btn-default " for="iconFileInput" id="icon_image">
+                                                 <label class="btn btn-default " for="iconFileInput" id="icon_image">
+                                                    <img class="logo" alt="" th:src="${software.iconPath}" />
                                                     <span class="ico ico_fileupload">파일찾기</span>
                                                 </label>
                                             </span>
@@ -97,16 +100,16 @@
                                     <div class="screenShotBox">
                                         <div class="sshotWrap">
                                             <ul>
-                                                <li name="li_in" id="li_in">
+                                                <li name="li_in" id="li_in" th:each="screenshot : ${software.screenshotList}">
                                                     <div class="sshot_in">
-                                                        <img src="/static/images/thum_test01.png" alt="" id="image_form_url"/>
+                                                        <img th:src="${screenshot}" alt="" id="image_form_url"/>
                                                         <a href="" data-toggle="modal" data-target="#myModal_del"><span class="ico ico_delete" name="ico_delete">X</span></a>
                                                     </div>
                                                 </li>
-                                                <li id="li_0">
-                                                    <!-- 첨부파일 -->
+                                                <!-- //첨부파일 -->
+                                                <li id="li_sshot">
                                                     <div class="fileUploadWrap selected_sshot">
-                                                        <input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreviewScreenshot(this, $('#screenshot_image_list'), 0)">
+                                                        <input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="">
                                                         <div class="bootstrap-filestyle input-group">
                                                             <span tabindex="0" class="group-span-filestyle input-group-btn">
                                                                 <label class="btn btn-default " for="screenshotFileInput" id="screenshot_image_list">
@@ -115,8 +118,8 @@
                                                             </span>
                                                         </div>
                                                     </div>
-                                                    <!-- //첨부파일 -->
                                                 </li>
+                                                <!-- //첨부파일 -->
                                             </ul>
                                         </div>
                                     </div>
@@ -132,8 +135,15 @@
                             </tr>
                             <tr>
                                 <th scope="row">파일유형</th>
-                                <td><input class="form-control" style="width:100px;" type="text" th:value="${software.type}" id="softwareType" readonly></td>
+                                <td>
+                                    <div class="radio radio-inline" th:each="type : ${types}">
+                                        <input name="softwareType" th:id="'radio1-' + ${type}" type="radio" th:field="*{type}" th:value="${type}" >
+                                        <label class="label" th:for="'radio1-' + ${type}" th:text="${type}"></label>
+                                    </div>
+                                </td>
                             </tr>
+
+
                             <tr>
                                 <th scope="row">상품파일<i class="i_star">필수입력</i></th>
                                 <td>
@@ -307,7 +317,7 @@
             //상세설명
             var softwareDescription = $("#softwareDescription").val();
             //파일유형
-            var softwareType = $("#softwareType").val();
+            var softwareType  = $('input:radio[name="softwareType"]:checked').val();
             //상품파일
             var softwareAppFile = $("#softwareAppFile").val();
             //환경파일
@@ -378,9 +388,8 @@
             }
         };
 
-        // Screenshot
+        //Screenshot
         var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
-
             if (html.files && html.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
@@ -396,27 +405,8 @@
                 count = countNum + 1;
                 console.log(count);
 
-                //Event cols
-                var div = document.createElement('li_');
-                div.id = "li_" + count;
-
-                var labelId = "screenshot_image_list" + count;
-                var pointLabelId = "#screenshot_image_list" + count;
-
-                div.innerHTML = '<div class="fileUploadWrap selected_sshot">'
-                    + '<input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreviewScreenshot(this, $(' + "\'" + pointLabelId + "')" + ', ' + count + ')>"'
-                    + '<div class="bootstrap-filestyle input-group"><span tabindex="0" class="group-span-filestyle input-group-btn">'
-                    + '<label class="btn btn-default " for="screenshotFileInput" id=' + labelId + '>'
-                    + '<span class="ico ico_fileupload">파일찾기'
-                    + '</span>'
-                    + '</label>'
-                    + '</span>'
-                    + '</div>';
-
-                var li_name = "#li_" + countNum;
-                $(li_name).after(div);
             }
-        }
+        };
 
         // [Common] extractFileName
         var extractFileName = function(html, $target) {
@@ -432,6 +422,58 @@
             $("#li_in").hide();
             $("#image_form_url").attr("src", "");
         }
+
+
+        // RESET APP SAMPLE
+        var resetAppSample = function (strHtml) {
+            $('#devEnvApp').filestyle('clear');
+            var target = $('#li_sshot');
+            target.html(strHtml);
+        };
+
+
+        // 앱 샘플 파일 선택 변경시 파일정보 영역 갱신
+        $("#screenshotFileInput").on("change", function (e) {
+            //setAppSample($(this));
+            procSetFileInfo($(this)[0].files);
+        });
+
+
+        // SET FILE INFO
+        var procSetFileInfo = function(reqFile) {
+            var fileName = reqFile[0].name;
+            //REQUEST_APP_SAMPLE_FILE = reqFile;
+            procSetFileLabel(fileName, null);
+        };
+
+
+        // SET FILE LABEL
+        var procSetFileLabel = function(reqFileName, reqFilePath) {
+            if (null == reqFileName){
+                return false;
+            }
+
+            var linkHtml;
+            if ( reqFilePath != null ) {
+                linkHtml = '<div class="fileUploadWrap selected_sshot">'
+                    + '<input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreviewScreenshot(this, $(' + "\'" + pointLabelId + "')" + ', ' + count + ')>"'
+                    + '<div class="bootstrap-filestyle input-group"><span tabindex="0" class="group-span-filestyle input-group-btn">'
+                    + '<label class="btn btn-default " for="screenshotFileInput" id=' + labelId + '>'
+                    + '<span class="ico ico_fileupload">파일찾기'
+                    + '</span>'
+                    + '</label>'
+                    + '</span>'
+                    + '</div>';
+            }
+
+            $('#li_sshot').html(linkHtml);
+
+            // 앱 샘플 삭제 버튼 처리
+            $('#li_in').on('click', function(e){
+                $("#image_form_url").attr("src", "");
+            });
+        };
+
 
         /*]]>*/
     </script>
