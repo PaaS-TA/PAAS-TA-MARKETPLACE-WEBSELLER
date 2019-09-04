@@ -52,9 +52,11 @@ public class SwiftOSController {
     public Object uploadObject(
         @RequestParam( SwiftOSConstants.SwiftOSCommonParameter.OBJECT_INSERT_FILE ) MultipartFile multipartFile ) throws IOException {
 
+        LOGGER.info("Put object into Object Storage (upload, POST) Init");
+
         final SwiftOSFileInfo fileInfo = swiftOSService.putObject( multipartFile );
         if (null == fileInfo) {
-            LOGGER.warn("Cannot find information for stored object in swift object storage. :: uploadObject");
+            LOGGER.info("Cannot find information for stored object in swift object storage. :: uploadObject");
             return createResponseEntity( new byte[0], null, HttpStatus.NOT_FOUND );
         }
 

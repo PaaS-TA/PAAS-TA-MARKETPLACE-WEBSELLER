@@ -71,8 +71,6 @@
                                 <th scope="row">개요<i class="i_star">필수입력</i></th>
                                 <td><input class="form-control" style="height:50px;" type="text" th:value="${software.summary}" id="softwareSummary"></td>
                             </tr>
-
-
                             <tr>
                                 <th scope="row">아이콘<i class="i_star">필수입력</i></th>
                                 <td>
@@ -107,9 +105,11 @@
                                                     </div>
                                                 </li>
                                                 <!-- //첨부파일 -->
-                                                <li id="li_sshot">
+                                                <li id="li_0">
                                                     <div class="fileUploadWrap selected_sshot">
-                                                        <input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="">
+                                                        <input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots"
+                                                               multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle=""
+                                                               onchange="getThumbnailPreviewScreenshot(this, $('#screenshot_image_list'), 0)">
                                                         <div class="bootstrap-filestyle input-group">
                                                             <span tabindex="0" class="group-span-filestyle input-group-btn">
                                                                 <label class="btn btn-default " for="screenshotFileInput" id="screenshot_image_list">
@@ -134,15 +134,14 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">파일유형</th>
+                                <th scope="row">파일유형<i class="i_star">필수입력</i></th>
                                 <td>
                                     <div class="radio radio-inline" th:each="type : ${types}">
-                                        <input name="softwareType" th:id="'radio1-' + ${type}" type="radio" th:field="*{type}" th:value="${type}" >
+                                        <input name="softwareType" th:id="'radio1-' + ${type}" type="radio" th:value="${type}" th:checked="${software.type} == ${type}" >
                                         <label class="label" th:for="'radio1-' + ${type}" th:text="${type}"></label>
                                     </div>
                                 </td>
                             </tr>
-
 
                             <tr>
                                 <th scope="row">상품파일<i class="i_star">필수입력</i></th>
@@ -277,10 +276,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="only-text">
-                        삭제 하시겠습니까?
+                       정말 삭제 하시겠습니까?
                     </div>
                 </div>
                 <div class="modal-footer">
+<!--                    onchange="getThumbnailPreviewScreenshot(this, $('#screenshot_image_list'), 0)">-->
                     <button type="button" name="button" id="deleteSoftwareBtn" class="btn btn-color1" onclick="deleteSoftwareBtn()" data-dismiss="modal">확인</button>
                     <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
                 </div>
@@ -288,20 +288,42 @@
         </div>
     </div>
     <!-- Modal -->
-
+    <input type="hidden" id="software" name="software" th:value="${software}" />
+    <input type="hidden" id="id" name="id" th:value="${software.id}" />
+    <input type="hidden" id="appPath" name="appPath" th:value="${software.appPath}" />
+    <input type="hidden" id="screenshotList" name="screenshotList" th:value="${software.screenshotList}" />
+    <input type="hidden" id="iconPath" name="iconPath" th:value="${software.iconPath}" />
+    <input type="hidden" id="manifestPath" name="manifestPath" th:value="${software.manifestPath}" />
     <!-- //content -->
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
 
         $(document).ready(function() {
             console.log("software-update init");
+            softwareList();
         });
+
+
+        // [상품] 파일 리스트
+        var softwareList = function () {
+            var software = $("#software").val();
+            console.log(":: software :: " + software);
+            // modifySoftwareFile();
+        };
+
+        // var callbackModifyCategory = function(data) {
+        //     console.log("데이타는??? " + JSON.stringify(data));
+        //     procMovePage("/admin/categories/" + $("#categoryId").val());
+        // };
+        //
 
         // save
         var saveBtn = function(id) {
             console.log("ID : " + id);
             modifySoftware(id);
+            // modifySoftwareFile();
         };
+
 
         var modifySoftware = function (id) {
             //상품명
@@ -328,6 +350,7 @@
             var softwareInUse  = $('input:radio[name="softwareInUse"]:checked').val();
             //버전
             var softwareVersion = $("#softwareVersion").val();
+            /*
             //상태
             var softwareStatus =  $('input:radio[name="softwareStatus"]:checked').val();
             //반려사유
@@ -337,10 +360,6 @@
             //처리일자
             var softwareStatusModifiedDate = $("#softwareStatusModifiedDate").val();
 
-
-            if(softwareConfirmComment === null || softwareConfirmComment === '') {
-                softwareConfirmComment = '';
-            }
 
             var reqParam = {
                 "inUse" : softwareInUse,
@@ -359,11 +378,11 @@
                 "pricePerDay" : softwarePricePerDay,
                 "version" : softwareVersion
             }
+            */
 
             var reqUrl = "/softwares/" + id;
 
             //console.log
-            console.log("iconFile" + iconFileInput);
             console.log(JSON.stringify(reqParam));
             console.log("REST_URL: " + reqUrl);
 
@@ -371,9 +390,7 @@
         };
 
         var callbackModifySoftware = function (data) {
-            console.log("data: " + data);
-            procMovePage("/softwares/{id}".replace("{id}", data.id));
-
+            // procMovePage("/softwares/{id}".replace("{id}", data.id));
         };
 
         //icon
@@ -388,92 +405,116 @@
             }
         };
 
+
         //Screenshot
         var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
-            if (html.files && html.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $target.css('display', '');
-                    $target.html('<div class="sshot_in">'
-                        + '<img class="btn btn-default" src="' + e.target.result + '" alt="" id="image_form_url" border="0">'
-                        + '<a href="" data-toggle="modal" data-target="#myModal_del"><span class="ico ico_delete" name="ico_delete">X</span></a>'
-                        + '</div>')
-                };
-                reader.readAsDataURL(html.files[0]);
 
-                console.log(countNum);
-                count = countNum + 1;
-                console.log(count);
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $target.css('display', '');
+                $target.html( '<li name="li_in" id="li_in">\n' +
+                    '<div class="sshot_in">\n' +
+                    '<img src="' + e.target.result + '" alt="" id="image_form_url">\n' +
+                    '<a href="" data-toggle="modal" data-target="#myModal_del"><span class="ico ico_delete" name="ico_delete">X</span></a>\n' +
+                    '</div>\n' +
+                    '</li>')
+            };
+            reader.readAsDataURL(html.files[0]);
 
+            //ADD
+            console.log(countNum);
+            count = countNum + 1;
+            console.log(count);
+
+            var currentTag = "#li_" + countNum;
+
+            var obj = $(currentTag).clone();
+            obj.attr('id', 'li_' + count);
+            obj.find("label").attr('id', 'screenshot_image_list' + count);
+
+            obj.find("#screenshotFileInput").attr('onchange', 'getThumbnailPreviewScreenshot(this, $(\'#screenshot_image_list' + count + '\'), '+ count +')');
+
+            var nextTag = '#li_' + countNum;
+            $(nextTag).after(obj);
+
+            //GET File
+            console.log(html.files[0]);
+
+            FILE_INFO = {}; // 파일정보 초기화
+
+            if(html.files[0] == null){
+                console.log("html.files[0] == null ::DATA_NO::");
+                return null;
+            }else{
+                console.log("html.files[0] != null ::DATA_YES::");
+                var fileInfo = html.files[0];
+                console.log(fileInfo);
+
+                /*
+                FILE_INFO.thumbImgName  = html.files[0].name;
+                FILE_INFO.thumbImgPath  = html.value;
+                console.log("[FILE_INFO.thumbImgName]: " + FILE_INFO.thumbImgName + " " + "[FILE_INFO.thumbImgPath]: "+FILE_INFO.thumbImgPath);
+                */
+                registerFile(fileInfo);
             }
         };
 
-        // [Common] extractFileName
-        var extractFileName = function(html, $target) {
-            var val = $(html).val().split("\\");
-            var f_name = val[val.length-1]; //마지막 화일명
-            var s_name = f_name.substring(f_name.length-4, f_name.length);
 
-            $target.val(f_name);
-        };
-
-        //delete Software ScreenshotBtn
-        function deleteSoftwareBtn() {
-            $("#li_in").hide();
-            $("#image_form_url").attr("src", "");
+        function registerFile(data) {
+            var formData = new FormData();
+            formData.append("file", data);
+            uploadFile(formData,"POST","/v2/swift",  );
         }
 
 
-        // RESET APP SAMPLE
-        var resetAppSample = function (strHtml) {
-            $('#devEnvApp').filestyle('clear');
-            var target = $('#li_sshot');
-            target.html(strHtml);
-        };
+        // 파일 삭제 버튼 처리
+        function deleteSoftwareBtn() {
+            console.log("deleteSoftwareBtn");
+            console.log($("#li_in").length);
 
+            var liLength = $("#li_in").length;
 
-        // 앱 샘플 파일 선택 변경시 파일정보 영역 갱신
-        $("#screenshotFileInput").on("change", function (e) {
-            //setAppSample($(this));
-            procSetFileInfo($(this)[0].files);
-        });
-
-
-        // SET FILE INFO
-        var procSetFileInfo = function(reqFile) {
-            var fileName = reqFile[0].name;
-            //REQUEST_APP_SAMPLE_FILE = reqFile;
-            procSetFileLabel(fileName, null);
-        };
-
-
-        // SET FILE LABEL
-        var procSetFileLabel = function(reqFileName, reqFilePath) {
-            if (null == reqFileName){
-                return false;
-            }
-
-            var linkHtml;
-            if ( reqFilePath != null ) {
-                linkHtml = '<div class="fileUploadWrap selected_sshot">'
-                    + '<input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreviewScreenshot(this, $(' + "\'" + pointLabelId + "')" + ', ' + count + ')>"'
-                    + '<div class="bootstrap-filestyle input-group"><span tabindex="0" class="group-span-filestyle input-group-btn">'
-                    + '<label class="btn btn-default " for="screenshotFileInput" id=' + labelId + '>'
-                    + '<span class="ico ico_fileupload">파일찾기'
-                    + '</span>'
-                    + '</label>'
-                    + '</span>'
-                    + '</div>';
-            }
-
-            $('#li_sshot').html(linkHtml);
-
-            // 앱 샘플 삭제 버튼 처리
-            $('#li_in').on('click', function(e){
+             if(liLength == 1){
+                $("#li_in").hide();
                 $("#image_form_url").attr("src", "");
+            }
+
+            uploadFile(null,"DELETE","/v2/thumbnail/"+ BEFORE_THUMB_NAME, null);
+        }
+
+
+        // reqType 따른 파일 업로드 / 삭제 처리
+        var uploadFile = function(formData, reqType, reqUploadUrl, reqProcFunction) {
+
+            $.ajax({
+                url : reqUploadUrl
+                , method : reqType
+                , processData : false
+                , contentType : false
+                , data : formData
+                , dataType : "json"
+                , timeout : 600000
+                ,success : function(data){
+
+                    if(reqType == "DELETE"){ // 삭제시 파일정보 초기화
+                        data.filename = "";
+                        data.fileURL  = "";
+                        data.length   = "";
+                    }
+
+                    if(reqProcFunction != null){
+                        reqProcFunction(data);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("ERROR :: error :: ", error);
+                    notifyAlert('danger','',JSON.parse(xhr.responseText).message);
+                },
+                complete : function(data) {
+                    console.log("COMPLETE :: data :: ", data);
+                }
             });
         };
-
 
         /*]]>*/
     </script>

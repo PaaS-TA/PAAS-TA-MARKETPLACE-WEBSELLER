@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/softwares")
@@ -157,6 +156,7 @@ public class SoftwareController {
         model.addAttribute("types", Software.Type.values());
         model.addAttribute("status", Software.Status.values());
         model.addAttribute("categories", softwareService.getCategories());
+
         return "contents/software-update";
     }
 
@@ -170,31 +170,12 @@ public class SoftwareController {
      */
     @PutMapping(value = "/{id}")
     @ResponseBody
-    public Software updateSoftware(@Valid @RequestBody Software software, @PathVariable Long id, @RequestParam(value = "screenshots") MultipartFile[] screenshots, @RequestParam(value = "iconFile") MultipartFile iconFile,
-                                   @RequestParam(value = "softwareAppFile") MultipartFile softwareAppFile, @RequestParam(value = "softwareManifest") MultipartFile softwareManifest) throws IOException {
-
-        log.info(">> updateSoftware Init (1) " + software.toString());
-        software.setIcon(iconFile.getOriginalFilename());
-        software.setApp(softwareAppFile.getOriginalFilename());
-        software.setManifest(softwareManifest.getOriginalFilename());
-
-
-        List<String> screenshotList = new ArrayList<>();
-        for(int i = 0; i < screenshots.length; i++) {
-            screenshotList.add(URLDecoder.decode(swiftOSService.putObject(screenshots[i]).getFileURL(), "UTF-8"));
-        }
-        software.setScreenshotList(screenshotList);
-
-        software.setIconPath(URLDecoder.decode(swiftOSService.putObject(iconFile).getFileURL(), "UTF-8"));
-        software.setAppPath(URLDecoder.decode(swiftOSService.putObject(softwareAppFile).getFileURL(), "UTF-8"));
-        software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(softwareManifest).getFileURL(), "UTF-8"));
-
-
-        log.info(">> updateSoftware (2) " + software.toString());
-
+    public Software updateSoftware(@Valid @RequestBody Software software, @PathVariable Long id) throws IOException {
+        log.info(">> updateSoftware " + software.toString());
         return softwareService.updateSoftware(id, software);
-
     }
+
+
 
     /**
      * 상품 수정이력 조회
