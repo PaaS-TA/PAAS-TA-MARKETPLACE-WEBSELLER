@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -44,9 +47,14 @@ public class ProfileService {
 
     @SneakyThrows
     public Profile createProfiles(Profile profile) {
+        Authentication finalAuth = SecurityContextHolder.getContext().getAuthentication();
+        OAuth2User principal = (OAuth2User) finalAuth.getPrincipal();
+        String user = (String) principal.getAttributes().get("user_name");
+
+        log.info(">> user :: " + user);
 
         if(profile.getId() == null){
-           profile.setId(profile.getName());
+           profile.setId(user);
         }
 
         return paasApiRest.postForObject("/profiles" , profile, Profile.class);
