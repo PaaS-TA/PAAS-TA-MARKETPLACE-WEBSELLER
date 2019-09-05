@@ -296,6 +296,13 @@
             if(listLength > 0){
                 for(var i = 0; i < listLength; i++){
                     var goDetailUrl = "/softwares/{id}".replace("{id}", productList[i].id);
+                    var statusModifiedDate = '';
+                    if(productList[i].statusModifiedDate == null){
+                        statusModifiedDate = '';
+                    }else{
+                        statusModifiedDate = productList[i].statusModifiedDate;
+                    }
+
                     htmlString.push(
                         "<tr>"
                         + "<td>" + (i+1) + "</td>"
@@ -305,7 +312,7 @@
                         + "<td>" + productList[i].createdDate + "</td>"
                         + "<td>" + productList[i].inUse + "</td>"
                         + "<td>" + productList[i].status + "</td>"
-                        + "<td>" + productList[i].statusModifiedDate + "</td>"
+                        + "<td>" + statusModifiedDate + "</td>"
                         +"</tr>"
                     );
                 }
