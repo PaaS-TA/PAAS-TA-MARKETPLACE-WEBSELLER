@@ -1,5 +1,9 @@
 package org.openpaas.paasta.marketplace.web.seller.controller;
 
+import lombok.extern.slf4j.Slf4j;
+import org.openpaas.paasta.marketplace.api.domain.CustomPage;
+import org.openpaas.paasta.marketplace.api.domain.Profile;
+import org.openpaas.paasta.marketplace.web.seller.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -22,6 +26,7 @@ import java.util.Map;
 /**
  * Login 버튼이 있는 페이지 클래스
  */
+@Slf4j
 @Controller
 @RequestMapping
 public class LoginController {
@@ -31,6 +36,9 @@ public class LoginController {
 
     @Autowired
     private OAuth2AuthorizedClientService authorizedClientService;
+
+    @Autowired
+    private ProfileService profileService;
 
     @GetMapping(value = "/login")
     public String getLoginPage(Model model) {
@@ -64,6 +72,22 @@ public class LoginController {
         httpSession.setAttribute("yourName", user.getAttributes().get("user_name"));
         httpSession.setAttribute("token", accessToken.getTokenValue());
 
-        return "redirect:/softwares/list";
+        int count = 0;
+
+        CustomPage<Profile> profileList = profileService.getProfileList("?page=0&size=10&sort=id");
+
+        log.info(">> user :: " + user.getAttributes().get("user_name"));
+
+        String userId = user.getAttributes().get("user_name").toString();
+
+        for(Profile profiles : profileList) {
+            if(userId.equals(profiles.getId())) {
+                count++;
+            }
+        }
+        if(count > 0){
+            return "redirect:/softwares/list";       // (1) 상품 목록 페이지
+        }
+        return "redirect:/profiles/create";                         // (2) 프로필 등록 페이지
     }
 }
