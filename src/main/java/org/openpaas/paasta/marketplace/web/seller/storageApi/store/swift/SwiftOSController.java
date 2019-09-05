@@ -52,7 +52,7 @@ public class SwiftOSController {
     public Object uploadObject(
         @RequestParam( SwiftOSConstants.SwiftOSCommonParameter.OBJECT_INSERT_FILE ) MultipartFile multipartFile ) throws IOException {
 
-        LOGGER.info("Put object into Object Storage (upload, POST) Init");
+        LOGGER.info(">>Put object into Object Storage (upload, POST) Init");
 
         final SwiftOSFileInfo fileInfo = swiftOSService.putObject( multipartFile );
         if (null == fileInfo) {
@@ -156,6 +156,7 @@ public class SwiftOSController {
     @CrossOrigin
     @DeleteMapping( SwiftOSConstants.SwiftOSControllerURI.OBJECT_DELETE_URI )
     public Object removeObject(@PathVariable( SwiftOSConstants.SwiftOSCommonParameter.OBJECT_FILENAME_PATH_VARIABLE ) String name, final HttpServletResponse response ) throws IOException {
+        LOGGER.info(">>Delete object into Object Storage Init");
         if (swiftOSService.removeObject( name )) {
             return createResponseEntity( SwiftOSConstants.ResultStatus.SUCCESS, null, HttpStatus.CREATED );
         } else {

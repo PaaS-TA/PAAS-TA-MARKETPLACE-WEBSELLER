@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/softwares")
@@ -107,6 +108,8 @@ public class SoftwareController {
             return "contents/software-create";
         }
 
+        log.info(">> createSoftware" + software.toString());
+
         software.setIcon(iconFile.getOriginalFilename());
         software.setApp(productFile.getOriginalFilename());
         software.setManifest(environmentFile.getOriginalFilename());
@@ -176,6 +179,42 @@ public class SoftwareController {
     }
 
 
+    /**
+     * 판매자 상품파일 수정
+     */
+    @PutMapping(value = "/file/{id}")
+    @ResponseBody
+    public Software updateScreenshotList(@RequestBody List<String> screenshotList, @PathVariable Long id) {
+
+        List<String> screenshotPackList = new ArrayList<>();
+
+        for(int i = 0; i < screenshotList.size(); i++) {
+            System.out.println("screenshotList.get(i).toString()" + screenshotList.get(i).toString());
+            screenshotPackList.add(screenshotList.get(i).toString());
+        }
+
+        Software software = softwareService.getSoftware(id);
+        software.setScreenshotList(screenshotPackList);
+
+        return softwareService.updateSoftware(id, software);
+    }
+
+
+    /**
+     * 판매자 상품파일 삭제
+     */
+    @DeleteMapping(value = "/file/{id}")
+    @ResponseBody
+    public Software deleteScreenshotList(@RequestBody List<String> screenshotList, @PathVariable Long id) {
+
+        List<String> screenshotPackList = new ArrayList<>();
+
+        Software software = softwareService.getSoftware(id);
+        software.setScreenshotList(screenshotPackList);
+
+        return softwareService.updateSoftware(id, software);
+    }
+
 
     /**
      * 상품 수정이력 조회
@@ -189,7 +228,6 @@ public class SoftwareController {
     public List<SoftwareHistory> getHistoryList(@NotNull @PathVariable Long id, HttpServletRequest httpServletRequest) {
         return softwareService.getHistoryList(id, commonService.setParameters(httpServletRequest));
     }
-
 
 
 }

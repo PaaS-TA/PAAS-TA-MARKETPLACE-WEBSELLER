@@ -27,7 +27,7 @@
 
     <!-- content -->
     <div class="content">
-        <form th:action="@{/softwares}" th:object="${software}" action="#" id="updateSoftwareForm" enctype="multipart/form-data">
+        <form th:action="@{/softwares}" th:object="${software}" action="#" id="updateSoftwareForm" method="post" enctype="multipart/form-data">
         <!-- cBox1 -->
         <div class="cBox type1 appCnt-info">
             <div class="cBox-hd">
@@ -77,7 +77,7 @@
                                     <!-- 첨부파일 -->
                                     <div class="fileUploadWrap selected_ico" style="width:50%;">
                                         <input tabindex="-1" class="form-control" id="iconFileInput" name="iconFile" multiple style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreview(this, $('#icon_image'))">
-                                        <div class="bootstrap-filestyle input-group">
+                                        <div class="bootstrap-filestyle input-group" id="bootstrap-filestyle input-group">
                                             <span tabindex="0" class="group-span-filestyle input-group-btn">
                                                  <label class="btn btn-default " for="iconFileInput" id="icon_image">
                                                     <img class="logo" alt="" th:src="${software.iconPath}" />
@@ -276,12 +276,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="only-text">
-                       정말 삭제 하시겠습니까?
+                        삭제 하시겠습니까?
                     </div>
                 </div>
                 <div class="modal-footer">
-<!--                    onchange="getThumbnailPreviewScreenshot(this, $('#screenshot_image_list'), 0)">-->
                     <button type="button" name="button" id="deleteSoftwareBtn" class="btn btn-color1" onclick="deleteSoftwareBtn()" data-dismiss="modal">확인</button>
+<!--                    <button type="button" name="button" class="btn btn-color1"  th:onclick="'javascript:delFileBtn(\''+ ${software.id} +'\');'">확인</button>-->
                     <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
                 </div>
             </div>
@@ -298,102 +298,64 @@
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
 
+        FILE_INFO = {} // 파일 초기화;
+
         $(document).ready(function() {
             console.log("software-update init");
-            softwareList();
+            getSoftwareList();
         });
 
-
-        // [상품] 파일 리스트
-        var softwareList = function () {
+        // [상품] 리스트
+        var getSoftwareList = function () {
             var software = $("#software").val();
-            console.log(":: software :: " + software);
-            // modifySoftwareFile();
+            console.log(software);
         };
 
-        // var callbackModifyCategory = function(data) {
-        //     console.log("데이타는??? " + JSON.stringify(data));
-        //     procMovePage("/admin/categories/" + $("#categoryId").val());
-        // };
-        //
 
-        // save
         var saveBtn = function(id) {
             console.log("ID : " + id);
             modifySoftware(id);
-            // modifySoftwareFile();
         };
 
 
-        var modifySoftware = function (id) {
-            //상품명
-            var softwareName = $("#softwareName").val();
-            //카테고리
-            var softwareCategory = $("#softwareCategory option:selected").val();
-            //개요&간단설명
-            var softwareSummary = $("#softwareSummary").val();
-            //아이콘
-            var iconFileInput = $("#iconFileInput").val();
-            //스크린샷
-            var screenshotFileInput = $("#screenshotFileInput").val();
-            //상세설명
-            var softwareDescription = $("#softwareDescription").val();
-            //파일유형
-            var softwareType  = $('input:radio[name="softwareType"]:checked').val();
-            //상품파일
-            var softwareAppFile = $("#softwareAppFile").val();
-            //환경파일
-            var softwareManifest  = $("#softwareManifest").val();
-            //판매가격
-            var softwarePricePerDay = $("#softwarePricePerDay").val();
-            //전시여부
-            var softwareInUse  = $('input:radio[name="softwareInUse"]:checked').val();
-            //버전
-            var softwareVersion = $("#softwareVersion").val();
-            /*
-            //상태
-            var softwareStatus =  $('input:radio[name="softwareStatus"]:checked').val();
-            //반려사유
-            var softwareConfirmComment = $("#softwareConfirmComment").val();
-            //등록일자
-            var softwareCreatedDate = $("#softwareCreatedDate").val();
-            //처리일자
-            var softwareStatusModifiedDate = $("#softwareStatusModifiedDate").val();
-
+        var modifySoftware = function (id, fileInfo) {
+            console.log(">> fileInfo : " + fileInfo);
 
             var reqParam = {
-                "inUse" : softwareInUse,
+                "inUse" : $('input:radio[name="softwareInUse"]:checked').val(),
                 "id" : id,
-                "name" : softwareName,
+                "name" :  $("#softwareName").val(),
                 "category" : {
-                "id" : softwareCategory
-            },
-                "app" : softwareAppFile,
-                "manifest" : softwareManifest,
-                "icon" : iconFileInput,
-                "screenshotList" : [screenshotFileInput],
-                "summary" : softwareSummary,
-                "description" : softwareDescription,
-                "type" : softwareType,
-                "pricePerDay" : softwarePricePerDay,
-                "version" : softwareVersion
-            }
-            */
-
-            var reqUrl = "/softwares/" + id;
+                    "id" :  $("#softwareCategory option:selected").val()
+                },
+                "app" :  $("#softwareAppFile").val(),
+                "appPath" : $("#appPath").val(),
+                "manifest" : $("#softwareManifest").val(),
+                "manifestPath" : $("#manifestPath").val(),
+                "icon" : $("#iconFileInput").val(),
+                "iconPath" :  $("#iconPath").val(),
+                "screenshotList" : fileInfo,
+                "summary" :  $("#softwareSummary").val(),
+                "description" : $("#softwareDescription").val(),
+                "type" : $('input:radio[name="softwareType"]:checked').val(),
+                "pricePerDay" : $("#softwarePricePerDay").val(),
+                "version" :  $("#softwareVersion").val()
+            };
 
             //console.log
             console.log(JSON.stringify(reqParam));
-            console.log("REST_URL: " + reqUrl);
 
+            var reqUrl = "/softwares/" + id;
             procCallAjax(reqUrl, "PUT", JSON.stringify(reqParam), null, callbackModifySoftware);
         };
 
+
         var callbackModifySoftware = function (data) {
-            // procMovePage("/softwares/{id}".replace("{id}", data.id));
+            procMovePage("/softwares/{id}".replace("{id}", data.id));
         };
 
-        //icon
+
+        //[아이콘] 화면 리스트
         var getThumbnailPreview = function (html, $target) {
             if (html.files && html.files[0]) {
                 var reader = new FileReader();
@@ -406,7 +368,7 @@
         };
 
 
-        //Screenshot
+        //[스크린 샷] 화면 리스트
         var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
 
             var reader = new FileReader();
@@ -437,53 +399,74 @@
             var nextTag = '#li_' + countNum;
             $(nextTag).after(obj);
 
-            //GET File
-            console.log(html.files[0]);
 
-            FILE_INFO = {}; // 파일정보 초기화
-
+            //[스크린 샷] 수정
             if(html.files[0] == null){
                 console.log("html.files[0] == null ::DATA_NO::");
                 return null;
             }else{
                 console.log("html.files[0] != null ::DATA_YES::");
                 var fileInfo = html.files[0];
-                console.log(fileInfo);
-
-                /*
-                FILE_INFO.thumbImgName  = html.files[0].name;
-                FILE_INFO.thumbImgPath  = html.value;
-                console.log("[FILE_INFO.thumbImgName]: " + FILE_INFO.thumbImgName + " " + "[FILE_INFO.thumbImgPath]: "+FILE_INFO.thumbImgPath);
-                */
                 registerFile(fileInfo);
             }
         };
 
 
+        //[스크린 샷] 파일 첨부 확인 및 업로드
         function registerFile(data) {
             var formData = new FormData();
+            console.log(" :: Register Screenshot :: ");
             formData.append("file", data);
-            uploadFile(formData,"POST","/v2/swift",  );
+            console.log(data);
+            uploadFile(formData,"POST","/v2/swift", createRegisterFileInfo);
         }
 
 
-        // 파일 삭제 버튼 처리
-        function deleteSoftwareBtn() {
-            console.log("deleteSoftwareBtn");
-            console.log($("#li_in").length);
+        //[스크린 샷] 신규 이미지 추가
+        function createRegisterFileInfo(data){
+            var id = $("#id").val();
 
-            var liLength = $("#li_in").length;
+            console.log(" :: createRegisterFileInfo :: ");
+            console.log(data);
 
-             if(liLength == 1){
-                $("#li_in").hide();
-                $("#image_form_url").attr("src", "");
+            if(data != null){
+                FILE_INFO.screenshots  = data.filename;
+                FILE_INFO.screenshotsFilePath  = data.fileURL;
+                FILE_INFO.screenshotsFileSize  = data.length;
+                console.log("[FILE_INFO.screenshots]: " + FILE_INFO.screenshots + " "
+                            + "[FILE_INFO.screenshotsFilePath]: "+FILE_INFO.screenshotsFilePath+ " "
+                            + "[FILE_INFO.screenshotsFileSize]: "+FILE_INFO.screenshotsFileSize);
             }
 
-            uploadFile(null,"DELETE","/v2/thumbnail/"+ BEFORE_THUMB_NAME, null);
+            var reqParam = [
+                FILE_INFO.screenshotsFilePath
+            ];
+
+            procCallAjax("/softwares/file/"+ id, "PUT", JSON.stringify(reqParam), null, modifySoftware(id,reqParam));
         }
 
 
-        // reqType 따른 파일 업로드 / 삭제 처리
+        // [스크린 샷] 삭제
+        function deleteSoftwareBtn() {
+            var id = $("#id").val();
+            console.log("deleteIconBtn [id] : " + id);
+
+            FILE_INFO.screenshotListSRC  = jQuery('#image_form_url').attr("src");
+            console.log("FILE_INFO.screenshotListSRC: " + FILE_INFO.screenshotListSRC);
+
+            var reqParam = [
+                FILE_INFO.screenshotListSRC
+            ];
+
+            //delete Icon_Btn Event
+            $("#li_in").hide();
+            $("#image_form_url").attr("src", "");
+
+            procCallAjax("/softwares/file/"+ id, "DELETE", JSON.stringify(reqParam), null, getSoftwareList);
+        }
+
+
+        // reqType 따른 파일 업로드/삭제 처리
         var uploadFile = function(formData, reqType, reqUploadUrl, reqProcFunction) {
 
             $.ajax({
