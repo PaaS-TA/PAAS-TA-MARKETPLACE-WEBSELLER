@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/softwares")
@@ -151,6 +150,7 @@ public class SoftwareController {
      * @param id
      * @return
      */
+    /*
     @GetMapping(value = "/{id}/update")
     public String updateSoftwareHtml(Model model, @PathVariable Long id) {
         model.addAttribute("software", softwareService.getSoftware(id));
@@ -162,6 +162,7 @@ public class SoftwareController {
 
         return "contents/software-update";
     }
+     */
 
 
     /**
@@ -171,16 +172,18 @@ public class SoftwareController {
      * @param id
      * @return
      */
+    /*
     @PutMapping(value = "/{id}")
     @ResponseBody
     public Software updateSoftware(@Valid @RequestBody Software software, @PathVariable Long id) throws IOException {
         log.info(">> updateSoftware " + software.toString());
         return softwareService.updateSoftware(id, software);
     }
+    */
 
 
     /**
-     * 판매자 상품파일 수정
+     * 판매자 상품[파일] 수정
      */
     @PutMapping(value = "/file/{id}")
     @ResponseBody
@@ -201,7 +204,7 @@ public class SoftwareController {
 
 
     /**
-     * 판매자 상품파일 삭제
+     * 판매자 상품[파일] 삭제
      */
     @DeleteMapping(value = "/file/{id}")
     @ResponseBody
@@ -228,6 +231,65 @@ public class SoftwareController {
     public List<SoftwareHistory> getHistoryList(@NotNull @PathVariable Long id, HttpServletRequest httpServletRequest) {
         return softwareService.getHistoryList(id, commonService.setParameters(httpServletRequest));
     }
+
+    //**************PUT(POST)**************
+
+    /**
+     * 판매자가 등록한 상품 수정 페이지 이동
+     *
+     * @param model
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/{id}/update")
+    public String updateSoftwareHtml(Model model, @PathVariable Long id) {
+        model.addAttribute("software", softwareService.getSoftware(id));
+        model.addAttribute("spec", new SoftwareSpecification());
+        model.addAttribute("yns", Yn.values());
+        model.addAttribute("types", Software.Type.values());
+        model.addAttribute("status", Software.Status.values());
+        model.addAttribute("categories", softwareService.getCategories());
+
+        return "contents/software-modifiy";
+    }
+
+    /**
+     * 판매자가 등록한 상품 수정
+     *
+     * @param software
+     * @param id
+     * @return
+     */
+    @PostMapping(value = "/{id}")
+    @ResponseBody
+    public String modifiySoftware(@Valid Software software, BindingResult bindingResult, @RequestParam(value = "screenshots") MultipartFile[] screenshots, @RequestParam(value = "iconFile") MultipartFile iconFile,
+                                 @RequestParam(value = "productFile") MultipartFile productFile, @RequestParam(value = "environmentFile") MultipartFile environmentFile) throws IOException {
+        if (bindingResult.hasErrors()) {
+            return "contents/software-modifiy";
+        }
+
+        log.info(">> updateSoftware" + software.toString());
+
+        software.setIcon(iconFile.getOriginalFilename());
+        software.setApp(productFile.getOriginalFilename());
+        software.setManifest(environmentFile.getOriginalFilename());
+
+        List<String> screenshotList = new ArrayList<>();
+        for(int i = 0; i < screenshots.length; i++) {
+            screenshotList.add(URLDecoder.decode(swiftOSService.putObject(screenshots[i]).getFileURL(), "UTF-8"));
+        }
+        software.setScreenshotList(screenshotList);
+
+        software.setAppPath(URLDecoder.decode(swiftOSService.putObject(productFile).getFileURL(), "UTF-8"));
+        software.setIconPath(URLDecoder.decode(swiftOSService.putObject(iconFile).getFileURL(), "UTF-8"));
+        software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(environmentFile).getFileURL(), "UTF-8"));
+        log.info(software.toString());
+
+        Software newSoftware = softwareService.createSoftware(software);
+        return "redirect:/softwares/{id}";
+    }
+
+
 
 
 }
