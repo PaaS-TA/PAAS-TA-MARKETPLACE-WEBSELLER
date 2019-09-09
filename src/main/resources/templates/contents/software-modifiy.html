@@ -28,8 +28,6 @@
     <!--TODO ::: 상품 이름 중복 안됨. 나머지 유효성 체크도 해야 함.-->
     <!-- content -->
     <div class="content">
-    <!--  NOTE:  여기에서 th:object를 해주면 @Controller에서 넣어준 @ModelAttribute 객체를 submit할 때 채워준다-->
-    <!--  NOTE:  action은 form을 보낼 위치, action="#"은 이렇게 두는 것 이당-->
     <form  th:action="@{'/softwares/' + ${software.id}}" th:object="${software}" action="#" id="createSoftwareForm" method="post" enctype="multipart/form-data">
         <!-- cBox1 -->
         <div class="cBox type1 appCnt-info">
@@ -294,9 +292,10 @@
                             삭제 후 스크린 샷 복구가 불 가능합니다.<br> 삭제하시겠습니까?
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button name="button" class="btn btn-color7 btn-md" type="button" th:onclick="'location.href = \'' + @{/softwares/file/{id}(id=${software.id})} + '\''">수정</button>
-                        <!--                    <button type="button" name="button" class="btn btn-color1"  th:onclick="'javascript:delFileBtn(\''+ ${software.id} +'\');'">확인</button>-->
+                    <div class="modal-footer" name="_method" type="hidden" value="PUT">
+                        <button type="submit" name="button" id="deleteSoftwareBtn" class="btn btn-color1" data-dismiss="modal" th:onclick="'location.href = \'' + @{/softwares/file/{id}(id=${software.id})} + '\''">확인</button>
+<!--                        <button type="button" name="button" id="deleteSoftwareBtn" class="btn btn-color1" onclick="deleteSoftwareBtn()" data-dismiss="modal">확인</button>-->
+<!--                        <button name="button" class="btn btn-color7 btn-md" type="button" th:onclick="'location.href = \'' + @{/softwares/file/{id}(id=${software.id})} + '\''">확인</button>-->
                         <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
                     </div>
                 </div>
@@ -377,6 +376,26 @@
 
             $target.val(f_name);
         };
+
+
+        // [스크린 샷] 삭제
+        function deleteSoftwareBtn() {
+            var id = $("#id").val();
+            console.log("deleteIconBtn [id] : " + id);
+
+            FILE_INFO.screenshotListSRC  = jQuery('#image_form_url').attr("src");
+            console.log("FILE_INFO.screenshotListSRC: " + FILE_INFO.screenshotListSRC);
+
+            var reqParam = [
+                FILE_INFO.screenshotListSRC
+            ];
+
+            //delete Icon_Btn Event
+            $("#li_in").hide();
+            $("#image_form_url").attr("src", "");
+
+            // procCallAjax("/softwares/file/"+ id, "DELETE", JSON.stringify(reqParam), null, getSoftwareList);
+        }
 
 
     </script>

@@ -162,7 +162,7 @@ public class SoftwareController {
 
         return "contents/software-update";
     }
-     */
+    */
 
 
     /**
@@ -175,8 +175,13 @@ public class SoftwareController {
     /*
     @PutMapping(value = "/{id}")
     @ResponseBody
-    public Software updateSoftware(@Valid @RequestBody Software software, @PathVariable Long id) throws IOException {
+    public Software updateSoftware(@Valid @RequestBody Software software, @PathVariable Long id, @RequestParam(value = "screenshots") MultipartFile[] screenshots) throws IOException {
         log.info(">> updateSoftware " + software.toString());
+        List<String> screenshotList = new ArrayList<>();
+        for(int i = 0; i < screenshots.length; i++) {
+            screenshotList.add(URLDecoder.decode(swiftOSService.putObject(screenshots[i]).getFileURL(), "UTF-8"));
+        }
+        software.setScreenshotList(screenshotList);
         return softwareService.updateSoftware(id, software);
     }
     */
@@ -234,13 +239,6 @@ public class SoftwareController {
 
     //**************PUT(POST)**************
 
-    /**
-     * 판매자가 등록한 상품 수정 페이지 이동
-     *
-     * @param model
-     * @param id
-     * @return
-     */
     @GetMapping(value = "/{id}/update")
     public String updateSoftwareHtml(Model model, @PathVariable Long id) {
         model.addAttribute("software", softwareService.getSoftware(id));
@@ -253,17 +251,10 @@ public class SoftwareController {
         return "contents/software-modifiy";
     }
 
-    /**
-     * 판매자가 등록한 상품 수정
-     *
-     * @param software
-     * @param id
-     * @return
-     */
     @PostMapping(value = "/{id}")
-    @ResponseBody
-    public String modifiySoftware(@Valid Software software, BindingResult bindingResult, @RequestParam(value = "screenshots") MultipartFile[] screenshots, @RequestParam(value = "iconFile") MultipartFile iconFile,
+    public String modifiySoftware(@PathVariable Long id, @Valid Software software, BindingResult bindingResult, @RequestParam(value = "screenshots") MultipartFile[] screenshots, @RequestParam(value = "iconFile") MultipartFile iconFile,
                                  @RequestParam(value = "productFile") MultipartFile productFile, @RequestParam(value = "environmentFile") MultipartFile environmentFile) throws IOException {
+
         if (bindingResult.hasErrors()) {
             return "contents/software-modifiy";
         }
@@ -285,7 +276,7 @@ public class SoftwareController {
         software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(environmentFile).getFileURL(), "UTF-8"));
         log.info(software.toString());
 
-        Software newSoftware = softwareService.createSoftware(software);
+        Software newSoftware = softwareService.updateSoftware(id,software);
         return "redirect:/softwares/{id}";
     }
 

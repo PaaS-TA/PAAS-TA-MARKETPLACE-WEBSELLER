@@ -276,7 +276,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="only-text">
-                        삭제 하시겠습니까?
+                        삭제 후 스크린 샷 복구가 불 가능합니다.<br> 삭제하시겠습니까?
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -302,12 +302,13 @@
 
         $(document).ready(function() {
             console.log("software-update init");
-            getSoftwareList();
         });
 
         // [상품] 리스트
         var getSoftwareList = function () {
             var software = $("#software").val();
+            var id = $("#id").val();
+
             console.log(software);
         };
 
@@ -442,7 +443,10 @@
                 FILE_INFO.screenshotsFilePath
             ];
 
+
             procCallAjax("/softwares/file/"+ id, "PUT", JSON.stringify(reqParam), null, modifySoftware(id,reqParam));
+
+            return reqParam;
         }
 
 
