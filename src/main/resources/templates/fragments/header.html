@@ -14,11 +14,15 @@
                                 <p class="name" th:text="${session.yourName}"></p>
                                 <span class="ico arr"></span>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-right" role="btn-my" aria-labelledby="btn-my">
-    <!--                            <li><a href="#"><span class="ico ico1"></span>개인정보 수정</a></li>-->
-    <!--                            <li><a href="#"><span class="ico ico3"></span>공지사항</a></li>-->
+                            <ul class="dropdown-menu dropdown-menu-right" role="btn-my" aria-labelledby="btn-my" th:if="${not #strings.isEmpty(session.yourName)}">
+                                <!--                            <li><a href="#"><span class="ico ico1"></span>개인정보 수정</a></li>-->
+                                <!--                            <li><a href="#"><span class="ico ico3"></span>공지사항</a></li>-->
                                 <li><a href="#" th:onclick="document.getElementById('frm').submit()"><span class="ico ico4"></span>로그아웃</a></li>
-                                <!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
+                            </ul>
+                            <ul class="dropdown-menu dropdown-menu-right" role="btn-my" aria-labelledby="btn-my" th:if="${#strings.isEmpty(session.yourName)}">
+                                <!--                            <li><a href="#"><span class="ico ico1"></span>개인정보 수정</a></li>-->
+                                <!--                            <li><a href="#"><span class="ico ico3"></span>공지사항</a></li>-->
+                                <li><a href="#" onclick="location.href='/login'"><span class="ico ico4"></span>로그인</a></li>
                             </ul>
                         </div>
                     </div>
