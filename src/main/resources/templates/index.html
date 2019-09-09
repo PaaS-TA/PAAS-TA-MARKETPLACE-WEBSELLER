@@ -32,9 +32,13 @@
             </div>
         </div>
         <div class="cBox-cnt">
-            <div class="cont_btnBox">
+            <div class="cont_btnBox"th:if="${#strings.isEmpty(session.yourName)}">
                 <!--<button name="button" class="btn btn-color1 btn-md" type="button" onclick="location.href='/softwares/list'">목록</button>-->
                 <button name="button" class="btn btn-color1 btn-md" type="button" onclick="location.href='/login'">로그인</button>
+            </div>
+            <div class="cont_btnBox"th:if="${not #strings.isEmpty(session.yourName)}">
+                <!--<button name="button" class="btn btn-color1 btn-md" type="button" onclick="location.href='/softwares/list'">목록</button>-->
+                <button name="button" class="btn btn-color1 btn-md" type="button" onclick="location.href='/profiles/page'">로그인</button>
             </div>
         </div>
         <!-- //content -->
