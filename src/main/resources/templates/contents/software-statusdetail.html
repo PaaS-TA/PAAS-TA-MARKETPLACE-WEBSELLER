@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout-registrant}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout-registrant}">
 
 <!-- index.html 고유 CSS 추가 -->
 <th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" href="../../static/dist/tui-chart.css" />
+    <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/codemirror.css'/>
+    <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/addon/lint/lint.css'/>
+    <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/theme/neo.css'/>
+    <link rel='stylesheet' type='text/css' href='../../static/css/example.css'/>
 </th:block>
 
 <!-- index.html 고유 스크립트 추가 -->
 <th:block layout:fragment="script">
-
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/core-js/2.5.7/core.js'></script>
+    <script type='text/javascript' src='https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js'></script>
+    <script type='text/javascript' src='https://uicdn.toast.com/tui.chart/latest/raphael.js'></script>
+    <script src='../../static/dist/tui-chart.js'></script>
 </th:block>
 
 <div class="rightCnt" layout:fragment="content">
@@ -75,12 +84,19 @@
                             </tr>
                             <tr>
                                 <th scope="row">사용자 수</th>
-                                <td colspan="3" th:text="${usedSwCountSum}"></td>
+                                <td colspan="3" th:text="${instanceUsingUserSum}"></td>
                             </tr>
                             </tbody>
                         </table>
+                        <div class='wrap'>
+<!--                            <div class='code-html' id='code-html'>-->
+                                <div id='chart-area'></div>
+<!--                            </div>-->
+                        </div>
                     </div>
                     <!-- //table -->
+
+
                 </div>
                 <!-- //inner -->
             </div>
@@ -109,7 +125,7 @@
 
         <div class="cont-titWrap mt30">
             <div class="pull-left">
-                <h3 class="h-tit3">사용자 수 <span class="point4" th:text="${'('+usedSwCountSum + ')'}"></span></h3>
+                <h3 class="h-tit3">사용자 수 <span class="point4" th:text="${'('+instanceUsingUserSum + ')'}"></span></h3>
             </div>
             <div class="pull-right">
                 <button name="button" class="btn btn-color2 btn-md" type="button" id="searchStatsBtn">사용자 추이</button>
@@ -148,8 +164,7 @@
         <!-- //page -->
     </div>
     <!-- //content -->
-
-    <script type="text/javascript">
+    <script class='code-js' id='code-js'>
         /*<![CDATA[*/
         var PAGING_SIZE = 10;
         var SORT = "id,asc";
@@ -164,6 +179,51 @@
             alert("userStatsSoftware will be distributed shortly");
         });
 
+        //chart(Line graph)
+        var container = document.getElementById('chart-area');
+        var data = {
+            categories: ['01/01/2019', '02/01/2019', '03/01/2019', '04/01/2019', '05/01/2019', '06/01/2019', '07/01/2019', '08/01/2019', '09/01/2019', '10/01/2019', '11/01/2019', '12/01/2019'],
+            /*Curve shape graph data*/
+            series: [
+                {
+                    name: '사용자',
+                    data: [-3.5, -1.1, 4.0, 11.3, 17.5, 21.5, 24.9, 25.2, 20.4, 13.9, 6.6, -0.6]
+                }
+            ]
+        };
+        var options = {
+            chart: {
+                width: 1200,
+                height: 300,
+            },
+            /*column(down) data*/
+            yAxis: {
+                title: 'Personnel',
+                pointOnColumn: true
+            },
+            xAxis: {
+                title: 'Month',
+                type: 'datetime',
+                dateFormat: 'MMM'
+            },
+            series: {
+                showDot: false,
+                zoomable: true
+            },
+            tooltip: {
+                suffix: '°C'
+            }
+        };
+        var theme = {
+            series: {
+                colors: [
+                    '#83b14e', '#458a3f', '#295ba0', '#2a4175', '#289399',
+                    '#289399', '#617178', '#8a9a9a', '#516f7d', '#dddddd'
+                ]
+            }
+        };
+
+        tui.chart.lineChart(container, data, options);
         /*]]>*/
     </script>
 </div>
