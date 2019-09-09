@@ -93,6 +93,7 @@ public class StatsController {
         }
 
         model.addAttribute("usedSwCountSum", usedSwCount);
+        model.addAttribute("instanceUsingUserSum", statsService.getCountOfUsersUsing());
         return "contents/software-statusdetail";
     }
 
