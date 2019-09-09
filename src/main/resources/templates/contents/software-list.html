@@ -226,31 +226,18 @@
             var endDate = $("#endDatePicker").datepicker('option', 'dateFormat', 'yy-mm-dd').val();
             console.log("종료 날짜 ::: "  + endDate);
 
-
-            // if((startDate === "" || startDate === undefined) && (endDate === "" || endDate === undefined)) {
-            //     dateParameter = "&createdDateAfter=" + '' + "&createdDateBefore=" + '';
-            // }else{
-            //     if(DATE_DIVISION === $("#createdDateOpt").val()){
-            //         dateParameter = "&createdDateAfter=" + startDate + "T00:00:00.000Z" + "&createdDateBefore=" + endDate + "T23:59:59.000Z";
-            //     }else{
-            //         dateParameter = "&statusModifiedDateAfter=" + startDate + "T00:00:00.000Z" + "&statusModifiedDateBefore=" + endDate + "T23:59:59.000Z";
-            //     }
-            // }
-
-
-
             if(DATE_DIVISION === $("#createdDateOpt").val()){
                 if((startDate === "" || startDate === undefined) && (endDate === "" || endDate === undefined)) {
                     dateParameter = "&createdDateAfter=" + '' + "&createdDateBefore=" + '';
                 }else{
-                    dateParameter = "&createdDateAfter=" + startDate + "T00:00:00.000Z" + "&createdDateBefore=" + endDate + "T23:59:59.000Z";
+                    dateParameter = "&createdDateAfter=" + startDate + "T00:00:00" + "&createdDateBefore=" + endDate + "T23:59:59";
                 }
             }else{
                 selectedStatus = "[[${statusApprove}]]";
                 if((startDate === "" || startDate === undefined) && (endDate === "" || endDate === undefined)) {
                     dateParameter = "&statusModifiedDateAfter=" + '' + "&statusModifiedDateBefore=" + '';
                 }else{
-                    dateParameter = "&statusModifiedDateAfter=" + startDate + "T00:00:00.000Z" + "&statusModifiedDateBefore=" + endDate + "T23:59:59.000Z";
+                    dateParameter = "&statusModifiedDateAfter=" + startDate + "T00:00:00" + "&statusModifiedDateBefore=" + endDate + "T23:59:59";
                 }
             }
 
