@@ -4,11 +4,19 @@
 
 <!-- index.html 고유 CSS 추가 -->
 <th:block layout:fragment="css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/tui-chart.css"/>
+    <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/codemirror.css'/>
+    <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/addon/lint/lint.css'/>
+    <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/theme/neo.css'/>
+    <link rel='stylesheet' type='text/css' href='../../static/css/example.css'/>
 </th:block>
 
 <!-- index.html 고유 스크립트 추가 -->
 <th:block layout:fragment="script">
-
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/core-js/2.5.7/core.js'></script>
+    <script type='text/javascript' src='https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js'></script>
+    <script type='text/javascript' src='https://uicdn.toast.com/tui.chart/latest/raphael.js'></script>
+    <script src='../../static/js/tui-chart.js'></script>
 </th:block>
 
 <div class="rightCnt" layout:fragment="content">
@@ -31,31 +39,20 @@
         <div class="statusBox">
             <ul>
                 <li>
+                    <!-- pie-chart -->
                     <div class="inWrap bg01">
-                        <span class="tit">등록 상품 수</span>
-                        <div class="in_txtBox">
-                            <span class="count">삭제 예정</span>
-                            <p class="txt">Total number of registered product</p>
-                        </div>
+                        <span class="tit">사용 앱</span>
+                        <div class="in_txtBox" id='pie-chart-area'></div>
                     </div>
+                    <!-- pie-chart -->
                 </li>
                 <li>
-                    <div class="inWrap bg02">
-                        <span class="tit">사용 상품 수</span>
-                        <div class="in_txtBox">
-                            <span class="count">삭제 예정</span>
-                            <p class="txt">Number of product in use</p>
-                        </div>
+                    <!-- line-chart -->
+                    <div class="inWrap bg01">
+                        <span class="tit">사용 추이</span>
+                        <div class="in_txtBox" id='line-chart-area'></div>
                     </div>
-                </li>
-                <li>
-                    <div class="inWrap bg03">
-                        <span class="tit">전체 사용자 수</span>
-                        <div class="in_txtBox">
-                            <span class="count">삭제 예정</span>
-                            <p class="txt">Total Users</p>
-                        </div>
-                    </div>
+                    <!-- line-chart -->
                 </li>
             </ul>
         </div>
@@ -262,6 +259,136 @@
             getSoftwareStatsList();
         });
 
+        //pie-chart-area
+        var container = document.getElementById('pie-chart-area');
+        var data = {
+            categories: ['Browser'],
+            series: [
+                {
+                    name: 'user 01',
+                    data: 46.02
+                },
+                {
+                    name: 'user 02',
+                    data: 20.47
+                },
+                {
+                    name: 'user 03',
+                    data: 17.71
+                },
+                {
+                    name: 'user 04',
+                    data: 5.45
+                },
+                {
+                    name: 'user 05',
+                    data: 3.10
+                }
+            ]
+        };
+        var options = {
+            chart: {
+                width: 660,
+                height: 400,
+                format: function(value, chartType, areaType, valuetype, legendName) {
+                    if (areaType === 'makingSeriesLabel') { // formatting at series area
+                        value = value;
+                    }
+
+                    return value;
+                }
+            },
+            series: {
+                radiusRange: ['40%', '100%'],
+                showLabel: true
+            },
+            tooltip: {
+                suffix: '%'
+            }
+        };
+        var theme = {
+            series: {
+                series: {
+                    colors: [
+                        '#83b14e', '#458a3f', '#295ba0', '#2a4175', '#289399',
+                        '#289399', '#617178', '#8a9a9a', '#516f7d', '#dddddd'
+                    ]
+                },
+                label: {
+                    color: '#fff',
+                    fontFamily: 'sans-serif'
+                }
+            }
+        };
+
+        // For apply theme
+
+        tui.chart.registerTheme('myTheme', theme);
+        options.theme = 'myTheme';
+
+        tui.chart.pieChart(container, data, options);
+
+
+        //line-chart-area
+        var container = document.getElementById('line-chart-area');
+        var data = {
+            categories: ['01/01/2019', '02/01/2019', '03/01/2019', '04/01/2019', '05/01/2019', '06/01/2019', '07/01/2019', '08/01/2019', '09/01/2019', '10/01/2019', '11/01/2019', '12/01/2019'],
+            series: [
+                {
+                    name: 'user 01',
+                    data: [-3.5, -1.1, 4.0, 11.3, 17.5, 21.5, 24.9, 25.2, 20.4, 13.9, 6.6, -0.6]
+                },
+                {
+                    name: 'user 02',
+                    data: [3.8, 5.6, 7.0, 9.1, 12.4, 15.3, 17.5, 17.8, 15.0, 10.6, 6.4, 3.7]
+                },
+                {
+                    name: 'user 03',
+                    data: [22.1, 22.0, 20.9, 18.3, 15.2, 12.8, 11.8, 13.0, 15.2, 17.6, 19.4, 21.2]
+                },
+                {
+                    name: 'user 04',
+                    data: [-10.3, -9.1, -4.1, 4.4, 12.2, 16.3, 18.5, 16.7, 10.9, 4.2, -2.0, -7.5]
+                },
+                {
+                    name: 'user 05',
+                    data: [-13.2, -13.7, -13.1, -10.3, -6.1, -3.2, 0.0, -0.1, -1.8, -4.5, -9.0, -10.9]
+                }
+            ]
+        };
+        var options = {
+            chart: {
+                width: 1200,
+                height: 400
+            },
+            /*column(down) data*/
+            yAxis: {
+                title: 'Personnel',
+                pointOnColumn: true
+            },
+            xAxis: {
+                title: 'Month',
+                type: 'datetime',
+                dateFormat: 'MMM'
+            },
+            series: {
+                showDot: false,
+                zoomable: true
+            },
+            tooltip: {
+                suffix: '°C'
+            }
+        };
+        var theme = {
+            series: {
+                colors: [
+                    '#83b14e', '#458a3f', '#295ba0', '#2a4175', '#289399',
+                    '#289399', '#617178', '#8a9a9a', '#516f7d', '#dddddd'
+                ]
+            }
+        };
+
+        var chart = tui.chart.lineChart(container, data, options);
 
         /*]]>*/
     </script>

@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openpaas.paasta.marketplace.api.domain.Category;
 import org.openpaas.paasta.marketplace.api.domain.CustomPage;
+import org.openpaas.paasta.marketplace.api.domain.Instance;
 import org.openpaas.paasta.marketplace.api.domain.Software;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -47,7 +48,6 @@ public class StatsService {
         return paasApiRest.getForObject(url, Map.class);
     }
 
-
     /**
      * 판매된 상품 총 개수 조회
      *
@@ -56,7 +56,6 @@ public class StatsService {
     public long getCountOfInstsUsing() {
         return paasApiRest.getForObject("/stats/instances/my/counts/sum", long.class);
     }
-
 
     /**
      * 총 사용자 수 조회
@@ -77,6 +76,19 @@ public class StatsService {
         return customPage;
     }
 
+    /**
+     * 인스턴스(상품) 조회
+     *
+     * @return
+     */
+    public Instance getInstance(Long id) {
+        String url = UriComponentsBuilder.newInstance().path("/instances/{id}")
+                .build()
+                .expand(id)
+                .toString();
+
+        return paasApiRest.getForObject(url, Instance.class);
+    }
 
 
 }

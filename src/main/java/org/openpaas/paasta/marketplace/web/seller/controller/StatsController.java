@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
@@ -60,9 +61,9 @@ public class StatsController {
         model.addAttribute("instanceUserCount", commonService.getJsonStringFromMap(newResult));
         model.addAttribute("instanceCountSum", statsService.getCountOfInstsUsing());
         model.addAttribute("instanceUsingUserSum", statsService.getCountOfUsersUsing());
+
         return "contents/software-status";
     }
-
 
     /**
      * 상품별 현황 상세 페이지
@@ -94,9 +95,10 @@ public class StatsController {
 
         model.addAttribute("usedSwCountSum", usedSwCount);
         model.addAttribute("instanceUsingUserSum", statsService.getCountOfUsersUsing());
+        model.addAttribute("localDate", LocalDate.now()); // 날짜
+        model.addAttribute("instance", statsService.getInstance(id));
         return "contents/software-statusdetail";
     }
-
 
     /**
      * 요금 목록 조회
