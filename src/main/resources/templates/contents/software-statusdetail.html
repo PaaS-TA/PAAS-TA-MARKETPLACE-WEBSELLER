@@ -125,9 +125,6 @@
             <div class="pull-left">
                 <h3 class="h-tit3">사용자 수 <span class="point4" th:text="${'('+instanceUsingUserSum + ')'}"></span></h3>
             </div>
-            <div class="pull-right">
-                <button name="button" class="btn btn-color2 btn-md" type="button" id="searchStatsBtn">사용자 추이</button>
-            </div>
         </div>
 
         <!-- 테이블 -->
@@ -231,6 +228,9 @@
         };
 
         tui.chart.lineChart(container, data, options);
+
+        $(".tui-chart-series-custom-event-area").hide();
+
         /*]]>*/
     </script>
 </div>

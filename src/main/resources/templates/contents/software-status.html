@@ -39,20 +39,21 @@
         <div class="statusBox">
             <ul>
                 <li>
-                    <!-- pie-chart -->
+                    <!-- pieChart -->
                     <div class="inWrap bg01">
                         <span class="tit">사용 앱</span>
-                        <div class="in_txtBox" id='pie-chart-area'></div>
+                        <div class="in_txtBox" id='pieChartArea'>
+                        </div>
                     </div>
-                    <!-- pie-chart -->
+                    <!-- pieChart -->
                 </li>
                 <li>
-                    <!-- line-chart -->
+                    <!-- lineChart -->
                     <div class="inWrap bg01">
                         <span class="tit">사용 추이</span>
-                        <div class="in_txtBox" id='line-chart-area'></div>
+                        <div class="in_txtBox" id='lineChartArea'></div>
                     </div>
-                    <!-- line-chart -->
+                    <!-- lineChart -->
                 </li>
             </ul>
         </div>
@@ -259,8 +260,8 @@
             getSoftwareStatsList();
         });
 
-        //pie-chart-area
-        var container = document.getElementById('pie-chart-area');
+        //pieChart
+        var container = document.getElementById('pieChartArea');
         var data = {
             categories: ['Browser'],
             series: [
@@ -288,7 +289,7 @@
         };
         var options = {
             chart: {
-                width: 660,
+                width: 600,
                 height: 400,
                 format: function(value, chartType, areaType, valuetype, legendName) {
                     if (areaType === 'makingSeriesLabel') { // formatting at series area
@@ -301,7 +302,8 @@
             series: {
                 radiusRange: ['40%', '100%'],
                 showLabel: true
-            },
+            }
+            ,
             tooltip: {
                 suffix: '%'
             }
@@ -329,8 +331,9 @@
         tui.chart.pieChart(container, data, options);
 
 
-        //line-chart-area
-        var container = document.getElementById('line-chart-area');
+
+        //lineChart
+        var container = document.getElementById('lineChartArea');
         var data = {
             categories: ['01/01/2019', '02/01/2019', '03/01/2019', '04/01/2019', '05/01/2019', '06/01/2019', '07/01/2019', '08/01/2019', '09/01/2019', '10/01/2019', '11/01/2019', '12/01/2019'],
             series: [
@@ -390,7 +393,9 @@
 
         var chart = tui.chart.lineChart(container, data, options);
 
+        $(".tui-chart-series-custom-event-area").hide();
         /*]]>*/
     </script>
+
 </div>
 </html>
