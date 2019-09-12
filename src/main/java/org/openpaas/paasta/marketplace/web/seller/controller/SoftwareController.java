@@ -150,7 +150,6 @@ public class SoftwareController {
      * @param id
      * @return
      */
-    /*
     @GetMapping(value = "/{id}/update")
     public String updateSoftwareHtml(Model model, @PathVariable Long id) {
         model.addAttribute("software", softwareService.getSoftware(id));
@@ -162,7 +161,7 @@ public class SoftwareController {
 
         return "contents/software-update";
     }
-    */
+
 
 
     /**
@@ -172,36 +171,43 @@ public class SoftwareController {
      * @param id
      * @return
      */
-    /*
-    @PutMapping(value = "/{id}")
-    @ResponseBody
-    public Software updateSoftware(@Valid @RequestBody Software software, @PathVariable Long id, @RequestParam(value = "screenshots") MultipartFile[] screenshots) throws IOException {
-        log.info(">> updateSoftware " + software.toString());
-        List<String> screenshotList = new ArrayList<>();
-        for(int i = 0; i < screenshots.length; i++) {
-            screenshotList.add(URLDecoder.decode(swiftOSService.putObject(screenshots[i]).getFileURL(), "UTF-8"));
-        }
-        software.setScreenshotList(screenshotList);
-        return softwareService.updateSoftware(id, software);
-    }
-    */
+//    @PutMapping(value = "/{id}")
+//    @ResponseBody
+//    public List updateSoftware(@Valid @RequestBody Software software, @PathVariable Long id, @RequestParam(value = "screenshots") MultipartFile[] screenshots) throws IOException {
+//        log.info(">> updateSoftware " + software.toString());
+//        List<String> screenshotList = new ArrayList<>();
+//        for(int i = 0; i < screenshots.length; i++) {
+//            screenshotList.add(URLDecoder.decode(swiftOSService.putObject(screenshots[i]).getFileURL(), "UTF-8"));
+//        }
+//        software.setScreenshotList(screenshotList);
+//        return software.getScreenshotList();
+//    }
+
 
 
     /**
-     * 판매자 상품[파일] 수정
+     * 판매자 상품[파일] DB 수정
      */
-    @PutMapping(value = "/file/{id}")
+    @PutMapping(value = "/file/{id}/{imgPath}")
     @ResponseBody
-    public Software updateScreenshotList(@RequestBody List<String> screenshotList, @PathVariable Long id) {
-
-        List<String> screenshotPackList = new ArrayList<>();
-
-        for(int i = 0; i < screenshotList.size(); i++) {
-            System.out.println("screenshotList.get(i).toString()" + screenshotList.get(i).toString());
-            screenshotPackList.add(screenshotList.get(i).toString());
-        }
+    public Software updateScreenshotList(@PathVariable String imgPath, @PathVariable Long id) {
 
         Software software = softwareService.getSoftware(id);
+        String finalUrl = "http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/" + imgPath;
+
+        // 기존 스크린 샷 리스트
+        List<String> originShotList = software.getScreenshotList();
+
+        // 새로 넣어줄 스크린 샷 리스트
+        List<String> screenshotPackList = new ArrayList<>();
+
+        if(originShotList.size() > 0) {
+            screenshotPackList.addAll(originShotList);
+            screenshotPackList.add(finalUrl);
+        } else {
+            screenshotPackList.add(finalUrl);
+        }
+
         software.setScreenshotList(screenshotPackList);
 
         return softwareService.updateSoftware(id, software);
@@ -209,15 +215,32 @@ public class SoftwareController {
 
 
     /**
-     * 판매자 상품[파일] 삭제
+     * 판매자 상품[파일] DB 삭제
      */
-    @DeleteMapping(value = "/file/{id}")
+    @DeleteMapping(value = "/file/{id}/{imgPath}")
     @ResponseBody
-    public Software deleteScreenshotList(@RequestBody List<String> screenshotList, @PathVariable Long id) {
-
-        List<String> screenshotPackList = new ArrayList<>();
+    public Software deleteScreenshotList(@PathVariable Long id, @PathVariable String imgPath) {
 
         Software software = softwareService.getSoftware(id);
+
+        // 기존 스크린 샷 리스트
+        List<String> originShotList = software.getScreenshotList();
+
+        // 새로 넣어줄 스크린 샷 리스트
+        List<String> screenshotPackList = new ArrayList<>();
+
+        String finalUrl = "http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/" + imgPath;
+
+
+        // 어차피 삭제되는 애는 한 개씩
+        if(originShotList.size() > 0) {
+            for(int i = 0; i < originShotList.size(); i++){
+                if(!originShotList.get(i).equals(finalUrl)) {
+                    screenshotPackList.add(originShotList.get(i));
+                }
+            }
+        }
+
         software.setScreenshotList(screenshotPackList);
 
         return softwareService.updateSoftware(id, software);
@@ -239,47 +262,58 @@ public class SoftwareController {
 
     //**************PUT(POST)**************
 
-    @GetMapping(value = "/{id}/update")
-    public String updateSoftwareHtml(Model model, @PathVariable Long id) {
-        model.addAttribute("software", softwareService.getSoftware(id));
-        model.addAttribute("spec", new SoftwareSpecification());
-        model.addAttribute("yns", Yn.values());
-        model.addAttribute("types", Software.Type.values());
-        model.addAttribute("status", Software.Status.values());
-        model.addAttribute("categories", softwareService.getCategories());
+//    @GetMapping(value = "/{id}/update")
+//    public String updateSoftwareHtml(Model model, @PathVariable Long id) {
+//        model.addAttribute("software", softwareService.getSoftware(id));
+//        model.addAttribute("spec", new SoftwareSpecification());
+//        model.addAttribute("yns", Yn.values());
+//        model.addAttribute("types", Software.Type.values());
+//        model.addAttribute("status", Software.Status.values());
+//        model.addAttribute("categories", softwareService.getCategories());
+//
+//        return "contents/software-modifiy";
+//    }
+//
+//    @PostMapping(value = "/{id}")
+//    public String modifiySoftware(@PathVariable Long id, @Valid Software software, BindingResult bindingResult, @RequestParam(value = "screenshots") MultipartFile[] screenshots, @RequestParam(value = "iconFile") MultipartFile iconFile,
+//                                 @RequestParam(value = "productFile") MultipartFile productFile, @RequestParam(value = "environmentFile") MultipartFile environmentFile) throws IOException {
+//
+//        if (bindingResult.hasErrors()) {
+//            return "contents/software-modifiy";
+//        }
+//
+//        log.info(">> updateSoftware" + software.toString());
+//
+//        software.setIcon(iconFile.getOriginalFilename());
+//        software.setApp(productFile.getOriginalFilename());
+//        software.setManifest(environmentFile.getOriginalFilename());
+//
+//        List<String> screenshotList = new ArrayList<>();
+//        for(int i = 0; i < screenshots.length; i++) {
+//            screenshotList.add(URLDecoder.decode(swiftOSService.putObject(screenshots[i]).getFileURL(), "UTF-8"));
+//        }
+//        software.setScreenshotList(screenshotList);
+//
+//        software.setAppPath(URLDecoder.decode(swiftOSService.putObject(productFile).getFileURL(), "UTF-8"));
+//        software.setIconPath(URLDecoder.decode(swiftOSService.putObject(iconFile).getFileURL(), "UTF-8"));
+//        software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(environmentFile).getFileURL(), "UTF-8"));
+//        log.info(software.toString());
+//
+//        Software newSoftware = softwareService.updateSoftware(id,software);
+//        return "redirect:/softwares/{id}";
+//    }
 
-        return "contents/software-modifiy";
-    }
-
-    @PostMapping(value = "/{id}")
-    public String modifiySoftware(@PathVariable Long id, @Valid Software software, BindingResult bindingResult, @RequestParam(value = "screenshots") MultipartFile[] screenshots, @RequestParam(value = "iconFile") MultipartFile iconFile,
-                                 @RequestParam(value = "productFile") MultipartFile productFile, @RequestParam(value = "environmentFile") MultipartFile environmentFile) throws IOException {
-
-        if (bindingResult.hasErrors()) {
-            return "contents/software-modifiy";
-        }
-
+    @PutMapping(value = "/{id}")
+    public Software updateSoftware(@PathVariable Long id, @Valid Software software) throws IOException {
         log.info(">> updateSoftware" + software.toString());
 
-        software.setIcon(iconFile.getOriginalFilename());
-        software.setApp(productFile.getOriginalFilename());
-        software.setManifest(environmentFile.getOriginalFilename());
+        software.setIcon(software.getIcon());
+        software.setApp(software.getApp());
+        software.setManifest(software.getManifest());
 
-        List<String> screenshotList = new ArrayList<>();
-        for(int i = 0; i < screenshots.length; i++) {
-            screenshotList.add(URLDecoder.decode(swiftOSService.putObject(screenshots[i]).getFileURL(), "UTF-8"));
-        }
-        software.setScreenshotList(screenshotList);
-
-        software.setAppPath(URLDecoder.decode(swiftOSService.putObject(productFile).getFileURL(), "UTF-8"));
-        software.setIconPath(URLDecoder.decode(swiftOSService.putObject(iconFile).getFileURL(), "UTF-8"));
-        software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(environmentFile).getFileURL(), "UTF-8"));
         log.info(software.toString());
-
-        Software newSoftware = softwareService.updateSoftware(id,software);
-        return "redirect:/softwares/{id}";
+        return softwareService.updateSoftware(id,software);
     }
-
 
 
 

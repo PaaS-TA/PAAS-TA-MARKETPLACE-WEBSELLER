@@ -22,7 +22,9 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import static org.junit.Assert.assertNotNull;
@@ -155,12 +157,18 @@ public class SwiftOSController {
      */
     @CrossOrigin
     @DeleteMapping( SwiftOSConstants.SwiftOSControllerURI.OBJECT_DELETE_URI )
-    public Object removeObject(@PathVariable( SwiftOSConstants.SwiftOSCommonParameter.OBJECT_FILENAME_PATH_VARIABLE ) String name, final HttpServletResponse response ) throws IOException {
-        LOGGER.info(">>Delete object into Object Storage Init");
+    public Map removeObject(@PathVariable( SwiftOSConstants.SwiftOSCommonParameter.OBJECT_FILENAME_PATH_VARIABLE ) String name, final HttpServletResponse response ) throws IOException {
+        LOGGER.info(">>Delete object into Object Storage Init  "  + name);
+
         if (swiftOSService.removeObject( name )) {
-            return createResponseEntity( SwiftOSConstants.ResultStatus.SUCCESS, null, HttpStatus.CREATED );
+            return new HashMap() {{
+                put("deletedImgPath", name);
+                put("result", SwiftOSConstants.ResultStatus.SUCCESS);
+            }};
         } else {
-            return createResponseEntity( SwiftOSConstants.ResultStatus.FAIL, null, HttpStatus.CREATED );
+            return new HashMap() {{
+                put("result", SwiftOSConstants.ResultStatus.FAIL);
+            }};
         }
     }
     @CrossOrigin

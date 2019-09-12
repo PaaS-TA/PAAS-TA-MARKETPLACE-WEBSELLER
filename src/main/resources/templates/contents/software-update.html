@@ -157,6 +157,9 @@
                                                 </label>
                                             </span>
                                         </div>
+<!--                                        <div class="bootstrap-filestyle input-group">-->
+<!--                                            <input class="form-control" type="text" th:value="${software.app}" readonly>-->
+<!--                                        </div>-->
                                     </div>
                                     <!-- //첨부파일 -->
                                 </td>
@@ -298,7 +301,7 @@
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
 
-        FILE_INFO = {} // 파일 초기화;
+        FILE_INFO = {}; // 파일 초기화;
 
         $(document).ready(function() {
             console.log("software-update init");
@@ -319,8 +322,7 @@
         };
 
 
-        var modifySoftware = function (id, fileInfo) {
-            console.log(">> fileInfo : " + fileInfo);
+        var modifySoftware = function (id) {
 
             var reqParam = {
                 "inUse" : $('input:radio[name="softwareInUse"]:checked').val(),
@@ -335,7 +337,6 @@
                 "manifestPath" : $("#manifestPath").val(),
                 "icon" : $("#iconFileInput").val(),
                 "iconPath" :  $("#iconPath").val(),
-                "screenshotList" : fileInfo,
                 "summary" :  $("#softwareSummary").val(),
                 "description" : $("#softwareDescription").val(),
                 "type" : $('input:radio[name="softwareType"]:checked').val(),
@@ -352,6 +353,7 @@
 
 
         var callbackModifySoftware = function (data) {
+            console.log("바뀐 상품 정보 ::: " + JSON.stringify(data));
             procMovePage("/softwares/{id}".replace("{id}", data.id));
         };
 
@@ -371,11 +373,12 @@
 
         //[스크린 샷] 화면 리스트
         var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
-
             var reader = new FileReader();
             reader.onload = function (e) {
+
+                console.log("너냐???");
                 $target.css('display', '');
-                $target.html( '<li name="li_in" id="li_in">\n' +
+                $target.html( '<li name="li_in" id="li_in'+ countNum + '">\n' +
                     '<div class="sshot_in">\n' +
                     '<img src="' + e.target.result + '" alt="" id="image_form_url">\n' +
                     '<a href="" data-toggle="modal" data-target="#myModal_del"><span class="ico ico_delete" name="ico_delete">X</span></a>\n' +
@@ -417,8 +420,10 @@
         function registerFile(data) {
             var formData = new FormData();
             console.log(" :: Register Screenshot :: ");
-            formData.append("file", data);
             console.log(data);
+
+            formData.append("file", data);
+
             uploadFile(formData,"POST","/v2/swift", createRegisterFileInfo);
         }
 
@@ -439,36 +444,58 @@
                             + "[FILE_INFO.screenshotsFileSize]: "+FILE_INFO.screenshotsFileSize);
             }
 
-            var reqParam = [
-                FILE_INFO.screenshotsFilePath
-            ];
+            // var reqParam = [
+            //     FILE_INFO.screenshotsFilePath
+            // ];
+            var imgPath = FILE_INFO.screenshotsFilePath.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
 
-
-            procCallAjax("/softwares/file/"+ id, "PUT", JSON.stringify(reqParam), null, modifySoftware(id,reqParam));
-
-            return reqParam;
+            procCallAjax("/softwares/file/"+ id + "/" + imgPath[1], "PUT", null, null, callbackScreenShotDb);
         }
 
+        var callbackScreenShotDb = function (data) {
+            console.log("스크린샷 리스트 ::: " + JSON.stringify(data));
+        };
+
+        function deleteSoftwareBtn() {
+            //var screenshotList = $("#screenshotList").val();
+            var screenshotList= jQuery('#image_form_url').attr("src");
+            console.log("FILE_INFO.screenshotListSRC: " + screenshotList);
+
+            var imgPath = screenshotList.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
+
+            var reqUrl = "/v2/swift/{name}".replace("{name}", imgPath[1]);
+            console.log("abcd :::" + reqUrl);
+            procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteScreenShotSwift);
+        }
+
+        var callbackDeleteScreenShotSwift = function (data) {
+            console.log("data ::: " + JSON.stringify(data));
+
+            if ("SUCCESS" == data.result) {
+                deleteScreenShot(data.deletedImgPath);
+            }
+        };
 
         // [스크린 샷] 삭제
-        function deleteSoftwareBtn() {
-            var id = $("#id").val();
-            console.log("deleteIconBtn [id] : " + id);
+        function deleteScreenShot(imgPath) {
+            console.log("image Path ::: " + imgPath);
 
+            var id = $("#id").val();
+            // console.log("deleteIconBtn [id] : " + id);
+            //
             FILE_INFO.screenshotListSRC  = jQuery('#image_form_url').attr("src");
             console.log("FILE_INFO.screenshotListSRC: " + FILE_INFO.screenshotListSRC);
-
-            var reqParam = [
-                FILE_INFO.screenshotListSRC
-            ];
 
             //delete Icon_Btn Event
             $("#li_in").hide();
             $("#image_form_url").attr("src", "");
 
-            procCallAjax("/softwares/file/"+ id, "DELETE", JSON.stringify(reqParam), null, getSoftwareList);
+            procCallAjax("/softwares/file/"+ id + "/" + imgPath, "DELETE", null, null, deleteScreenShotDb);
         }
 
+        var deleteScreenShotDb  = function (data) {
+          console.log("hohoho ::: " + JSON.stringify(data));
+        };
 
         // reqType 따른 파일 업로드/삭제 처리
         var uploadFile = function(formData, reqType, reqUploadUrl, reqProcFunction) {
