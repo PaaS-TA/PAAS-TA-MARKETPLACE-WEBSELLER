@@ -62,21 +62,11 @@
                                 <td>
                                     <div class="slideWrap">
                                         <div class="slide_list">
-                                            <div class="scrtabs-tab-container" style="visibility: visible;">
-                                                <div class="scrtabs-tab-scroll-arrow scrtabs-tab-scroll-arrow-left">
-                                                    <span class="ico btn-left"></span>
-                                                </div>
-                                                <div class="scrtabs-tabs-fixed-container" style="width: 494px;">
-                                                    <div class="scrtabs-tabs-movable-container" style="width: 2501px;">
-                                                        <ul class="nav nav-tabs">
-                                                            <li th:each="screenshot : ${software.screenshotList}">
-                                                                <a href=""><img th:src="${screenshot}" alt=""></a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="scrtabs-tab-scroll-arrow scrtabs-tab-scroll-arrow-right"><span class="ico btn-right"></span></div>
-                                            </div>
+                                            <ul class="nav nav-tabs">
+                                                <li th:each="screenshot : ${software.screenshotList}">
+                                                    <a href=""><img th:src="${screenshot}" alt=""></a>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </td>
