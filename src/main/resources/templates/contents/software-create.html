@@ -267,6 +267,9 @@
 
         // 스크린샷
         var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
+            var currentTag = "#li_" + countNum;
+            $(currentTag).find("input").attr('name', 'screenshots');
+
             console.log("target ::: " + $target + " & countNum ::: " + countNum);
 
             if (html.files && html.files[0]) {
@@ -286,8 +289,6 @@
 
                 // 이미지 파일 첨부 버튼 추가 하기
                 // 새로운 div 생성
-                var currentTag = "#li_" + countNum;
-
                 var obj = $(currentTag).clone();
                 obj.attr('id', 'li_' + (countNum + 1));
                 obj.find("label").attr('id', 'screenshot_image_list' + (countNum + 1));
@@ -297,6 +298,7 @@
 
                 // 초기화
                 obj.find("input").attr('onchange', '');
+                obj.find("input").attr('name', '');
 
                 $(currentTag).after(obj);
 
