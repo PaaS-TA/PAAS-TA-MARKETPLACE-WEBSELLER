@@ -49,6 +49,15 @@ public class StatsService {
     }
 
     /**
+     * 과거 사용량 추이 조회
+     *
+     * @return
+     */
+    public Map<String, Object> countsOfInstsProviderMonthly() {
+        return paasApiRest.getForObject("/stats/instances/my/counts/months", Map.class);
+    }
+
+    /**
      * 판매된 상품 총 개수 조회
      *
      * @return
@@ -65,7 +74,6 @@ public class StatsService {
     public long getCountOfUsersUsing() {
         return paasApiRest.getForObject("/stats/users/my/counts/sum", long.class);
     }
-
 
     public CustomPage<Software> getSoftwareList(String queryParamString) {
         ResponseEntity<CustomPage<Software>> responseEntity = paasApiRest.exchange(" /stats/softwares/my" + queryParamString, HttpMethod.GET, null, new ParameterizedTypeReference<CustomPage<Software>>() {});
@@ -89,6 +97,5 @@ public class StatsService {
 
         return paasApiRest.getForObject(url, Instance.class);
     }
-
 
 }

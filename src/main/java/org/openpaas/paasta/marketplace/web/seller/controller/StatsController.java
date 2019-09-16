@@ -65,6 +65,7 @@ public class StatsController {
         return "contents/software-status";
     }
 
+
     /**
      * 상품별 현황 상세 페이지
      *
@@ -93,12 +94,18 @@ public class StatsController {
             usedSwCount = 0;
         }
 
+        //사용량 추이
+        Map  countsOfInstsProvider =  statsService.countsOfInstsProviderMonthly();
+        model.addAttribute("countOfInstsProviderMonthly", countsOfInstsProvider.get("terms"));
+        model.addAttribute("countOfInstsProviderCounts", countsOfInstsProvider.get("counts"));
+
         model.addAttribute("usedSwCountSum", usedSwCount);
         model.addAttribute("instanceUsingUserSum", statsService.getCountOfUsersUsing());
-        model.addAttribute("localDate", LocalDate.now()); // 날짜
         model.addAttribute("instance", statsService.getInstance(id));
+
         return "contents/software-statusdetail";
     }
+
 
     /**
      * 요금 목록 조회
@@ -111,6 +118,7 @@ public class StatsController {
     public CustomPage<Software> getSoftwareList(HttpServletRequest httpServletRequest){
         return statsService.getSoftwareList(commonService.setParameters(httpServletRequest));
     }
+
 
     /**
      * 요금 목록 페이지 이동
@@ -132,6 +140,7 @@ public class StatsController {
         model.addAttribute("yns", Yn.values());
         return "contents/software-charge";
     }
+
 
 
 }
