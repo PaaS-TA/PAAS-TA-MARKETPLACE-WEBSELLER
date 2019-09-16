@@ -190,7 +190,7 @@ public class SoftwareController {
      */
     @PutMapping(value = "/file/{id}/{fileType}/{imgPath}")
     @ResponseBody
-    public Software updateScreenshotList(@PathVariable Long id, @PathVariable String  fileType, @PathVariable String imgPath, @RequestParam(name = "iconFileName", required = false) String iconFileName) {
+    public Software updateFile(@PathVariable Long id, @PathVariable String  fileType, @PathVariable String imgPath, @RequestParam(name = "iconFileName", required = false) String iconFileName) {
         Software software = softwareService.getSoftware(id);
         String finalUrl = "http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/" + imgPath;
 
