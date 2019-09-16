@@ -75,17 +75,39 @@
                                 <th scope="row">아이콘<i class="i_star">필수입력</i></th>
                                 <td>
                                     <!-- 첨부파일 -->
-                                    <div class="fileUploadWrap selected_ico" style="width:50%;">
+                                    <div class="fileUploadWrap selected_ico" style="width:50%;" name="reSelectPreview">
                                         <input tabindex="-1" class="form-control" id="iconFileInput" name="iconFile" multiple style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreview(this, $('#icon_image'))">
                                         <div class="bootstrap-filestyle input-group" id="bootstrap-filestyle input-group">
                                             <span tabindex="0" class="group-span-filestyle input-group-btn">
                                                  <label class="btn btn-default " for="iconFileInput" id="icon_image">
-                                                    <img class="logo" alt="" th:src="${software.iconPath}" />
+                                                    <!--<img class="logo" alt="" />-->
                                                     <span class="ico ico_fileupload">파일찾기</span>
                                                 </label>
                                             </span>
                                             <div class="input-form-group">
                                                 <input name="userfile" disabled="" class="form-control" id="userfile" type="text" placeholder="아이콘으로 등록할 이미지를 선택하세요.">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- //첨부파일 -->
+                                    <!-- 첨부파일 -->
+                                    <div class="fileUploadWrap selected_ico" style="width:50%;" name="divPreview">
+                                        <div class="bootstrap-filestyle input-group" id="bootstrap-filestyle input-group2">
+                                            <span tabindex="0" class="group-span-filestyle input-group-btn">
+                                                 <label class="btn btn-default ">
+                                                    <img class="logo" alt="" th:src="${software.iconPath}" id="iconFilePath" />
+                                                 </label>
+                                            </span>
+                                            <div class="input-form-group">&nbsp;
+                                                <!--<input name="userfile" disabled="" class="form-control" id="userfile" type="text" placeholder="아이콘으로 등록할 이미지를 선택하세요.">-->
+                                                <a href="" data-toggle="modal" data-target="#myModal_icon_del"><img src="../../static/images/ico_delete.png" alt="" /></a>&nbsp;
+                                                <span th:text="${software.icon}"></span>
+                                            </div>
+                                            <div>
+                                                <label id="serviceLabelThumbName2" name="labelThumbName"></label>
+                                                <div id="serviceThumRemove2" name="thumRemove" class="pull-right file-remove-button">
+                                                    <i class="fa fa-times"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -283,7 +305,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" name="button" id="deleteSoftwareBtn" class="btn btn-color1" onclick="deleteSoftwareBtn()" data-dismiss="modal">확인</button>
+                    <button type="button" name="button" id="deleteScreenShotBtn" class="btn btn-color1" onclick="deleteScreenShotBtn()" data-dismiss="modal">확인</button>
 <!--                    <button type="button" name="button" class="btn btn-color1"  th:onclick="'javascript:delFileBtn(\''+ ${software.id} +'\');'">확인</button>-->
                     <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
                 </div>
@@ -291,6 +313,30 @@
         </div>
     </div>
     <!-- Modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal_icon_del" tabindex="-1" role="dialog" aria-labelledby="modalLabel_icon_del" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content modal-sm"><!-- 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="modalLabel_icon_del">아이콘 삭제</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="only-text">
+                        삭제 후 아이콘 복구가 불 가능합니다.<br> 삭제하시겠습니까?
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="button" id="deleteIconBtn" class="btn btn-color1" onclick="deleteIconBtn()" data-dismiss="modal">확인</button>
+                    <!--                    <button type="button" name="button" class="btn btn-color1"  th:onclick="'javascript:delFileBtn(\''+ ${software.id} +'\');'">확인</button>-->
+                    <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+
     <input type="hidden" id="software" name="software" th:value="${software}" />
     <input type="hidden" id="id" name="id" th:value="${software.id}" />
     <input type="hidden" id="appPath" name="appPath" th:value="${software.appPath}" />
@@ -305,6 +351,7 @@
 
         $(document).ready(function() {
             console.log("software-update init");
+            $('div[name=reSelectPreview]').hide();
         });
 
         // [상품] 리스트
@@ -322,21 +369,18 @@
         };
 
 
+        // TODO ::: 상품 파일, 환경 파일도 스크린샷 처럼 따로 처리 필요.
         var modifySoftware = function (id) {
 
             var reqParam = {
                 "inUse" : $('input:radio[name="softwareInUse"]:checked').val(),
-                "id" : id,
                 "name" :  $("#softwareName").val(),
                 "category" : {
                     "id" :  $("#softwareCategory option:selected").val()
                 },
                 "app" :  $("#softwareAppFile").val(),
-                "appPath" : $("#appPath").val(),
                 "manifest" : $("#softwareManifest").val(),
-                "manifestPath" : $("#manifestPath").val(),
                 "icon" : $("#iconFileInput").val(),
-                "iconPath" :  $("#iconPath").val(),
                 "summary" :  $("#softwareSummary").val(),
                 "description" : $("#softwareDescription").val(),
                 "type" : $('input:radio[name="softwareType"]:checked').val(),
@@ -368,7 +412,43 @@
                 };
                 reader.readAsDataURL(html.files[0]);
             }
+
+            //[아이콘] 수정
+            if(html.files[0] == null){
+                console.log("html.files[0] == null ::DATA_NO::");
+                return null;
+            }else{
+                console.log("html.files[0] != null ::DATA_YES::");
+                var fileInfo = html.files[0];
+
+                // Swift - create
+                registerFile(fileInfo, "icon");
+
+            }
         };
+
+        // [아이콘] Swift 삭제
+        function deleteIconBtn() {
+            // Swift - delete
+            var iconImagePath = jQuery('#iconFilePath').attr("src");
+            console.log("지울 파일 이름 ::: " + iconImagePath);
+
+            var imgPath = iconImagePath.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
+            var reqUrl = "/v2/swift/{name}".replace("{name}", imgPath[1]);
+
+            console.log("지울 파일 위치 ::: " + reqUrl);
+            procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteIconSwift);
+        }
+
+        var callbackDeleteIconSwift = function (data) {
+            console.log("data ::: " + JSON.stringify(data));
+            alert("반드시 아이콘을 추가해주시기 바랍니다.");
+
+            $('div[name=divPreview]').hide();
+
+            $('div[name=reSelectPreview]').show();
+        };
+
 
 
         //[스크린 샷] 화면 리스트
@@ -411,20 +491,48 @@
             }else{
                 console.log("html.files[0] != null ::DATA_YES::");
                 var fileInfo = html.files[0];
-                registerFile(fileInfo);
+                registerFile(fileInfo, "screenShots");
             }
         };
 
 
-        //[스크린 샷] 파일 첨부 확인 및 업로드
-        function registerFile(data) {
+        //[스크린 샷, 아이콘] 파일 첨부 확인 및 업로드
+        function registerFile(data, fileType) {
             var formData = new FormData();
-            console.log(" :: Register Screenshot :: ");
+            console.log(" :: Register file :: ");
             console.log(data);
 
             formData.append("file", data);
 
-            uploadFile(formData,"POST","/v2/swift", createRegisterFileInfo);
+            if(fileType === "screenShots") {
+                console.log("여기는 스크린샷 업로드 !!!");
+                uploadFile(formData,"POST","/v2/swift", createRegisterFileInfo);
+            }
+
+            if(fileType === "icon") {
+                console.log("여기는 아이콘 업로드 !!!");
+                uploadFile(formData,"POST","/v2/swift", createIconFile);
+            }
+
+        }
+
+        //[아이콘] 신규 이미지 추가 (DB - icon, iconPath => update)
+        function createIconFile(data){
+            var id = $("#id").val();
+
+            console.log(" :: createRegisterFileInfo :: ");
+            console.log(data);
+
+            if(data != null){
+                FILE_INFO.iconFileName  = data.filename;
+                FILE_INFO.iconFilePath  = data.fileURL;
+                console.log("[FILE_INFO.iconFileName]: " + FILE_INFO.iconFileName + " "
+                    + "[FILE_INFO.iconFilePath]: "+FILE_INFO.iconFilePath);
+            }
+
+            var storedFilename = data.storedFilename;
+
+            procCallAjax("/softwares/file/"+ id + "/icon/" + storedFilename + "?iconFileName=" + data.filename, "PUT", null, null, callbackScreenShotDb);
         }
 
 
@@ -449,14 +557,14 @@
             // ];
             var imgPath = FILE_INFO.screenshotsFilePath.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
 
-            procCallAjax("/softwares/file/"+ id + "/" + imgPath[1], "PUT", null, null, callbackScreenShotDb);
+            procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath[1], "PUT", null, null, callbackScreenShotDb);
         }
 
         var callbackScreenShotDb = function (data) {
             console.log("스크린샷 리스트 ::: " + JSON.stringify(data));
         };
 
-        function deleteSoftwareBtn() {
+        function deleteScreenShotBtn() {
             //var screenshotList = $("#screenshotList").val();
             var screenshotList= jQuery('#image_form_url').attr("src");
             console.log("FILE_INFO.screenshotListSRC: " + screenshotList);
@@ -490,8 +598,9 @@
             $("#li_in").hide();
             $("#image_form_url").attr("src", "");
 
-            procCallAjax("/softwares/file/"+ id + "/" + imgPath, "DELETE", null, null, deleteScreenShotDb);
+            procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath, "DELETE", null, null, deleteScreenShotDb);
         }
+
 
         var deleteScreenShotDb  = function (data) {
           console.log("hohoho ::: " + JSON.stringify(data));

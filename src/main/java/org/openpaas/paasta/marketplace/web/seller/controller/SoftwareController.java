@@ -188,36 +188,45 @@ public class SoftwareController {
     /**
      * 판매자 상품[파일] DB 수정
      */
-    @PutMapping(value = "/file/{id}/{imgPath}")
+    @PutMapping(value = "/file/{id}/{fileType}/{imgPath}")
     @ResponseBody
-    public Software updateScreenshotList(@PathVariable String imgPath, @PathVariable Long id) {
-
+    public Software updateScreenshotList(@PathVariable Long id, @PathVariable String  fileType, @PathVariable String imgPath, @RequestParam(name = "iconFileName", required = false) String iconFileName) {
         Software software = softwareService.getSoftware(id);
         String finalUrl = "http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/" + imgPath;
 
-        // 기존 스크린 샷 리스트
-        List<String> originShotList = software.getScreenshotList();
+        // 스크린샷 DB 업데이트
+        if(fileType.equals("screenShots")) {
+            // 기존 스크린 샷 리스트
+            List<String> originShotList = software.getScreenshotList();
 
-        // 새로 넣어줄 스크린 샷 리스트
-        List<String> screenshotPackList = new ArrayList<>();
+            // 새로 넣어줄 스크린 샷 리스트
+            List<String> screenshotPackList = new ArrayList<>();
 
-        if(originShotList.size() > 0) {
-            screenshotPackList.addAll(originShotList);
-            screenshotPackList.add(finalUrl);
-        } else {
-            screenshotPackList.add(finalUrl);
+            if(originShotList.size() > 0) {
+                screenshotPackList.addAll(originShotList);
+                screenshotPackList.add(finalUrl);
+            } else {
+                screenshotPackList.add(finalUrl);
+            }
+
+            software.setScreenshotList(screenshotPackList);
         }
 
-        software.setScreenshotList(screenshotPackList);
+
+        // icon DB 업데이트
+        if(fileType.equals("icon")) {
+            software.setIcon(iconFileName);
+            software.setIconPath(finalUrl);
+        }
 
         return softwareService.updateSoftware(id, software);
     }
 
 
     /**
-     * 판매자 상품[파일] DB 삭제
+     * 판매자 상품[파일 - 스크린샷] DB 삭제
      */
-    @DeleteMapping(value = "/file/{id}/{imgPath}")
+    @DeleteMapping(value = "/file/{id}/screenShots/{imgPath}")
     @ResponseBody
     public Software deleteScreenshotList(@PathVariable Long id, @PathVariable String imgPath) {
 
