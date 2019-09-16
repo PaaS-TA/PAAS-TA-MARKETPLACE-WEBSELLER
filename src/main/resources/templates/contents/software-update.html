@@ -531,8 +531,9 @@
             }
 
             var storedFilename = data.storedFilename;
+            var url = encodeURI("/softwares/file/"+ id + "/icon/" + storedFilename + "?iconFileName=" + data.filename);
 
-            procCallAjax("/softwares/file/"+ id + "/icon/" + storedFilename + "?iconFileName=" + data.filename, "PUT", null, null, callbackScreenShotDb);
+            procCallAjax(url, "PUT", null, null, callbackScreenShotDb);
         }
 
 

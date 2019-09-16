@@ -61,7 +61,7 @@ public class SoftwareService {
         log.info("updateSoftware url :: " + url + " Software " + software.toString());
 
         paasApiRest.put(url, software);
-        return getSoftware(id);
+        return software;
     }
 
 
