@@ -5,17 +5,21 @@
 
 <!-- index.html 고유 CSS 추가 -->
 <th:block layout:fragment="css">
-    <link rel="stylesheet" type="text/css" href="../../static/css/tui-chart.css" />
-    <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/codemirror.css'/>
-    <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/addon/lint/lint.css'/>
-    <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/theme/neo.css'/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/tui-chart.css"/>
+    <link rel='stylesheet' type='text/css'
+          href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/codemirror.css'/>
+    <link rel='stylesheet' type='text/css'
+          href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/addon/lint/lint.css'/>
+    <link rel='stylesheet' type='text/css'
+          href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/theme/neo.css'/>
     <link rel='stylesheet' type='text/css' href='../../static/css/example.css'/>
 </th:block>
 
 <!-- index.html 고유 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/core-js/2.5.7/core.js'></script>
-    <script type='text/javascript' src='https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js'></script>
+    <script type='text/javascript'
+            src='https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js'></script>
     <script type='text/javascript' src='https://uicdn.toast.com/tui.chart/latest/raphael.js'></script>
     <script src='../../static/js/tui-chart.js'></script>
 </th:block>
@@ -54,7 +58,7 @@
                                 <col style="width:15%;">
                                 <col style="width:auto;">
                             </colgroup>
-<!--                            <tbody id="softwareStatusArea">-->
+                            <!--                            <tbody id="softwareStatusArea">-->
                             <tbody>
                             <tr>
                                 <th scope="row">상품명</th>
@@ -84,7 +88,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">사용자 수</th>
-                                <td colspan="3" th:text="${instanceUsingUserSum}"></td>
+                                <td colspan="3" th:text="${instanceUsingUserSum + ' 명'}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -109,9 +113,11 @@
                         <div class="fm_label"><label for="" class="label">등록일</label></div>
                         <div class="fm_box w_auto">
                             <div class="dateWrap">
-                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD" id="startDatePicker" value=""></div>
+                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD"
+                                                              id="startDatePicker" value=""></div>
                                 <span class="wave">~</span>
-                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD" id="endDatePicker" value=""></div>
+                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD"
+                                                              id="endDatePicker" value=""></div>
                             </div>
                         </div>
                     </div>
@@ -151,10 +157,10 @@
                 <tr>
                     <td>1</td>
                     <td th:text="${instance.appName}"></td>
-                    <td th:text="${instance.software.createdBy}"></td>
-                    <td th:text="${instance.software.createdBy}"></td>
-                    <td th:text="${#temporals.format(software.createdDate,'yyyy-MM-dd')}"></td>
-                    <td th:text="${#temporals.format(software.statusModifiedDate,'yyyy-MM-dd')}"></td>
+                    <td th:text="${instance.createdBy}"></td>
+                    <td th:text="${instance.createdBy}"></td>
+                    <td th:text="${#temporals.format(instance.usageStartDate,'yyyy-MM-dd')}"></td>
+                    <td th:text="${#temporals.format(instance.usageEndDate,'yyyy-MM-dd')}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -173,9 +179,68 @@
         var PAGING_SIZE = 10;
         var SORT = "id,asc";
 
+        //단일 상품에 대한 총 사용자 수
+        var usedSwCountSum = "[[${usedSwCountSum}]]";
+
+        //총 사용자 수
+        var instanceUsingUserSum = "[[${instanceUsingUserSum}]]";
+
+        //인스턴스
+        var SoftwareInstances = "[[${instance}]]";
+
+        //사용량 추이(terms)
+        var countOfInstsProviderMonthly = "[[${countOfInstsProviderMonthly}]]";
+
+        //사용량 추이(counts)
+        var countOfInstsProviderCounts = "[[${countOfInstsProviderCounts}]]";
+
         // ON LOAD
-        $(document).ready(function() {
+        $(document).ready(function () {
             console.log('::StatsSoftwareDetail Init::');
+
+            var categoriesData = countOfInstsProviderMonthly.replace("[", "").replace("]", "").split(",");
+            var seriesData = countOfInstsProviderCounts.replace("[", "").replace("]", "").split(",");
+
+            //chart(Line graph)
+            var container = document.getElementById('chart-area');
+
+            var data = {
+                categories: categoriesData,
+                series : seriesData
+            };
+            var options = {
+                chart: {
+                    width: 1200,
+                    height: 300,
+                },
+                /*column(down) data*/
+                yAxis: {
+                    pointOnColumn: true,
+                    tickInterval: 'auto'
+                },
+                xAxis: {
+                    pointOnColumn: true,
+                    tickInterval: 'auto',
+                    type: 'datetime',
+                    dateFormat: 'yyyy-MMM'
+                },
+                series: {
+                    showDot: false,
+                    zoomable: true,
+                    pointWidth: 2
+                },
+                legend: {
+                    visible: true,
+                    showCheckbox: false
+                },
+                chartExportMenu: {
+                    visible: false
+                }
+            };
+
+            tui.chart.lineChart(container, data, options);
+
+            $(".tui-chart-series-custom-event-area").hide();
         });
 
         //eventBtn
@@ -183,53 +248,6 @@
             alert("userStatsSoftware will be distributed shortly");
         });
 
-        //chart(Line graph)
-        var container = document.getElementById('chart-area');
-        var data = {
-            categories: ['01/01/2019', '02/01/2019', '03/01/2019', '04/01/2019', '05/01/2019', '06/01/2019', '07/01/2019', '08/01/2019', '09/01/2019', '10/01/2019', '11/01/2019', '12/01/2019'],
-            /*Curve shape graph data*/
-            series: [
-                {
-                    name: '사용자',
-                    data: [-3.5, -1.1, 4.0, 11.3, 17.5, 21.5, 24.9, 25.2, 20.4, 13.9, 6.6, -0.6]
-                }
-            ]
-        };
-        var options = {
-            chart: {
-                width: 1200,
-                height: 300,
-            },
-            /*column(down) data*/
-            yAxis: {
-                title: 'Personnel',
-                pointOnColumn: true
-            },
-            xAxis: {
-                title: 'Month',
-                type: 'datetime',
-                dateFormat: 'MMM'
-            },
-            series: {
-                showDot: false,
-                zoomable: true
-            },
-            tooltip: {
-                suffix: '°C'
-            }
-        };
-        var theme = {
-            series: {
-                colors: [
-                    '#83b14e', '#458a3f', '#295ba0', '#2a4175', '#289399',
-                    '#289399', '#617178', '#8a9a9a', '#516f7d', '#dddddd'
-                ]
-            }
-        };
-
-        tui.chart.lineChart(container, data, options);
-
-        $(".tui-chart-series-custom-event-area").hide();
 
         /*]]>*/
     </script>
