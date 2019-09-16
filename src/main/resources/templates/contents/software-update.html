@@ -584,16 +584,35 @@
         var totalScreenShotList = function (data) {
             var htmlString = [];
 
-            for(var i = 0; i < data.screenshotList.length; i++) {
-                var screenShot = data.screenshotList[i];
+            if(data.screenshotList.length > 0) {
+                for(var i = 0; i < data.screenshotList.length; i++) {
+                    var screenShot = data.screenshotList[i];
 
-                htmlString.push('<li name="li_in" id="li_in'+ i + '">\n' +
-                    '<div class="sshot_in">\n' +
-                    '<img src="' + screenShot + '" alt="" id="image_form_url'+ i + '">\n' +
-                    '<a href="#" onclick="clickModal(this)" id="' + i +'"><span class="ico ico_delete" name="ico_delete">X</span></a>\n' +
-                    '</div>\n' +
-                    '</li>')
+                    htmlString +='<li name="li_in" id="li_in'+ i + '">\n' +
+                        '<div class="sshot_in">\n' +
+                        '<img src="' + screenShot + '" alt="" id="image_form_url'+ i + '">\n' +
+                        '<a href="#" onclick="clickModal(this)" id="' + i +'"><span class="ico ico_delete" name="ico_delete">X</span></a>\n' +
+                        '</div>\n' +
+                        '</li>';
+                }
             }
+
+            htmlString +=
+                '<li id="li_0">\n' +
+                '    <div class="fileUploadWrap selected_sshot">\n' +
+                '        <input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots"\n' +
+                '               multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle=""\n' +
+                '               onchange="getThumbnailPreviewScreenshot(this, $(\'#screenshot_image_list\'), 0)">\n' +
+                '        <div class="bootstrap-filestyle input-group">\n' +
+                '            <span tabindex="0" class="group-span-filestyle input-group-btn">\n' +
+                '                <label class="btn btn-default " for="screenshotFileInput" id="screenshot_image_list">\n' +
+                '                    <span class="ico ico_fileupload">파일찾기</span>\n' +
+                '                </label>\n' +
+                '            </span>\n' +
+                '        </div>\n' +
+                '    </div>\n' +
+                '</li>';
+
 
             $("#screenShotTotal").html(htmlString);
         };
