@@ -119,11 +119,13 @@
                                 <td>
                                     <div class="screenShotBox">
                                         <div class="sshotWrap">
-                                            <ul>
-                                                <li name="li_in" id="li_in" th:each="screenshot : ${software.screenshotList}">
-                                                    <div class="sshot_in">
-                                                        <img th:src="${screenshot}" alt="" id="image_form_url"/>
-                                                        <a href="" data-toggle="modal" data-target="#myModal_del"><span class="ico ico_delete" name="ico_delete">X</span></a>
+                                            <ul id="screenShotTotal">
+                                                <li name="li_in" th:id="'li_in' + ${index.index}" th:each="screenshot, index : ${software.screenshotList}">
+                                                    <div class="sshot_in" th:id="${index.index}">
+                                                        <img th:src="${screenshot}" alt="" th:id="'image_form_url' + ${index.index}"/>
+                                                        <a href="#" onclick="clickModal(this)" th:id="${index.index}" /><span class="ico ico_delete" name="ico_delete" th:id="${index.index}">X</span></a>
+                                                        <!--<a href="" data-toggle="modal" data-target="#myModal_del"><span class="ico ico_delete" name="ico_delete" th:id="${index.index}">X</span></a>-->
+                                                        <!--<button id="clickModal"><span class="ico ico_delete" name="ico_delete" th:id="${index.index}">X</span></button>-->
                                                     </div>
                                                 </li>
                                                 <!-- //첨부파일 -->
@@ -343,6 +345,7 @@
     <input type="hidden" id="screenshotList" name="screenshotList" th:value="${software.screenshotList}" />
     <input type="hidden" id="iconPath" name="iconPath" th:value="${software.iconPath}" />
     <input type="hidden" id="manifestPath" name="manifestPath" th:value="${software.manifestPath}" />
+    <input type="hidden" id="indexForScreenShot" name="index" value="" />
     <!-- //content -->
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
@@ -450,6 +453,12 @@
         };
 
 
+        function clickModal(aaa) {
+            var index = $(aaa).attr('id');
+            console.log("따란~~ " + index);
+            $("#indexForScreenShot").val(index);
+            $('div #myModal_del').modal();
+        }
 
         //[스크린 샷] 화면 리스트
         var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
@@ -458,12 +467,12 @@
 
                 console.log("너냐???");
                 $target.css('display', '');
-                $target.html( '<li name="li_in" id="li_in'+ countNum + '">\n' +
+                $target.html( '<li name="li_in" id="new_li_in'+ countNum + '">\n' +
                     '<div class="sshot_in">\n' +
                     '<img src="' + e.target.result + '" alt="" id="image_form_url">\n' +
                     '<a href="" data-toggle="modal" data-target="#myModal_del"><span class="ico ico_delete" name="ico_delete">X</span></a>\n' +
                     '</div>\n' +
-                    '</li>')
+                    '</li>');
             };
             reader.readAsDataURL(html.files[0]);
 
@@ -474,14 +483,20 @@
 
             var currentTag = "#li_" + countNum;
 
+            // 이미지 파일 첨부 버튼 추가 하기
+            // 새로운 div 생성
             var obj = $(currentTag).clone();
-            obj.attr('id', 'li_' + count);
-            obj.find("label").attr('id', 'screenshot_image_list' + count);
+            obj.attr('id', 'li_' + (countNum + 1));
+            obj.find("label").attr('id', 'screenshot_image_list' + (countNum + 1));
+            obj.find("label").attr('for', 'screenshotFileInput' + (countNum + 1));
 
-            obj.find("#screenshotFileInput").attr('onchange', 'getThumbnailPreviewScreenshot(this, $(\'#screenshot_image_list' + count + '\'), '+ count +')');
+            obj.find("input").attr('id', 'screenshotFileInput' + (countNum + 1));
 
-            var nextTag = '#li_' + countNum;
-            $(nextTag).after(obj);
+            // 초기화
+            obj.find("input").attr('onchange', '');
+            obj.find("input").attr('name', '');
+
+            $(currentTag).after(obj);
 
 
             //[스크린 샷] 수정
@@ -553,24 +568,44 @@
                             + "[FILE_INFO.screenshotsFileSize]: "+FILE_INFO.screenshotsFileSize);
             }
 
-            // var reqParam = [
-            //     FILE_INFO.screenshotsFilePath
-            // ];
             var imgPath = FILE_INFO.screenshotsFilePath.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
 
             procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath[1], "PUT", null, null, callbackScreenShotDb);
         }
 
+
         var callbackScreenShotDb = function (data) {
             console.log("스크린샷 리스트 ::: " + JSON.stringify(data));
+            totalScreenShotList(data);
+        };
+
+
+        // 스크린샷 리스트 재정렬
+        var totalScreenShotList = function (data) {
+            var htmlString = [];
+
+            for(var i = 0; i < data.screenshotList.length; i++) {
+                var screenShot = data.screenshotList[i];
+
+                htmlString.push('<li name="li_in" id="li_in'+ i + '">\n' +
+                    '<div class="sshot_in">\n' +
+                    '<img src="' + screenShot + '" alt="" id="image_form_url'+ i + '">\n' +
+                    '<a href="#" onclick="clickModal(this)" id="' + i +'"><span class="ico ico_delete" name="ico_delete">X</span></a>\n' +
+                    '</div>\n' +
+                    '</li>')
+            }
+
+            $("#screenShotTotal").html(htmlString);
         };
 
         function deleteScreenShotBtn() {
-            //var screenshotList = $("#screenshotList").val();
-            var screenshotList= jQuery('#image_form_url').attr("src");
-            console.log("FILE_INFO.screenshotListSRC: " + screenshotList);
+            var index = $("#indexForScreenShot").val();
+            var selectId = "#image_form_url" + index;
+            console.log("오늘은 일찍 가즈아~~~ " + index + " & " + selectId);
+            var selectedScreenshot = $(selectId).attr("src");
+            console.log("FILE_INFO.screenshotListSRC: " + selectedScreenshot);
 
-            var imgPath = screenshotList.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
+            var imgPath = selectedScreenshot.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
 
             var reqUrl = "/v2/swift/{name}".replace("{name}", imgPath[1]);
             console.log("abcd :::" + reqUrl);
@@ -596,8 +631,7 @@
             console.log("FILE_INFO.screenshotListSRC: " + FILE_INFO.screenshotListSRC);
 
             //delete Icon_Btn Event
-            $("#li_in").hide();
-            $("#image_form_url").attr("src", "");
+            //$("li [name='li_in']").hide();
 
             procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath, "DELETE", null, null, deleteScreenShotDb);
         }
@@ -605,6 +639,8 @@
 
         var deleteScreenShotDb  = function (data) {
           console.log("hohoho ::: " + JSON.stringify(data));
+
+          totalScreenShotList(data);
         };
 
         // reqType 따른 파일 업로드/삭제 처리
