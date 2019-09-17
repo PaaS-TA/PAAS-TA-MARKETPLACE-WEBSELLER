@@ -57,6 +57,10 @@ public class StatsController {
                 newResult.put(mapId, 0);
             }
         }
+        //사용량 추이
+        Map  countsOfInstsProvider =  statsService.countsOfInstsProviderMonthly();
+        model.addAttribute("countOfInstsProviderMonthly", countsOfInstsProvider.get("terms"));
+        model.addAttribute("countOfInstsProviderCounts", countsOfInstsProvider.get("counts"));
 
         model.addAttribute("instanceUserCount", commonService.getJsonStringFromMap(newResult));
         model.addAttribute("instanceCountSum", statsService.getCountOfInstsUsing());
