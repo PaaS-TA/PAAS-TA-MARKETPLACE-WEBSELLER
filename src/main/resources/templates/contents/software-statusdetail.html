@@ -6,20 +6,16 @@
 <!-- index.html 고유 CSS 추가 -->
 <th:block layout:fragment="css">
     <link rel="stylesheet" type="text/css" href="../../static/css/tui-chart.css"/>
-    <link rel='stylesheet' type='text/css'
-          href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/codemirror.css'/>
-    <link rel='stylesheet' type='text/css'
-          href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/addon/lint/lint.css'/>
-    <link rel='stylesheet' type='text/css'
-          href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/theme/neo.css'/>
+    <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/codemirror.css'/>
+    <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/addon/lint/lint.css'/>
+    <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.43.0/theme/neo.css'/>
     <link rel='stylesheet' type='text/css' href='../../static/css/example.css'/>
 </th:block>
 
 <!-- index.html 고유 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/core-js/2.5.7/core.js'></script>
-    <script type='text/javascript'
-            src='https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js'></script>
+    <script type='text/javascript' src='https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js'></script>
     <script type='text/javascript' src='https://uicdn.toast.com/tui.chart/latest/raphael.js'></script>
     <script src='../../static/js/tui-chart.js'></script>
 </th:block>
@@ -142,7 +138,8 @@
 
     <input type="hidden" id="softwareId" th:value="${software.id}">
     <input type="hidden" id="software" th:value="${software}">
-    <script class='code-js' id='code-js'>
+    <input type="hidden" id="instanceUsingUserSum" th:value="${instanceUsingUserSum}">
+    <script type="text/javascript">
         /*<![CDATA[*/
         var PAGING_SIZE = 10;
         var SORT = "id,asc";
@@ -159,12 +156,11 @@
 
         var getSoftwareLineChart = function(contentData){
             console.log(">>lineChartData");
-
+            var instanceUsingUserSum = $("#instanceUsingUserSum").val();
             var categoriesData = countOfInstsProviderMonthly.replace("[", "").replace("]", "").split(",");
             var countsData = countOfInstsProviderCounts.replace("[", "").replace("]", "").split(",");
 
             var lineChartData = contentData.content;
-            console.log(lineChartData);
 
             if (lineChartData.length == 0) {
                 return;
@@ -172,13 +168,13 @@
                 var lineSeriesData = [];
                 var lineItem = [];
 
+
                 for (var i = 0; i < lineChartData.length; i++) {
                     var map = lineChartData[i];
-                    console.log(map);
 
                     //dataJson(softwareName,series)
-                    lineItem = {name: map.appName , data: [countsData]};
-                    // lineItem = {name: map.name , data: [0, 0, 0, 0, 0, 0, 0, 0, .0, 0, 0, 3]};
+                    lineItem = {name: map.appName , data: instanceUsingUserSum};
+                    // lineItem = {name: map.name , data: [0, 0, 0, 0, 0, 0, 0, 0, .0, 0, 0, 2]};
                     lineSeriesData.push(lineItem);
                 }
                 console.log(lineSeriesData);

@@ -204,8 +204,8 @@
 
             var options = {
                 chart: {
-                    width: 700,
-                    height: 400,
+                    width : 450,
+                    height : 250,
                     format: function(value, chartType, areaType, valuetype, legendName) {
                         if (areaType === 'makingSeriesLabel') { // formatting at series area
                             value = value;
@@ -258,7 +258,7 @@
 
                     //dataJson(softwareName,series)
                     lineItem = {name: map.name , data: [countsData]};
-                    // lineItem = {name: map.name , data: [0, 0, 0, 0, 0, 0, 0, 0, .0, 0, 0, 3]};
+                    // lineItem = {name: map.name , data: [0, 0, 0, 0, 0, 0, 0, 0, .0, 0, 0, 10]};
                     lineSeriesData.push(lineItem);
                 }
                 console.log(lineSeriesData);
@@ -272,8 +272,8 @@
 
             var options = {
                 chart: {
-                    width: 1200,
-                    height: 400
+                    width : 700,
+                    height : 250,
                 },
                 yAxis: {
                     pointOnColumn: true,
