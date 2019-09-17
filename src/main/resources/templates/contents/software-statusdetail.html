@@ -58,7 +58,6 @@
                                 <col style="width:15%;">
                                 <col style="width:auto;">
                             </colgroup>
-                            <!--                            <tbody id="softwareStatusArea">-->
                             <tbody>
                             <tr>
                                 <th scope="row">상품명</th>
@@ -97,39 +96,15 @@
                         </div>
                     </div>
                     <!-- //table -->
-
-
                 </div>
                 <!-- //inner -->
             </div>
         </div>
         <!-- //cBox1 -->
 
-        <div class="searchWrap mt50">
-            <div class="searchBox"><!--검색폼 두줄일 때 class="fm-row-2"-->
-                <!-- Form 그룹 -->
-                <div class="form-group">
-                    <div class="form-group-area">
-                        <div class="fm_label"><label for="" class="label">등록일</label></div>
-                        <div class="fm_box w_auto">
-                            <div class="dateWrap">
-                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD"
-                                                              id="startDatePicker" value=""></div>
-                                <span class="wave">~</span>
-                                <div class="date-inpt"><input type="text" class="datepicker" placeholder="YYYY-MM-DD"
-                                                              id="endDatePicker" value=""></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- //Form 그룹 -->
-                <button type="button" name="button" class="btn btn-sch" title="검색"><span class="ico">검색</span></button>
-            </div>
-        </div>
-
         <div class="cont-titWrap mt30">
             <div class="pull-left">
-                <h3 class="h-tit3">사용자 수 <span class="point4" th:text="${'('+instanceUsingUserSum + ')'}"></span></h3>
+                <h3 class="h-tit3">판매 현황 <span class="point4" th:text="${'('+instanceUsingUserSum + ')'}"></span></h3>
             </div>
         </div>
 
@@ -153,15 +128,7 @@
                     <th scope="col">종료일</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td th:text="${instance.appName}"></td>
-                    <td th:text="${instance.createdBy}"></td>
-                    <td th:text="${instance.createdBy}"></td>
-                    <td th:text="${#temporals.format(instance.usageStartDate,'yyyy-MM-dd')}"></td>
-                    <td th:text="${#temporals.format(instance.usageEndDate,'yyyy-MM-dd')}"></td>
-                </tr>
+                <tbody id="instanceListArea">
                 </tbody>
             </table>
         </div>
@@ -174,6 +141,9 @@
         <!-- //page -->
     </div>
     <!-- //content -->
+
+    <input type="hidden" id="softwareId" th:value="${software.id}">
+
     <script class='code-js' id='code-js'>
         /*<![CDATA[*/
         var PAGING_SIZE = 10;
@@ -194,7 +164,11 @@
 
         // ON LOAD
         $(document).ready(function () {
-            console.log('::StatsSoftwareDetail Init::');
+            getInstanceList();
+            getSoftwaresStats();
+        });
+
+        var getSoftwaresStats = function(){
 
             var categoriesData = countOfInstsProviderMonthly.replace("[", "").replace("]", "").split(",");
             var seriesData = countOfInstsProviderCounts.replace("[", "").replace("]", "").split(",");
@@ -239,13 +213,71 @@
             tui.chart.lineChart(container, data, options);
 
             $(".tui-chart-series-custom-event-area").hide();
-        });
 
-        //eventBtn
-        $("#searchStatsBtn").on("click", function () {
-            alert("userStatsSoftware will be distributed shortly");
-        });
+        };
 
+        var getInstanceList = function(pageNum) {
+            var reqUrl = "/stats/instances" + "?softwareId=" + $("#softwareId").val() + "&size=" + PAGING_SIZE + "&sort=" + SORT + "&page=" + pageNum;
+            procCallAjax(reqUrl, "GET", null, null, callbackGetInstanceList);
+        };
+
+        var callbackGetInstanceList = function(data) {
+            $("#totalCount").text("(" + data.totalElements + ")");
+
+            var instanceListArea = $("#instanceListArea");
+            var htmlString = [];
+            var content = data.content;
+
+            var listLength = content.length;
+
+            if(listLength > 0){
+                for(var i = 0; i < listLength; i++){
+                    var usageEndDate = '';
+                    if(content[i].usageEndDate == null){
+                        usageEndDate = '';
+                    }else{
+                        usageEndDate = content[i].usageEndDate;
+                    }
+
+                    htmlString.push(
+                        "<tr>"
+                        + "<td>" + (i + 1)  + "</td>"
+                        + "<td>" + content[i].appName + "</td>"
+                        + "<td>" + content[i].createdBy + "</td>"
+                        + "<td>" + content[i].createdBy + "</td>"
+                        + "<td>" + content[i].usageStartDate + "</td>"
+                        + "<td>" + usageEndDate + "</td>"
+                        + "</tr>"
+                    );
+                }
+            }else{
+                htmlString = "<tr>"
+                    + "<td colspan='6'><p class='user_p'>결과가 존재하지 않습니다.</p></td>" + "</tr>"
+            }
+
+            instanceListArea.html(htmlString);
+
+            //::page::
+            var pageNumberList = $("#pageNumberList");
+            var htmlStringPage = "<li class='first disabled'><a href='#'>맨 처음</a></li>" + "<li class='prev'><a href='#'>이전</a></li>";
+            var pageTotalNumber = data.totalElements;
+            var pageSize = data.size;
+
+            var pageCount = Math.ceil(pageTotalNumber/pageSize);
+
+            if(pageCount > 0){
+                for(var page = 0; page < pageCount; page++){
+                    htmlStringPage += "<li class='active'><a href='javascript:void(0);' onclick=moveInstanceListPage('"+ page +"')>" + (page + 1) + "<span class='sr-only'>(current)</span></a></li>"
+                }
+            }
+            htmlStringPage += "<li class='next'><a href='#'>다음</a></li>" + "<li class='end'><a href='#'>맨 끝</a></li>";
+            pageNumberList.html(htmlStringPage);
+        };
+
+        // moveInstanceListPage
+        var moveInstanceListPage = function(page) {
+            getInstanceList(page);
+        };
 
         /*]]>*/
     </script>
