@@ -171,20 +171,21 @@
                 console.log(pieChartData.length);
                 return;
             }else{
-
                 var seriesData = [];
                 var item = [];
+                var userCount;
 
                 for (var i = 0; i < pieChartData.length; i++) {
 
                     var map = pieChartData[i];
 
-                    if (pieChartData[i].id) {
-                        var userCount = resultCountList[i];
+                    for (key in resultCountList) {
+                        if (pieChartData[i].id == key) {
+                            userCount = resultCountList[key];
+                        }
                     }
 
-                    //userCount
-                    if(userCount == undefined && userCount == null){
+                    if(userCount == "" || userCount == undefined){
                         userCount = 0;
                     }
 
@@ -196,9 +197,11 @@
             }
 
             var container = document.getElementById('pieChartArea');
+
             var data = {
                 series: seriesData
             };
+
             var options = {
                 chart: {
                     width: 700,
@@ -207,7 +210,6 @@
                         if (areaType === 'makingSeriesLabel') { // formatting at series area
                             value = value;
                         }
-
                         return value;
                     }
                 },
@@ -234,38 +236,38 @@
                     }
                 }
             };
-
-            // For apply theme
-            tui.chart.registerTheme('myTheme', theme);
-            options.theme = 'myTheme';
-
             tui.chart.pieChart(container, data, options);
 
 
             // Chart [lineChart]
             var categoriesData = countOfInstsProviderMonthly.replace("[", "").replace("]", "").split(",");
-            var series = countOfInstsProviderCounts.replace("[", "").replace("]", "").split(",");
-
-            //content
-            var lineChartSeries  = [];
-            var content = contentData.content;
-            var listLength = content.length;
-
-            for (var i = 0; i < listLength; i++) {
-
-                var content = lineChartSeries [i];
-
-                for(var key in content){
-                    var val = content[key];
-                    var seriesData = "[{name: " + val.name + ", data: [" + series + "]}]";
-                }
-            }
+            var countsData = countOfInstsProviderCounts.replace("[", "").replace("]", "").split(",");
+            var lineChartData = contentData.content;
 
             var container = document.getElementById('lineChartArea');
 
+            if (lineChartData.length == 0) {
+                return;
+            }else{
+                var lineSeriesData = [];
+                var lineItem = [];
+
+                for (var i = 0; i < lineChartData.length; i++) {
+                    var map = lineChartData[i];
+                    console.log(map);
+
+                    //dataJson(softwareName,series)
+                    lineItem = {name: map.name , data: [countsData]};
+                    // lineItem = {name: map.name , data: [0, 0, 0, 0, 0, 0, 0, 0, .0, 0, 0, 3]};
+                    lineSeriesData.push(lineItem);
+                }
+                console.log(lineSeriesData);
+            }
+
+
             var data = {
                 categories: categoriesData,
-                seriesData
+                series: lineSeriesData
             };
 
             var options = {
@@ -287,11 +289,17 @@
                     showDot: false,
                     zoomable: true,
                     pointWidth: 2
+                },
+                legend : {
+                    visible : true,
+                    showCheckbox : false
+                },
+                chartExportMenu : {
+                    visible : false
                 }
             };
 
            tui.chart.lineChart(container, data, options);
-
             $(".tui-chart-series-custom-event-area").hide();
         };
 

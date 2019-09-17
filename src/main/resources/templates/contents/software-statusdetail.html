@@ -103,9 +103,7 @@
         <!-- //cBox1 -->
 
         <div class="cont-titWrap mt30">
-            <div class="pull-left">
-                <h3 class="h-tit3">판매 현황 <span class="point4" th:text="${'('+instanceUsingUserSum + ')'}"></span></h3>
-            </div>
+            <h3 class="h-tit3">판매 현황 <span class="point4" id="totalCount"></span></h3>
         </div>
 
         <!-- 테이블 -->
@@ -143,20 +141,11 @@
     <!-- //content -->
 
     <input type="hidden" id="softwareId" th:value="${software.id}">
-
+    <input type="hidden" id="software" th:value="${software}">
     <script class='code-js' id='code-js'>
         /*<![CDATA[*/
         var PAGING_SIZE = 10;
         var SORT = "id,asc";
-
-        //단일 상품에 대한 총 사용자 수
-        var usedSwCountSum = "[[${usedSwCountSum}]]";
-
-        //총 사용자 수
-        var instanceUsingUserSum = "[[${instanceUsingUserSum}]]";
-
-        //인스턴스
-        var SoftwareInstances = "[[${instance}]]";
 
         //사용량 추이(terms,counts)
         var countOfInstsProviderMonthly = "[[${countOfInstsProviderMonthly}]]";
@@ -164,21 +153,42 @@
 
         // ON LOAD
         $(document).ready(function () {
+            // var software = $("#software").val();
             getInstanceList();
-            getSoftwaresStats();
         });
 
-        var getSoftwaresStats = function(){
+        var getSoftwareLineChart = function(contentData){
+            console.log(">>lineChartData");
 
             var categoriesData = countOfInstsProviderMonthly.replace("[", "").replace("]", "").split(",");
-            var seriesData = countOfInstsProviderCounts.replace("[", "").replace("]", "").split(",");
+            var countsData = countOfInstsProviderCounts.replace("[", "").replace("]", "").split(",");
 
-            //chart(Line graph)
+            var lineChartData = contentData.content;
+            console.log(lineChartData);
+
+            if (lineChartData.length == 0) {
+                return;
+            }else{
+                var lineSeriesData = [];
+                var lineItem = [];
+
+                for (var i = 0; i < lineChartData.length; i++) {
+                    var map = lineChartData[i];
+                    console.log(map);
+
+                    //dataJson(softwareName,series)
+                    lineItem = {name: map.appName , data: [countsData]};
+                    // lineItem = {name: map.name , data: [0, 0, 0, 0, 0, 0, 0, 0, .0, 0, 0, 3]};
+                    lineSeriesData.push(lineItem);
+                }
+                console.log(lineSeriesData);
+            }
+
             var container = document.getElementById('chart-area');
 
             var data = {
                 categories: categoriesData,
-                series : seriesData
+                series: lineSeriesData
             };
             var options = {
                 chart: {
@@ -222,6 +232,9 @@
         };
 
         var callbackGetInstanceList = function(data) {
+
+            getSoftwareLineChart(data);
+
             $("#totalCount").text("(" + data.totalElements + ")");
 
             var instanceListArea = $("#instanceListArea");
