@@ -172,18 +172,18 @@
                                 <td>
                                     <!-- 첨부파일 -->
                                     <div class="fileUploadWrap" style="width:50%;">
-                                        <input tabindex="-1" class="form-control" id="softwareAppFileInput" multiple style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="softwareAppFile" onchange="extractFileName(this, $('#softwareAppFile'))" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="">
-                                        <div class="bootstrap-filestyle input-group">
+                                        <input tabindex="-1" class="form-control" id="softwareAppFileInput" multiple style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="softwareAppFile" onchange="extractFileName(this, $('#softwareAppFile'), 'prodFile')" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="">
+                                        <div class="bootstrap-filestyle input-group" id="softwareAppFileDiv">
                                             <input class="form-control" id="softwareAppFile" type="text" th:value="${software.app}">
                                             <span tabindex="0" class="group-span-filestyle input-group-btn">
                                                 <label class="btn btn-default" for="softwareAppFileInput">
                                                     <span class="btn btn-md btn-color1">파일찾기</span>
                                                 </label>
                                             </span>
+                                            <span tabindex="0" class="group-span-filestyle input-group-btn">
+                                                <button type="button" class="btn-sm btn-color2" id="deleteProdFile">삭제</button>
+                                            </span>
                                         </div>
-<!--                                        <div class="bootstrap-filestyle input-group">-->
-<!--                                            <input class="form-control" type="text" th:value="${software.app}" readonly>-->
-<!--                                        </div>-->
                                     </div>
                                     <!-- //첨부파일 -->
                                 </td>
@@ -193,13 +193,16 @@
                                 <td>
                                     <!-- 첨부파일 -->
                                     <div class="fileUploadWrap" style="width:50%;">
-                                        <input tabindex="-1" class="form-control" id="softwareManifestInput" multiple style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="softwareManifest" onchange="extractFileName(this, $('#softwareManifest'))" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="">
-                                        <div class="bootstrap-filestyle input-group">
+                                        <input tabindex="-1" class="form-control" id="softwareManifestInput" multiple style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="softwareManifest" onchange="extractFileName(this, $('#softwareManifest'), 'envFile')" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="">
+                                        <div class="bootstrap-filestyle input-group" id="softwareManifestFileDiv">
                                             <input id="softwareManifest" class="form-control" type="text" th:value="${software.manifest}">
                                             <span tabindex="0" class="group-span-filestyle input-group-btn">
                                                 <label class="btn btn-dfefault" for="softwareManifestInput">
                                                     <span class="btn btn-md btn-color1">파일찾기</span>
                                                 </label>
+                                            </span>
+                                            <span tabindex="0" class="group-span-filestyle input-group-btn">
+                                                <button type="button" class="btn-sm btn-color2" id="deleteManifestFile">삭제</button>
                                             </span>
                                         </div>
                                     </div>
@@ -372,7 +375,7 @@
         };
 
 
-        // TODO ::: 상품 파일, 환경 파일도 스크린샷 처럼 따로 처리 필요.
+        // 상품 수정(텍스트)
         var modifySoftware = function (id) {
 
             var reqParam = {
@@ -381,9 +384,6 @@
                 "category" : {
                     "id" :  $("#softwareCategory option:selected").val()
                 },
-                "app" :  $("#softwareAppFile").val(),
-                "manifest" : $("#softwareManifest").val(),
-                "icon" : $("#iconFileInput").val(),
                 "summary" :  $("#softwareSummary").val(),
                 "description" : $("#softwareDescription").val(),
                 "type" : $('input:radio[name="softwareType"]:checked').val(),
@@ -445,17 +445,17 @@
 
         var callbackDeleteIconSwift = function (data) {
             console.log("data ::: " + JSON.stringify(data));
-            alert("반드시 아이콘을 추가해주시기 바랍니다.");
 
             $('div[name=divPreview]').hide();
-
             $('div[name=reSelectPreview]').show();
+
+            alert("반드시 아이콘을 추가해주시기 바랍니다.");
         };
 
 
-        function clickModal(aaa) {
-            var index = $(aaa).attr('id');
-            console.log("따란~~ " + index);
+        function clickModal(target) {
+            var index = $(target).attr('id');
+            console.log("index :: " + index);
             $("#indexForScreenShot").val(index);
             $('div #myModal_del').modal();
         }
@@ -464,8 +464,6 @@
         var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
             var reader = new FileReader();
             reader.onload = function (e) {
-
-                console.log("너냐???");
                 $target.css('display', '');
                 $target.html( '<li name="li_in" id="new_li_in'+ countNum + '">\n' +
                     '<div class="sshot_in">\n' +
@@ -475,11 +473,6 @@
                     '</li>');
             };
             reader.readAsDataURL(html.files[0]);
-
-            //ADD
-            console.log(countNum);
-            count = countNum + 1;
-            console.log(count);
 
             var currentTag = "#li_" + countNum;
 
@@ -529,6 +522,16 @@
                 uploadFile(formData,"POST","/v2/swift", createIconFile);
             }
 
+            if(fileType === "prodFile") {
+                console.log("여기는 상품 파일 업로드 !!!");
+                uploadFile(formData,"POST","/v2/swift", createProdFile);
+            }
+
+            if(fileType === "envFile") {
+                console.log("여기는 환경 파일 업로드 !!!");
+                uploadFile(formData,"POST","/v2/swift", createEnvFile);
+            }
+
         }
 
         //[아이콘] 신규 이미지 추가 (DB - icon, iconPath => update)
@@ -546,9 +549,9 @@
             }
 
             var storedFilename = data.storedFilename;
-            var url = encodeURI("/softwares/file/"+ id + "/icon/" + storedFilename + "?iconFileName=" + data.filename);
+            var url = encodeURI("/softwares/file/"+ id + "/icon/" + storedFilename + "?fileName=" + data.filename);
 
-            procCallAjax(url, "PUT", null, null, callbackScreenShotDb);
+            procCallAjax(url, "PUT", null, null, callbackFileDb);
         }
 
 
@@ -570,12 +573,12 @@
 
             var imgPath = FILE_INFO.screenshotsFilePath.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
 
-            procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath[1], "PUT", null, null, callbackScreenShotDb);
+            procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath[1], "PUT", null, null, callbackFileDb);
         }
 
 
-        var callbackScreenShotDb = function (data) {
-            console.log("스크린샷 리스트 ::: " + JSON.stringify(data));
+        var callbackFileDb = function (data) {
+            console.log("변경된 상품의 파일들 확인 ::: " + JSON.stringify(data));
             totalScreenShotList(data);
         };
 
@@ -620,20 +623,16 @@
         function deleteScreenShotBtn() {
             var index = $("#indexForScreenShot").val();
             var selectId = "#image_form_url" + index;
-            console.log("오늘은 일찍 가즈아~~~ " + index + " & " + selectId);
-            var selectedScreenshot = $(selectId).attr("src");
-            console.log("FILE_INFO.screenshotListSRC: " + selectedScreenshot);
+            console.log("index : " + index + " & id : " + selectId);
 
+            var selectedScreenshot = $(selectId).attr("src");
             var imgPath = selectedScreenshot.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
 
             var reqUrl = "/v2/swift/{name}".replace("{name}", imgPath[1]);
-            console.log("abcd :::" + reqUrl);
             procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteScreenShotSwift);
         }
 
         var callbackDeleteScreenShotSwift = function (data) {
-            console.log("data ::: " + JSON.stringify(data));
-
             if ("SUCCESS" == data.result) {
                 deleteScreenShot(data.deletedImgPath);
             }
@@ -644,21 +643,15 @@
             console.log("image Path ::: " + imgPath);
 
             var id = $("#id").val();
-            // console.log("deleteIconBtn [id] : " + id);
-            //
+
             FILE_INFO.screenshotListSRC  = jQuery('#image_form_url').attr("src");
             console.log("FILE_INFO.screenshotListSRC: " + FILE_INFO.screenshotListSRC);
-
-            //delete Icon_Btn Event
-            //$("li [name='li_in']").hide();
 
             procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath, "DELETE", null, null, deleteScreenShotDb);
         }
 
 
         var deleteScreenShotDb  = function (data) {
-          console.log("hohoho ::: " + JSON.stringify(data));
-
           totalScreenShotList(data);
         };
 
@@ -693,6 +686,111 @@
                     console.log("COMPLETE :: data :: ", data);
                 }
             });
+        };
+
+        // [공통] 파일 첨부 시 이름 추출
+        var extractFileName = function(html, $target, type) {
+            var val = $(html).val().split("\\");
+            var f_name = val[val.length-1]; //마지막 화일명
+            var s_name = f_name.substring(f_name.length-4, f_name.length);//확장자빼오기
+
+            $target.val(f_name);
+
+            var reader = new FileReader();
+            reader.readAsDataURL(html.files[0]);
+
+            if(html.files[0] == null){
+                console.log("html.files[0] == null ::DATA_NO::");
+                return null;
+            }else{
+                console.log("html.files[0] != null ::DATA_YES::");
+                var fileInfo = html.files[0];
+
+                if(type === "prodFile") {
+                    registerFile(fileInfo, "prodFile");
+                }
+
+                if(type === "envFile") {
+                    registerFile(fileInfo, "envFile");
+                }
+
+            }
+        };
+
+
+        // 상품 파일 swift 생성
+        var createProdFile = function(data) {
+            var id = $("#id").val();
+
+            console.log(" :: createProdFile :: ");
+
+            if(data != null){
+                FILE_INFO.prodFileName  = data.filename;
+                FILE_INFO.prodFilePath  = data.fileURL;
+                console.log("[FILE_INFO.prodFileName]: " + FILE_INFO.prodFileName + " "
+                    + "[FILE_INFO.prodFilePath]: "+FILE_INFO.prodFilePath);
+            }
+
+            var storedFilename = data.storedFilename;
+            var url = encodeURI("/softwares/file/"+ id + "/prodFile/" + storedFilename + "?fileName=" + data.filename);
+
+            procCallAjax(url, "PUT", null, null, callbackFileDb);
+        };
+
+
+        // 환경 파일 swift 생성
+        var createEnvFile = function(data) {
+            var id = $("#id").val();
+
+            console.log(" :: createEnvFile :: ");
+
+            if(data != null){
+                FILE_INFO.envFileName  = data.filename;
+                FILE_INFO.envFilePath  = data.fileURL;
+                console.log("[FILE_INFO.envFileName]: " + FILE_INFO.envFileName + " "
+                    + "[FILE_INFO.envFilePath]: "+FILE_INFO.envFilePath);
+            }
+
+            var storedFilename = data.storedFilename;
+            var url = encodeURI("/softwares/file/"+ id + "/envFile/" + storedFilename + "?fileName=" + data.filename);
+
+            procCallAjax(url, "PUT", null, null, callbackFileDb);
+        };
+
+
+
+        // 상품 파일 삭제
+        $("#deleteProdFile").on("click", function () {
+            var prodFilePath = $("#appPath").val();
+
+            var filePath = prodFilePath.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
+            var reqUrl = "/v2/swift/{name}".replace("{name}", filePath[1]);
+            procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteProdFileSwift);
+
+        });
+
+        var callbackDeleteProdFileSwift = function(data) {
+            $("#softwareAppFileDiv").contents('input').attr('value', "");
+
+            alert("반드시 상품 파일을 추가해주시기 바랍니다.");
+        };
+
+
+
+
+        // 환경 파일 삭제
+        $("#deleteManifestFile").on("click", function () {
+            var envFilePath = $("#manifestPath").val();
+
+            var filePath = envFilePath.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
+            var reqUrl = "/v2/swift/{name}".replace("{name}", filePath[1]);
+            procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteEnvFileSwift);
+        });
+
+        var callbackDeleteEnvFileSwift = function(data) {
+            $("#softwareManifestFileDiv").contents('input').attr('value', "");
+
+            alert("반드시 환경 파일을 추가해주시기 바랍니다.");
         };
 
         /*]]>*/

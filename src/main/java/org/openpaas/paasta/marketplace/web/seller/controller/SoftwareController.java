@@ -164,35 +164,15 @@ public class SoftwareController {
 
 
 
-    /**
-     * 판매자가 등록한 상품 수정
-     *
-     * @param software
-     * @param id
-     * @return
-     */
-//    @PutMapping(value = "/{id}")
-//    @ResponseBody
-//    public List updateSoftware(@Valid @RequestBody Software software, @PathVariable Long id, @RequestParam(value = "screenshots") MultipartFile[] screenshots) throws IOException {
-//        log.info(">> updateSoftware " + software.toString());
-//        List<String> screenshotList = new ArrayList<>();
-//        for(int i = 0; i < screenshots.length; i++) {
-//            screenshotList.add(URLDecoder.decode(swiftOSService.putObject(screenshots[i]).getFileURL(), "UTF-8"));
-//        }
-//        software.setScreenshotList(screenshotList);
-//        return software.getScreenshotList();
-//    }
-
-
 
     /**
      * 판매자 상품[파일] DB 수정
      */
-    @PutMapping(value = "/file/{id}/{fileType}/{imgPath}")
+    @PutMapping(value = "/file/{id}/{fileType}/{filePath}")
     @ResponseBody
-    public Software updateFile(@PathVariable Long id, @PathVariable String  fileType, @PathVariable String imgPath, @RequestParam(name = "iconFileName", required = false) String iconFileName) {
+    public Software updateFile(@PathVariable Long id, @PathVariable String  fileType, @PathVariable String filePath, @RequestParam(name = "fileName", required = false) String fileName) {
         Software software = softwareService.getSoftware(id);
-        String finalUrl = "http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/" + imgPath;
+        String finalUrl = "http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/" + filePath;
 
         // 스크린샷 DB 업데이트
         if(fileType.equals("screenShots")) {
@@ -215,8 +195,20 @@ public class SoftwareController {
 
         // icon DB 업데이트
         if(fileType.equals("icon")) {
-            software.setIcon(iconFileName);
+            software.setIcon(fileName);
             software.setIconPath(finalUrl);
+        }
+
+        // 상품 파일 DB 업데이트
+        if(fileType.equals("prodFile")) {
+            software.setApp(fileName);
+            software.setAppPath(finalUrl);
+        }
+
+        // 환경 파일 DB 업데이트
+        if(fileType.equals("envFile")) {
+            software.setManifest(fileName);
+            software.setManifestPath(finalUrl);
         }
 
         return softwareService.updateSoftware(id, software);
@@ -269,59 +261,33 @@ public class SoftwareController {
         return softwareService.getHistoryList(id, commonService.setParameters(httpServletRequest));
     }
 
-    //**************PUT(POST)**************
 
-//    @GetMapping(value = "/{id}/update")
-//    public String updateSoftwareHtml(Model model, @PathVariable Long id) {
-//        model.addAttribute("software", softwareService.getSoftware(id));
-//        model.addAttribute("spec", new SoftwareSpecification());
-//        model.addAttribute("yns", Yn.values());
-//        model.addAttribute("types", Software.Type.values());
-//        model.addAttribute("status", Software.Status.values());
-//        model.addAttribute("categories", softwareService.getCategories());
-//
-//        return "contents/software-modifiy";
-//    }
-//
-//    @PostMapping(value = "/{id}")
-//    public String modifiySoftware(@PathVariable Long id, @Valid Software software, BindingResult bindingResult, @RequestParam(value = "screenshots") MultipartFile[] screenshots, @RequestParam(value = "iconFile") MultipartFile iconFile,
-//                                 @RequestParam(value = "productFile") MultipartFile productFile, @RequestParam(value = "environmentFile") MultipartFile environmentFile) throws IOException {
-//
-//        if (bindingResult.hasErrors()) {
-//            return "contents/software-modifiy";
-//        }
-//
-//        log.info(">> updateSoftware" + software.toString());
-//
-//        software.setIcon(iconFile.getOriginalFilename());
-//        software.setApp(productFile.getOriginalFilename());
-//        software.setManifest(environmentFile.getOriginalFilename());
-//
-//        List<String> screenshotList = new ArrayList<>();
-//        for(int i = 0; i < screenshots.length; i++) {
-//            screenshotList.add(URLDecoder.decode(swiftOSService.putObject(screenshots[i]).getFileURL(), "UTF-8"));
-//        }
-//        software.setScreenshotList(screenshotList);
-//
-//        software.setAppPath(URLDecoder.decode(swiftOSService.putObject(productFile).getFileURL(), "UTF-8"));
-//        software.setIconPath(URLDecoder.decode(swiftOSService.putObject(iconFile).getFileURL(), "UTF-8"));
-//        software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(environmentFile).getFileURL(), "UTF-8"));
-//        log.info(software.toString());
-//
-//        Software newSoftware = softwareService.updateSoftware(id,software);
-//        return "redirect:/softwares/{id}";
-//    }
-
+    /**
+     * 판매자가 등록한 상품 수정
+     *
+     * @param id
+     * @param software
+     * @return
+     * @throws IOException
+     */
     @PutMapping(value = "/{id}")
-    public Software updateSoftware(@PathVariable Long id, @Valid Software software) throws IOException {
+    @ResponseBody
+    public Software updateSoftware(@PathVariable Long id, @RequestBody Software software) throws IOException {
         log.info(">> updateSoftware" + software.toString());
 
-        software.setIcon(software.getIcon());
-        software.setApp(software.getApp());
-        software.setManifest(software.getManifest());
+        // 이미 파일 관련은 처리된 상태
+        Software newSoftware = softwareService.getSoftware(id);
+        newSoftware.setInUse(software.getInUse());
+        newSoftware.setName(software.getName());
+        newSoftware.setCategory(software.getCategory());
+        newSoftware.setSummary(software.getSummary());
+        newSoftware.setDescription(software.getDescription());
+        newSoftware.setType(software.getType());
+        newSoftware.setPricePerDay(software.getPricePerDay());
+        newSoftware.setVersion(software.getVersion());
 
-        log.info(software.toString());
-        return softwareService.updateSoftware(id,software);
+        log.info(newSoftware.toString());
+        return softwareService.updateSoftware(id,newSoftware);
     }
 
 
