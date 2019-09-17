@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openpaas.paasta.marketplace.api.domain.*;
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
+import org.openpaas.paasta.marketplace.web.seller.common.PropertyService;
 import org.openpaas.paasta.marketplace.web.seller.service.SoftwareService;
 import org.openpaas.paasta.marketplace.web.seller.storageApi.store.swift.SwiftOSService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class SoftwareController {
 
     private final SoftwareService softwareService;
     private final CommonService commonService;
+    private final PropertyService propertyService;
 
     @Autowired
     SwiftOSService swiftOSService;
@@ -158,6 +160,7 @@ public class SoftwareController {
         model.addAttribute("types", Software.Type.values());
         model.addAttribute("status", Software.Status.values());
         model.addAttribute("categories", softwareService.getCategories());
+        model.addAttribute("objectStorageUri", propertyService.getObjectStorageUri());
 
         return "contents/software-update";
     }
@@ -172,7 +175,7 @@ public class SoftwareController {
     @ResponseBody
     public Software updateFile(@PathVariable Long id, @PathVariable String  fileType, @PathVariable String filePath, @RequestParam(name = "fileName", required = false) String fileName) {
         Software software = softwareService.getSoftware(id);
-        String finalUrl = "http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/" + filePath;
+        String finalUrl = propertyService.getObjectStorageUri() + filePath;
 
         // 스크린샷 DB 업데이트
         if(fileType.equals("screenShots")) {
@@ -230,7 +233,7 @@ public class SoftwareController {
         // 새로 넣어줄 스크린 샷 리스트
         List<String> screenshotPackList = new ArrayList<>();
 
-        String finalUrl = "http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/" + imgPath;
+        String finalUrl = propertyService.getObjectStorageUri() + imgPath;
 
 
         // 어차피 삭제되는 애는 한 개씩

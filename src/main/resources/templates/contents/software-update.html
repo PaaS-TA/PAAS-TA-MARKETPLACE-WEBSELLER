@@ -349,9 +349,12 @@
     <input type="hidden" id="iconPath" name="iconPath" th:value="${software.iconPath}" />
     <input type="hidden" id="manifestPath" name="manifestPath" th:value="${software.manifestPath}" />
     <input type="hidden" id="indexForScreenShot" name="index" value="" />
+    <input type="hidden" id="objectStorageUri" name="objectStorageUri" th:value="${objectStorageUri}" />
     <!-- //content -->
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
+
+        var OBJECT_STORAGE_URI = $("#objectStorageUri").val();
 
         FILE_INFO = {}; // 파일 초기화;
 
@@ -436,7 +439,7 @@
             var iconImagePath = jQuery('#iconFilePath').attr("src");
             console.log("지울 파일 이름 ::: " + iconImagePath);
 
-            var imgPath = iconImagePath.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
+            var imgPath = iconImagePath.split(OBJECT_STORAGE_URI);
             var reqUrl = "/v2/swift/{name}".replace("{name}", imgPath[1]);
 
             console.log("지울 파일 위치 ::: " + reqUrl);
@@ -571,7 +574,7 @@
                             + "[FILE_INFO.screenshotsFileSize]: "+FILE_INFO.screenshotsFileSize);
             }
 
-            var imgPath = FILE_INFO.screenshotsFilePath.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
+            var imgPath = FILE_INFO.screenshotsFilePath.split(OBJECT_STORAGE_URI);
 
             procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath[1], "PUT", null, null, callbackFileDb);
         }
@@ -626,7 +629,7 @@
             console.log("index : " + index + " & id : " + selectId);
 
             var selectedScreenshot = $(selectId).attr("src");
-            var imgPath = selectedScreenshot.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
+            var imgPath = selectedScreenshot.split(OBJECT_STORAGE_URI);
 
             var reqUrl = "/v2/swift/{name}".replace("{name}", imgPath[1]);
             procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteScreenShotSwift);
@@ -763,7 +766,7 @@
         $("#deleteProdFile").on("click", function () {
             var prodFilePath = $("#appPath").val();
 
-            var filePath = prodFilePath.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
+            var filePath = prodFilePath.split(OBJECT_STORAGE_URI);
             var reqUrl = "/v2/swift/{name}".replace("{name}", filePath[1]);
             procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteProdFileSwift);
 
@@ -782,7 +785,7 @@
         $("#deleteManifestFile").on("click", function () {
             var envFilePath = $("#manifestPath").val();
 
-            var filePath = envFilePath.split('http://15.164.0.24:10008/v1/AUTH_955647b847dd483d9ce3aa7828fc6ed5/marketplace-container/');
+            var filePath = envFilePath.split(OBJECT_STORAGE_URI);
             var reqUrl = "/v2/swift/{name}".replace("{name}", filePath[1]);
             procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteEnvFileSwift);
         });
