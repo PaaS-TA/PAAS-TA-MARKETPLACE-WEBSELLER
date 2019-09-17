@@ -67,6 +67,21 @@ public class StatsService {
     }
 
     /**
+     * 상품 판매 현황 목록 조회
+     *
+     * @param queryString
+     * @return
+     */
+    public CustomPage<Instance> getInstanceListBySwId(String queryString) {
+        ResponseEntity<CustomPage<Instance>> responseEntity = paasApiRest.exchange("/instances/page" + queryString, HttpMethod.GET, null, new ParameterizedTypeReference<CustomPage<Instance>>() {});
+        CustomPage<Instance> customPage = responseEntity.getBody();
+
+        System.out.println("getContent ::: " + customPage.getContent());
+        System.out.println("getTotalElements ::: " + customPage.getTotalElements());
+        return customPage;
+    }
+
+    /**
      * 총 사용자 수 조회
      *
      * @return

@@ -121,7 +121,7 @@
                     <th scope="col">버전</th>
                     <th scope="col">등록일</th>
                     <th scope="col">승인일</th>
-                    <th scope="col">사용자 수</th>
+                    <th scope="col">판매량</th>
                 </tr>
                 </thead>
                 <tbody id="softwareStatusArea">
@@ -162,39 +162,46 @@
         });
 
         var getSoftwaresStats = function (contentData){
-            console.log(">> getSoftwaresStats Init");
+            console.log(">> Chart init");
 
-            var content = contentData.content;
-            var listLength = content.length;
-            console.log(content);
+            // Chart [pieChart]
+            var pieChartData = contentData.content;
 
-            // if (listLength > 0) {
-            //     for (var i = 0; i < listLength; i++) {
-            //
-            //         for (key in resultCountList) {
-            //             if (content[i].id == key) {
-            //                 var userCount = resultCountList[key];
-            //             }
-            //         }
-            //         var name = content[i].name;
-            //         console.log(name)
-            //     }
-            // }
+            if(pieChartData.length == 0){
+                console.log(pieChartData.length);
+                return;
+            }else{
 
+                var seriesData = [];
+                var item = [];
 
-            //pieChart
+                for (var i = 0; i < pieChartData.length; i++) {
+
+                    var map = pieChartData[i];
+
+                    if (pieChartData[i].id) {
+                        var userCount = resultCountList[i];
+                    }
+
+                    //userCount
+                    if(userCount == undefined && userCount == null){
+                        userCount = 0;
+                    }
+
+                    //dataJson(softwareName,userCount)
+                    item = {name: map.name , data: userCount};
+                    seriesData.push(item);
+                }
+                console.log(seriesData);
+            }
+
             var container = document.getElementById('pieChartArea');
             var data = {
-                series: [
-                    {
-                        name: 'user01',
-                        data: ''
-                    }
-                ]
+                series: seriesData
             };
             var options = {
                 chart: {
-                    width: 600,
+                    width: 700,
                     height: 400,
                     format: function(value, chartType, areaType, valuetype, legendName) {
                         if (areaType === 'makingSeriesLabel') { // formatting at series area
@@ -235,24 +242,22 @@
             tui.chart.pieChart(container, data, options);
 
 
-            //lineChart
+            // Chart [lineChart]
             var categoriesData = countOfInstsProviderMonthly.replace("[", "").replace("]", "").split(",");
-            var seriesData = countOfInstsProviderCounts.replace("[", "").replace("]", "").split(",");
+            var series = countOfInstsProviderCounts.replace("[", "").replace("]", "").split(",");
 
             //content
-            var contentList = [];
+            var lineChartSeries  = [];
             var content = contentData.content;
             var listLength = content.length;
-            console.log(content);
-            console.log("[listLength]: "+ listLength);
 
             for (var i = 0; i < listLength; i++) {
 
-                var content = contentList[i];
+                var content = lineChartSeries [i];
 
                 for(var key in content){
                     var val = content[key];
-                    var data_series = "[{name: " + val.name + ", data: [" + seriesData + "]}]";
+                    var seriesData = "[{name: " + val.name + ", data: [" + series + "]}]";
                 }
             }
 
@@ -260,7 +265,7 @@
 
             var data = {
                 categories: categoriesData,
-                data_series
+                seriesData
             };
 
             var options = {

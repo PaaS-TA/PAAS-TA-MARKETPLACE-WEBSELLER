@@ -78,7 +78,7 @@ public class StatsController {
      * @return
      */
     @GetMapping(value = "/softwares/{id}")
-    public String getSoftwareStats(Model model, @PathVariable Long id) {
+    public String getSoftwareStats(Model model, @PathVariable Long id, HttpServletRequest httpServletRequest) {
         model.addAttribute("software", softwareService.getSoftware(id));
 
         // 단일 상품에 대한 총 사용자 수
@@ -105,9 +105,20 @@ public class StatsController {
 
         model.addAttribute("usedSwCountSum", usedSwCount);
         model.addAttribute("instanceUsingUserSum", statsService.getCountOfUsersUsing());
-        model.addAttribute("instance", statsService.getInstance(id));
 
         return "contents/software-statusdetail";
+    }
+
+    /**
+     * 상품별 현황 상세 페이지(판매 현황 목록 조회)
+     *
+     * @param httpServletRequest
+     * @return
+     */
+    @GetMapping(value = "/instances")
+    @ResponseBody
+    public CustomPage<Instance> getInstanceListBySwId(HttpServletRequest httpServletRequest) {
+        return statsService.getInstanceListBySwId(commonService.setParameters(httpServletRequest));
     }
 
 
