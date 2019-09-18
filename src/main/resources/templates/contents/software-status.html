@@ -161,10 +161,15 @@
             getSoftwareStatsList();
         });
 
-        var getSoftwaresStats = function (contentData){
-            console.log(">> Chart init");
+        //chart
+        var getSoftwareStatsChart = function(data) {
+            pieChart(data);
+            lineChart(data);
+        };
 
-            // Chart [pieChart]
+        var pieChart = function (contentData){
+            console.log(">> pieChart init");
+
             var pieChartData = contentData.content;
 
             if(pieChartData.length == 0){
@@ -237,9 +242,10 @@
                 }
             };
             tui.chart.pieChart(container, data, options);
+        };
 
-
-            // Chart [lineChart]
+        var lineChart = function(contentData) {
+            console.log(">> lineChart init");
             var categoriesData = countOfInstsProviderMonthly.replace("[", "").replace("]", "").split(",");
             var countsData = countOfInstsProviderCounts.replace("[", "").replace("]", "").split(",");
             var lineChartData = contentData.content;
@@ -263,7 +269,6 @@
                 }
                 console.log(lineSeriesData);
             }
-
 
             var data = {
                 categories: categoriesData,
@@ -299,10 +304,9 @@
                 }
             };
 
-           tui.chart.lineChart(container, data, options);
+            tui.chart.lineChart(container, data, options);
             $(".tui-chart-series-custom-event-area").hide();
-        };
-
+        }
 
         var getSoftwareStatsList = function (pageNum) {
             var dateParameter;                                              //날짜
@@ -335,7 +339,7 @@
 
 
         var callbackSoftwareStatsList = function(data) {
-            getSoftwaresStats(data);
+            getSoftwareStatsChart(data);
 
             $("#totalCount").text(" (" + data.totalElements + " / " + soldSoftwareTotal + " / " + usingSWUserTotal + ")");
 
