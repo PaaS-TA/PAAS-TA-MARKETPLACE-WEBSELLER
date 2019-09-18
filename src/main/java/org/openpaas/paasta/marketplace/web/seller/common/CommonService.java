@@ -134,7 +134,11 @@ public class CommonService {
         /**
          * Parameters id parameters list.
          */
-        PARAMETERS_ID("categoryId"),
+        PARAMETERS_SW_ID("softwareId"),
+        /**
+         * Parameters id parameters list.
+         */
+        PARAMETERS_CATEGORY_ID("categoryId"),
         /**
          * Parameters name parameters list.
          */
