@@ -154,6 +154,8 @@
         //사용량 추이(terms,counts)
         var countOfInstsProviderMonthly = "[[${countOfInstsProviderMonthly}]]";
         var countOfInstsProviderCounts = "[[${countOfInstsProviderCounts}]]";
+        var totalCountInstsProviderInfo = "[[${totalCountInstsProviderInfo}]]";
+        var countofInstsProvider = JSON.parse(totalCountInstsProviderInfo.replace(/&quot;/g,'"'));
 
         // ON LOAD
         $(document).ready(function() {
@@ -241,7 +243,7 @@
 
             // Chart [lineChart]
             var categoriesData = countOfInstsProviderMonthly.replace("[", "").replace("]", "").split(",");
-            var countsData = countOfInstsProviderCounts.replace("[", "").replace("]", "").split(",");
+            var countsData = countOfInstsProviderCounts;
             var lineChartData = contentData.content;
 
             var container = document.getElementById('lineChartArea');
@@ -251,19 +253,24 @@
             }else{
                 var lineSeriesData = [];
                 var lineItem = [];
+                var dataPerMonth = [];
 
                 for (var i = 0; i < lineChartData.length; i++) {
                     var map = lineChartData[i];
-                    console.log(map);
+
+                    if(countofInstsProvider.counts[map.id]) {
+                        dataPerMonth = countofInstsProvider.counts[map.id];
+                    } else {
+                        dataPerMonth = 0;
+                    }
 
                     //dataJson(softwareName,series)
-                    lineItem = {name: map.name , data: [countsData]};
-                    // lineItem = {name: map.name , data: [0, 0, 0, 0, 0, 0, 0, 0, .0, 0, 0, 10]};
+                    lineItem = {name: map.name , data: dataPerMonth};
                     lineSeriesData.push(lineItem);
                 }
-                console.log(lineSeriesData);
             }
 
+            console.log(lineSeriesData);
 
             var data = {
                 categories: categoriesData,

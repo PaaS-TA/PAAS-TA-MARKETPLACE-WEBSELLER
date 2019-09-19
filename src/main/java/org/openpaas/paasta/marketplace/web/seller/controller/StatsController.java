@@ -57,7 +57,8 @@ public class StatsController {
             }
         }
         //사용량 추이
-        Map  countsOfInstsProvider =  statsService.countsOfInstsProviderMonthly();
+        Map  countsOfInstsProvider =  statsService.countsOfInstsProviderMonthly(idIn);
+        model.addAttribute("totalCountInstsProviderInfo", commonService.getJsonStringFromMap(countsOfInstsProvider));
         model.addAttribute("countOfInstsProviderMonthly", countsOfInstsProvider.get("terms"));
         model.addAttribute("countOfInstsProviderCounts", countsOfInstsProvider.get("counts"));
 
@@ -98,7 +99,7 @@ public class StatsController {
         }
 
         //사용량 추이
-        Map  countsOfInstsProvider =  statsService.countsOfInstsProviderMonthly();
+        Map  countsOfInstsProvider =  statsService.countsOfInstsProviderMonthly(idIn);
         model.addAttribute("countOfInstsProviderMonthly", countsOfInstsProvider.get("terms"));
         model.addAttribute("countOfInstsProviderCounts", countsOfInstsProvider.get("counts"));
 

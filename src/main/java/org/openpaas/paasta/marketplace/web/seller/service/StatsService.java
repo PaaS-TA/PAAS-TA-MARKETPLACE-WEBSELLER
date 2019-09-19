@@ -53,8 +53,14 @@ public class StatsService {
      *
      * @return
      */
-    public Map<String, Object> countsOfInstsProviderMonthly() {
-        return paasApiRest.getForObject("/stats/instances/my/counts/months", Map.class);
+    public Map<String, Object> countsOfInstsProviderMonthly(List<Long> idIn) {
+        UriComponentsBuilder builder = UriComponentsBuilder.newInstance().path("/stats/instances/my/counts/months");
+        for (Long id : idIn) {
+            builder.queryParam("idIn", id);
+        }
+        String url = builder.buildAndExpand().toUriString();
+
+        return paasApiRest.getForObject(url, Map.class);
     }
 
     /**
