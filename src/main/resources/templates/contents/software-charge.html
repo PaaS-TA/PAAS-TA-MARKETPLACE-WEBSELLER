@@ -47,24 +47,14 @@
                 <!-- Form 그룹 -->
                 <div class="form-group">
                     <div class="form-group-area">
-                        <div class="fm_label"><label for="" class="label">사용연월</label></div>
-                        <div class="fm_box w_auto pr10">
-                            <select id="" name="">
-                                <option value="">2019</option>
-                                <option value="">2018</option>
-                                <option value="">2017</option>
-                                <option value="">2016</option>
-                            </select>
-                        </div>
-                        <div class="fm_box w_auto">
-                            <select id="" name="">
-                                <option value="">05</option>
-                                <option value="">04</option>
-                                <option value="">03</option>
-                                <option value="">02</option>
-                                <option value="">01</option>
-                            </select>
-                        </div>
+                        <div class="fm_label"><label class="label">사용연월</label></div>
+                        <select name="selectDateYear1" id="selectDateYear1" th:onchange="selectYear()">
+
+                        </select>
+                        <label></label>
+                        <select name="selectDateMonth1" id="selectDateMonth1" th:onchange="selectMonth()">
+
+                        </select>
                     </div>
                 </div>
                 <!-- //Form 그룹 -->
@@ -104,19 +94,19 @@
                     <col style="width:15%;">
                     <col style="width:auto;">
                     <col style="width:8%;">
-                    <col style="width:10%;">
-                    <col style="width:10%;">
+                    <col style="width:15%;">
+                    <col style="width:15%;">
                     <col style="width:10%;">
                 </colgroup>
                 <thead>
                 <tr>
                     <th scope="col">No.</th>
                     <th scope="col">카테고리</th>
-                    <th scope="col">상품 명</th>
+                    <th scope="col">상품명</th>
                     <th scope="col">버전</th>
                     <th scope="col">등록일</th>
-                    <th scope="col">승인일</th>
                     <th scope="col">사용자 수</th>
+                    <th scope="col">사용 요금</th>
                 </tr>
                 </thead>
                 <tbody id = "statsSoftwareArea">
@@ -127,20 +117,7 @@
 
         <!-- page -->
         <nav class="pagiWrap">
-            <ul class="pagination">
-                <li class="first disabled"><a href="#">맨 처음</a></li>
-                <li class="prev"><a href="#">이전</a></li>
-                <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                <li class=" disabled"><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">6</a></li>
-                <li><a href="#">7</a></li>
-                <li><a href="#">8</a></li>
-                <li><a href="#">9</a></li>
-                <li class="next"><a href="#">다음</a></li>
-                <li class="end"><a href="#">맨 끝</a></li>
+            <ul class="pagination" id="pageNumberList">
             </ul>
         </nav>
         <!-- //page -->
@@ -150,12 +127,10 @@
         /*<![CDATA[*/
         var PAGING_SIZE = 10;
         var SORT = "id,asc";
+        var yearValue = $("#selectDateYear1 option:selected").val();
+        var monthValue = $("#selectDateMonth1 option:selected").val();
 
-        // ON LOAD
-        $(document).ready(function() {
-            console.log('::StatsSoftwareList Init::');
-            getStatsSoftwareList();
-        });
+
 
         var getStatsSoftwareList = function (pageNum) {
             console.log("getStatsSoftwareList");
@@ -170,7 +145,7 @@
                 categoryId = '';
             }
 
-            var reqUrl = "/stats/softwares/my" + "?categoryId=" + categoryId + "&page=" + pageNum + "&size=" + PAGING_SIZE + "&sort=" + SORT;
+            var reqUrl = "/softwares" + "?categoryId=" + categoryId + "&page=" + pageNum + "&size=" + PAGING_SIZE + "&sort=" + SORT;
             console.log(reqUrl);
 
             procCallAjax(reqUrl, "GET", null, null, callbackStatsSoftwareList);
@@ -179,6 +154,7 @@
         var callbackStatsSoftwareList = function(data) {
             console.log("callbackStatsSoftwareList");
             console.log(data);
+            var lastDay = ( new Date(yearValue, monthValue, 0) ).getDate();
 
             //::totalElements::
             $("#totalElements").text("(" + data.totalElements + ")");
@@ -194,13 +170,12 @@
                     htmlString.push(
                         "<tr>"
                         + "<td>" + (i + 1)  + "</td>"
-                        + "<td>10</td>"
                         + "<td><span class=\"pn_cate type"+ content[i].category.id +"\">" + content[i].category.name + "</span></td>"
-                        + "<td><a href='javascript:void(0);'" + content[i].name+ "</a></td>"
+                        + "<td>" + content[i].name+ "</td>"
                         + "<td>" + content[i].version + "</td>"
                         + "<td>" + content[i].createdDate + "</td>"
-                        + "<td>" + content[i].lastModifiedDate + " </td>"
-                        + "<td>15명</td>"
+                        + "<td>" + "1명" + " </td>"
+                        + "<td></td>"
                         + "</tr>"
                     );
                 }
@@ -223,6 +198,54 @@
         });
 
 
+        //move::SoftwareDetail
+        var moveSoftwareDetail = function(id) {
+            procMovePage("/admin/softwares/{id}".replace("{id}", id));
+        };
+
+        // [공통] 년, 월 select box
+        function selectCal(monthfield, yearfield) {
+            var today = new Date();
+
+            console.log("오늘?? " + (today.getMonth() + 1));
+            yearValue = today.getFullYear();
+            monthValue = (today.getMonth() + 1);
+
+            console.log("기본 이어1 ::: " + yearValue + "& 기본 몬쓰1 ::: " + monthValue);
+
+            for (var i = 1; i < 13; i++) {
+
+                if ((today.getMonth() + 1) == i) $("#" + monthfield).append("<option value='" + i + "' selected='selected'>" + i + "</option>");
+                else $("#" + monthfield).append("<option value='" + i + "'>" + i + "</option>");
+            }
+
+            var thisyear = today.getFullYear();
+            for (var y = thisyear - 10; y < thisyear + 10; y++) {
+
+                if (thisyear == y) $("#" + yearfield).append("<option value='" + y + "' selected='selected'>" + y + "</option>");
+                else $("#" + yearfield).append("<option value='" + y + "'>" + y + "</option>");
+            }
+
+        }
+
+        var selectYear = function() {
+            var selectedYearValue = $("#selectDateYear1 option:selected").val();
+            console.log("Year ::: " + selectedYearValue);
+            yearValue = selectedYearValue;
+        };
+
+        var selectMonth = function() {
+            var selectedMonthValue = $("#selectDateMonth1 option:selected").val();
+            console.log("Month ::: " + selectedMonthValue);
+            monthValue = selectedMonthValue;
+        };
+
+
+        // ON LOAD
+        $(document).ready(function() {
+            selectCal('selectDateMonth1', 'selectDateYear1');
+            getStatsSoftwareList();
+        });
 
         /*]]>*/
     </script>
