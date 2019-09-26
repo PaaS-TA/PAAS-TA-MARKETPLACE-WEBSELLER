@@ -50,7 +50,7 @@ public class ProfileController {
             }
         }
         if(count > 0){
-            return "redirect:/profiles/update/" + profileId;        // (1) 프로필 상세 페이지
+            return "redirect:/profiles/" + profileId;               // (1) 프로필 상세 페이지
         }
         return "redirect:/profiles/create";                         // (2) 프로필 등록 페이지
     }

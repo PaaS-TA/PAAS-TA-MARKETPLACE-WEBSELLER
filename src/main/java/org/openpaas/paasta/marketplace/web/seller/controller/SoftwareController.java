@@ -5,11 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.openpaas.paasta.marketplace.api.domain.*;
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.common.PropertyService;
+import org.openpaas.paasta.marketplace.web.seller.service.ProfileService;
 import org.openpaas.paasta.marketplace.web.seller.service.SoftwareService;
 import org.openpaas.paasta.marketplace.web.seller.storageApi.store.swift.SwiftOSService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +35,7 @@ import java.util.List;
 public class SoftwareController {
 
     private final SoftwareService softwareService;
+    private final ProfileService profileService;
     private final CommonService commonService;
     private final PropertyService propertyService;
 
@@ -87,7 +90,26 @@ public class SoftwareController {
         model.addAttribute("types", Software.Type.values());
         model.addAttribute("yns", Yn.values());
         model.addAttribute("categories", softwareService.getCategories());
-        return "contents/software-create";
+
+        int count = 0;
+
+        CustomPage<Profile> profileList = profileService.getProfileList("?page=0&size=10&sort=id");
+        Authentication finalAuth = SecurityContextHolder.getContext().getAuthentication();
+        OAuth2User principal = (OAuth2User) finalAuth.getPrincipal();
+        String user = (String) principal.getAttributes().get("user_name");
+
+        log.info(">> user :: " + user);
+
+        for(Profile profiles : profileList) {
+            if(user.equals(profiles.getId())) {
+                count++;
+            }
+        }
+        if(count > 0){
+            return "contents/software-create";               // (1) 상품 등록 페이지
+        }
+
+        return "redirect:/profiles/create";                         // (2) 프로필 등록 페이지
     }
 
 
