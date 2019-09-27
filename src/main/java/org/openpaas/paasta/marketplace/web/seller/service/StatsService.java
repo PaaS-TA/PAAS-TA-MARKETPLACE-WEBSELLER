@@ -119,4 +119,20 @@ public class StatsService {
         return paasApiRest.getForObject(url, Instance.class);
     }
 
+
+    /**
+     * 판매자의 상품별 총 판매량(사용 + 중지)
+     *
+     * @param idIn
+     * @return
+     */
+    public Map<Long, Object> soldInstanceByProvider(List<Long> idIn) {
+        UriComponentsBuilder builder = UriComponentsBuilder.newInstance().path("/stats/instances/sold/count");
+        for (Long id : idIn) {
+            builder.queryParam("idIn", id);
+        }
+        String url = builder.buildAndExpand().toUriString();
+
+        return paasApiRest.getForObject(url, Map.class);
+    }
 }

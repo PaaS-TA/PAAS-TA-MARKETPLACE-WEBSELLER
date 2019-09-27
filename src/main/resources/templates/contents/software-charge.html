@@ -105,8 +105,8 @@
                     <th scope="col">상품명</th>
                     <th scope="col">버전</th>
                     <th scope="col">등록일</th>
-                    <th scope="col">사용자 수</th>
-                    <th scope="col">사용 요금</th>
+                    <th scope="col">판매량</th>
+                    <th scope="col">판매액</th>
                 </tr>
                 </thead>
                 <tbody id = "statsSoftwareArea">
@@ -162,11 +162,21 @@
             var statsSoftwareList = $("#statsSoftwareArea");
             var htmlString = [];
             var content = data.content;
-
             var listLength = content.length;
+
+            var soldInstanceCountList = "[[${soldInstanceCount}]]";
+            var soldInstanceCount = soldInstanceCountList.replace("{", "").replace("}", "").split(",");
+            var soldCount;
 
             if(listLength > 0){
                 for(var i = 0; i < listLength; i++){
+
+                    var soldInstanceMap= soldInstanceCount[i].replace(/(\s*)/g, "");
+                    var value = soldInstanceMap.split("=");
+
+                    soldCount = value[1];
+
+                    // TODO ::: 판매액 -> 판매량 안에서도 상품별 각각 사용한 일 수 구해서 다시 곱해줘야 함!!
                     htmlString.push(
                         "<tr>"
                         + "<td>" + (i + 1)  + "</td>"
@@ -174,8 +184,8 @@
                         + "<td>" + content[i].name+ "</td>"
                         + "<td>" + content[i].version + "</td>"
                         + "<td>" + content[i].createdDate + "</td>"
-                        + "<td>" + "1명" + " </td>"
-                        + "<td></td>"
+                        + "<td>" + soldCount + " 개</td>"
+                        + "<td>" + soldCount * content[i].pricePerDay + " 원</td>"
                         + "</tr>"
                     );
                 }

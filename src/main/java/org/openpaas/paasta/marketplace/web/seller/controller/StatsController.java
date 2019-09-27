@@ -147,12 +147,19 @@ public class StatsController {
      */
     @GetMapping(value = "/softwares/my")
     public String getStatsSoftwaresMy(Model model, @AuthenticationPrincipal OAuth2User oauth2User, HttpSession httpSession, SoftwareSpecification spec, Authentication authentication) {
-        log.info(">> stats Init" );
+        CustomPage<Software> software = softwareService.getSoftwareList("");
+
+        List<Long> idIn = new ArrayList<>();
+        for (Software s:software.getContent()) {
+            idIn.add(s.getId());
+        }
+
         model.addAttribute("categories", statsService.getCategories());
         model.addAttribute("status", Software.Status.values());
         model.addAttribute("spec", new SoftwareSpecification());
         model.addAttribute("types", Software.Type.values());
         model.addAttribute("yns", Yn.values());
+        model.addAttribute("soldInstanceCount", statsService.soldInstanceByProvider(idIn));
         return "contents/software-charge";
     }
 
