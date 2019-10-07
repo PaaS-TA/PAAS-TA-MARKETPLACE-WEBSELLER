@@ -56,6 +56,10 @@ public class StatsController {
                 newResult.put(mapId, 0);
             }
         }
+
+        // 판매량
+        model.addAttribute("soldInstanceCount", statsService.soldInstanceByProvider(idIn));
+
         //사용량 추이
         Map  countsOfInstsProvider =  statsService.countsOfInstsProviderMonthly(idIn);
         model.addAttribute("totalCountInstsProviderInfo", commonService.getJsonStringFromMap(countsOfInstsProvider));
@@ -149,17 +153,24 @@ public class StatsController {
     public String getStatsSoftwaresMy(Model model, @AuthenticationPrincipal OAuth2User oauth2User, HttpSession httpSession, SoftwareSpecification spec, Authentication authentication) {
         CustomPage<Software> software = softwareService.getSoftwareList("");
 
-        List<Long> idIn = new ArrayList<>();
-        for (Software s:software.getContent()) {
-            idIn.add(s.getId());
+        if(software.getTotalElements() > 0) {
+            List<Long> idIn = new ArrayList<>();
+            for (Software s:software.getContent()) {
+                idIn.add(s.getId());
+            }
+
+            model.addAttribute("soldInstanceCount", statsService.soldInstanceByProvider(idIn));
+        } else {
+            model.addAttribute("soldInstanceCount", null);
         }
+
 
         model.addAttribute("categories", statsService.getCategories());
         model.addAttribute("status", Software.Status.values());
         model.addAttribute("spec", new SoftwareSpecification());
         model.addAttribute("types", Software.Type.values());
         model.addAttribute("yns", Yn.values());
-        model.addAttribute("soldInstanceCount", statsService.soldInstanceByProvider(idIn));
+
         return "contents/software-charge";
     }
 

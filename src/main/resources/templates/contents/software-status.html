@@ -357,15 +357,17 @@
 
             var listLength = content.length;
 
-            if (listLength > 0) {
-                var userCount;
+            // 판매량
+            var soldInstanceCountList = "[[${soldInstanceCount}]]";
+            var soldInstanceCount = soldInstanceCountList.replace("{", "").replace("}", "").split(",");
+            var soldCount;
 
+            if (listLength > 0) {
                 for (var i = 0; i < listLength; i++) {
-                    for (key in resultCountList) {
-                        if (content[i].id == key) {
-                            userCount = resultCountList[key];
-                        }
-                    }
+
+                    var soldInstanceMap= soldInstanceCount[i].replace(/(\s*)/g, "");
+                    var value = soldInstanceMap.split("=");
+                    soldCount = value[1];
 
                     var statusModifiedDate = '';
                     if(content[i].statusModifiedDate == null){
@@ -382,7 +384,7 @@
                         + "<td>" + content[i].version + "</td>"
                         + "<td>" + content[i].createdDate + "</td>"
                         + "<td>" + statusModifiedDate + "</td>"
-                        + "<td>" + userCount + "</td>"
+                        + "<td>" + soldCount + " 개</td>"
                         + "</tr>"
                     );
                 }

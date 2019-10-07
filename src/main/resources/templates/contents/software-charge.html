@@ -133,8 +133,6 @@
 
 
         var getStatsSoftwareList = function (pageNum) {
-            console.log("getStatsSoftwareList");
-
             var categoryId = $("#categoryId option:selected").val();        //카테고리
 
             console.log(":: categoryId :: " + categoryId +
@@ -145,8 +143,43 @@
                 categoryId = '';
             }
 
+            console.log("기본 이어2 ::: " + yearValue + "& 기본 몬쓰2 ::: " + monthValue);
+
+            var yy = yearValue; // 이번 해
+            var yy2 = yearValue; // 다음 해
+
+            var mm = monthValue; // 이번 달
+            var mm2 = monthValue; // 다음 달
+
+            if (monthValue < 10) {
+                mm = '0' + monthValue;
+                if((parseInt(monthValue) + 1) >= 10) {
+                    mm2 = (parseInt(monthValue) + 1);
+                } else {
+                    mm2 = '0' + (parseInt(monthValue) + 1);
+                }
+            }else if(monthValue >= 10 && monthValue < 12) {
+                mm = monthValue;
+                mm2 = parseInt(monthValue) + 1;
+            }
+
+
+            if(monthValue > 11) {
+                console.log("현재 12월 ::: " + yearValue + "-" + monthValue);
+                console.log(parseInt(yearValue) + 1);
+                yy = yearValue;
+                yy2 = parseInt(yearValue) + 1;
+                mm = monthValue;
+                mm2 = "01";
+            }
+
+            var currentYearMonth = yy + "-" + mm + "-01";
+            var nextYearMonth = yy2 + "-" + mm2 + "-01";
+
             var reqUrl = "/softwares" + "?categoryId=" + categoryId + "&page=" + pageNum + "&size=" + PAGING_SIZE + "&sort=" + SORT;
             console.log(reqUrl);
+
+            // TODO : /admin/stats/instances/counts/months?epoch=2019-10-01&size=1&idIn=1&idIn=2&idIn=3&idIn=4 이거 참고하면 될 듯.
 
             procCallAjax(reqUrl, "GET", null, null, callbackStatsSoftwareList);
         };
@@ -191,7 +224,7 @@
                 }
             }else{
                 htmlString = "<tr>"
-                    + "<td colspan='8'><p class='user_p'>상품이 존재하지 않습니다.</p></td>" + "</tr>"
+                    + "<td colspan='7'><p class='user_p'>상품이 존재하지 않습니다.</p></td>" + "</tr>"
             }
 
             statsSoftwareList.html(htmlString);
@@ -204,7 +237,7 @@
 
         //eventBtn
         $("#searchBtn").on("click", function () {
-            alert("statsSoftware will be distributed shortly");
+            getStatsSoftwareList();
         });
 
 
