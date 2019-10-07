@@ -6,12 +6,16 @@ import org.openpaas.paasta.marketplace.api.domain.*;
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.service.SoftwareService;
 import org.openpaas.paasta.marketplace.web.seller.service.StatsService;
+import org.openpaas.paasta.marketplace.web.seller.util.SecurityUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -67,8 +71,12 @@ public class StatsController {
         model.addAttribute("countOfInstsProviderCounts", countsOfInstsProvider.get("counts"));
 
         model.addAttribute("instanceUserCount", commonService.getJsonStringFromMap(newResult));
+
+        // 판매 상품
+        model.addAttribute("soldSwCount", statsService.countOfSoldSw(SecurityUtils.getUser().getAttributes().get("user_name").toString()));
+
+        // 판매량
         model.addAttribute("instanceCountSum", statsService.getCountOfInstsUsing());
-        model.addAttribute("instanceUsingUserSum", statsService.getCountOfUsersUsing());
 
         return "contents/software-status";
     }

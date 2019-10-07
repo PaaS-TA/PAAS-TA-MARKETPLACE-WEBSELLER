@@ -23,7 +23,7 @@ import java.util.Map;
 @Slf4j
 public class StatsService {
 
-    @Autowired
+    private final SoftwareService softwareService;
     private final RestTemplate paasApiRest;
 
     @SneakyThrows
@@ -134,5 +134,31 @@ public class StatsService {
         String url = builder.buildAndExpand().toUriString();
 
         return paasApiRest.getForObject(url, Map.class);
+    }
+
+    /**
+     * 판매자가 등록한 상품 중 1개 이상 판매된 상품들의 수
+     *
+     * @param id
+     * @return
+     */
+    public int countOfSoldSw(String id) {
+        // 본인이 등록한 승인된 상품 목록
+        CustomPage<Software> softwares = softwareService.getSoftwareList("?createdBy=" + id + "&status=" + Software.Status.Approval);
+
+        // 구매된 상품 전체 목록
+        CustomPage<Instance> instances = getInstanceListBySwId("");
+
+        int count = 0;
+
+        for(int i = 0; i < softwares.getContent().size(); i++) {
+            for(int j = 0; j < instances.getContent().size(); j++) {
+                if(softwares.getContent().get(i).getId().equals(instances.getContent().get(j).getSoftware().getId())) {
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count;
     }
 }
