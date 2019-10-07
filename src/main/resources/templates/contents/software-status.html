@@ -429,6 +429,8 @@
 
         //eventBtn
         $("#searchBtn").on("click", function () {
+            $("#pieChartArea").empty();
+            $("#lineChartArea").empty();
             getSoftwareStatsList();
         });
 
