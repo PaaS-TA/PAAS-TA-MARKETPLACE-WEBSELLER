@@ -110,6 +110,9 @@ public class StatsController {
             usedSwCount = 0;
         }
 
+        // 단일 상품 판매량
+        model.addAttribute("personalSoldInstanceCount", statsService.soldInstanceCountOfSw(id));
+
         //사용량 추이
         Map  countsOfInstsProvider =  statsService.countsOfInstsProviderMonthly(idIn);
         model.addAttribute("countOfInstsProviderMonthly", countsOfInstsProvider.get("terms"));
@@ -181,7 +184,5 @@ public class StatsController {
 
         return "contents/software-charge";
     }
-
-
 
 }

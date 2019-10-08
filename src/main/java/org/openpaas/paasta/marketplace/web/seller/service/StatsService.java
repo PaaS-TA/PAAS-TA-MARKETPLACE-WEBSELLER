@@ -161,4 +161,19 @@ public class StatsService {
         }
         return count;
     }
+
+
+    /**
+     * 등록한 상품 중 총 판매량
+     *
+     * @return
+     */
+    public long soldInstanceCountOfSw(Long id) {
+        String url = UriComponentsBuilder.newInstance().path("/stats/software/{id}/sold/counts/sum")
+                .build()
+                .expand(id)
+                .toString();
+        return paasApiRest.getForObject(url, long.class);
+    }
+
 }
