@@ -138,27 +138,24 @@
 
     <input type="hidden" id="softwareId" th:value="${software.id}">
     <input type="hidden" id="software" th:value="${software}">
-    <input type="hidden" id="instanceUsingUserSum" th:value="${instanceUsingUserSum}">
     <script type="text/javascript">
         /*<![CDATA[*/
         var PAGING_SIZE = 10;
         var SORT = "id,asc";
 
+        var softwareId = $("#softwareId").val();
+
         //사용량 추이(terms,counts)
-        var countOfInstsProviderMonthly = "[[${countOfInstsProviderMonthly}]]";
-        var countOfInstsProviderCounts = "[[${countOfInstsProviderCounts}]]";
+        var totalCountInstsProviderInfo = "[[${totalCountInstsProviderInfo}]]";
+        var countofInstsProvider = JSON.parse(totalCountInstsProviderInfo.replace(/&quot;/g,'"'));
 
         // ON LOAD
         $(document).ready(function () {
-            // var software = $("#software").val();
             getInstanceList();
         });
 
         var getSoftwareLineChart = function(contentData){
             console.log(">>lineChartData");
-            var instanceUsingUserSum = $("#instanceUsingUserSum").val();
-            var categoriesData = countOfInstsProviderMonthly.replace("[", "").replace("]", "").split(",");
-            var countsData = countOfInstsProviderCounts.replace("[", "").replace("]", "").split(",");
 
             var lineChartData = contentData.content;
 
@@ -168,27 +165,22 @@
                 var lineSeriesData = [];
                 var lineItem = [];
 
+                var map = lineChartData[0];
 
-                for (var i = 0; i < lineChartData.length; i++) {
-                    var map = lineChartData[i];
+                lineItem = {name: map.software.name , data: countofInstsProvider.counts[softwareId]};
+                lineSeriesData.push(lineItem);
 
-                    //dataJson(softwareName,series)
-                    lineItem = {name: map.appName , data: instanceUsingUserSum};
-                    // lineItem = {name: map.name , data: [0, 0, 0, 0, 0, 0, 0, 0, .0, 0, 0, 2]};
-                    lineSeriesData.push(lineItem);
-                }
-                console.log(lineSeriesData);
             }
 
             var container = document.getElementById('chart-area');
 
             var data = {
-                categories: categoriesData,
+                categories: countofInstsProvider.terms,
                 series: lineSeriesData
             };
             var options = {
                 chart: {
-                    width: 1200,
+                    width: 1100,
                     height: 300,
                 },
                 /*column(down) data*/
