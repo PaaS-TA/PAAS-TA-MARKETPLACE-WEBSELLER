@@ -370,7 +370,7 @@
                 getSoftwareStatsChart(data);
                 for (var i = 0; i < listLength; i++) {
 
-                    var soldInstanceMap= soldInstanceCount[i].replace(/(\s*)/g, "");
+                    var soldInstanceMap= soldInstanceCount[i+pageNumSave*PAGING_SIZE].replace(/(\s*)/g, "");
                     var value = soldInstanceMap.split("=");
                     soldCount = value[1];
 

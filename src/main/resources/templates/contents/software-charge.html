@@ -201,6 +201,7 @@
             var content = data.content;
             var listLength = content.length;
 
+         	// 판매량
             var soldInstanceCountList = "[[${soldInstanceCount}]]";
             var soldInstanceCount = soldInstanceCountList.replace("{", "").replace("}", "").split(",");
             var soldCount;
@@ -210,10 +211,12 @@
                 	// Format Date
                 	var createdDateValue = new Date(content[i].createdDate);
                 	var createdDate = getFormatDate(createdDateValue);
-
-                    var soldInstanceMap= soldInstanceCount[i].replace(/(\s*)/g, "");
+                	
+                    //var soldInstanceMap= soldInstanceCount[i].replace(/(\s*)/g, "");
+                    var soldInstanceMap= soldInstanceCount[i+pageNumSave*PAGING_SIZE].replace(/(\s*)/g, "");
+                    console.log("index= "+(i+pageNumSave*PAGING_SIZE));
                     var value = soldInstanceMap.split("=");
-
+                    
                     soldCount = value[1];
 
                     // TODO ::: 판매액 -> 판매량 안에서도 상품별 각각 사용한 일 수 구해서 다시 곱해줘야 함!!
