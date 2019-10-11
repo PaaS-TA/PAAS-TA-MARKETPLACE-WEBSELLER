@@ -308,7 +308,7 @@ public class SoftwareController {
         newSoftware.setSummary(software.getSummary());
         newSoftware.setDescription(software.getDescription());
         newSoftware.setType(software.getType());
-        newSoftware.setPricePerDay(software.getPricePerDay());
+        newSoftware.setPricePerMonth(software.getPricePerMonth());
         newSoftware.setVersion(software.getVersion());
 
         log.info(newSoftware.toString());

@@ -227,7 +227,7 @@
                                 <th scope="row">판매가격<i class="i_star">필수입력</i></th>
                                 <td>
                                     <div class="form-group">
-                                        <input style="width:100px;" type="text" th:value="${software.pricePerDay}" id="softwarePricePerDay"> 원 / 월
+                                        <input style="width:100px;" type="text" th:value="${software.pricePerMonth}" id="softwarePricePerMonth"> 원 / 월
                                     </div>
                                 </td>
                             </tr>
@@ -404,7 +404,7 @@
                 "summary" :  $("#softwareSummary").val(),
                 "description" : $("#softwareDescription").val(),
                 "type" : $('input:radio[name="softwareType"]:checked').val(),
-                "pricePerDay" : $("#softwarePricePerDay").val(),
+                "pricePerMonth" : $("#softwarePricePerMonth").val(),
                 "version" :  $("#softwareVersion").val()
             };
 
