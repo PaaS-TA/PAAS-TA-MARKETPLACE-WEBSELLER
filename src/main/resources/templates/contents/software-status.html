@@ -146,7 +146,13 @@
 
         // 상품 사용자 수
         var userCountPerSoftware = "[[${instanceUserCount}]]";
-        var resultCountList = JSON.parse(userCountPerSoftware.replace(/&quot;/g,'"'));
+        var resultCountList;
+        if(userCountPerSoftware == "") {
+            resultCountList = null;
+        } else {
+            resultCountList = JSON.parse(userCountPerSoftware.replace(/&quot;/g,'"'));
+        }
+
 
         // 판매 상품
         var soldSwCount = "[[${soldSwCount}]]";
@@ -155,14 +161,12 @@
         var instanceCountSum = "[[${instanceCountSum}]]";
 
         //사용량 추이(terms,counts)
-        var countOfInstsProviderMonthly = "[[${countOfInstsProviderMonthly}]]";
-        var countOfInstsProviderCounts = "[[${countOfInstsProviderCounts}]]";
         var totalCountInstsProviderInfo = "[[${totalCountInstsProviderInfo}]]";
         var countofInstsProvider = JSON.parse(totalCountInstsProviderInfo.replace(/&quot;/g,'"'));
 
         // ON LOAD
         $(document).ready(function() {
-            console.log('::StatsSoftwareReportList Init::');
+            currentMenu('2_1');
             getSoftwareStatsList();
         });
 
@@ -251,8 +255,8 @@
 
         var lineChart = function(contentData) {
             console.log(">> lineChart init");
-            var categoriesData = countOfInstsProviderMonthly.replace("[", "").replace("]", "").split(",");
-            var countsData = countOfInstsProviderCounts;
+
+            var countsData = countofInstsProvider;
             var lineChartData = contentData.content;
 
             var container = document.getElementById('lineChartArea');
@@ -282,7 +286,7 @@
             console.log(lineSeriesData);
 
             var data = {
-                categories: categoriesData,
+                categories: countofInstsProvider.terms,
                 series: lineSeriesData
             };
 

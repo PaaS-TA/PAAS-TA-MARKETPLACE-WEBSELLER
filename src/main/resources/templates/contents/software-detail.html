@@ -202,7 +202,7 @@
             var softwareId = "[[${software.id}]]";
 
             var reqUrl = "/softwares/" + softwareId + "/histories" + "?sort=lastModifiedDate,desc";
-            procCallAjax(reqUrl, "GET", null, null, callbackGetSoftwareHistoryList)
+            procCallAjax(reqUrl, "GET", null, null, callbackGetSoftwareHistoryList);
         });
 
         var callbackGetSoftwareHistoryList = function (data) {
@@ -225,6 +225,12 @@
                 historyArea.html(htmlString);
             }
         };
+
+        // ON LOAD
+        $(document).ready(function() {
+            currentMenu('1_1');
+        });
+
 
         /*]]>*/
     </script>

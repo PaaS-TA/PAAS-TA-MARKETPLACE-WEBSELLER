@@ -101,52 +101,14 @@
 
     </div>
     <!-- //content -->
-<!--    <script type="text/javascript">-->
-<!--        /*<![CDATA[*/-->
-<!--        var profile = "[[${profile}]]";-->
-<!--        var profileId= "[[${profile.id}]]";-->
-<!--        var REST_URL= "/profiles";-->
+    <script type="text/javascript">
+        /*<![CDATA[*/
 
-<!--        var users = "[[${users}]]";-->
+        $(document).ready(function() {
+            currentMenu('3');
+        });
 
-<!--        $(document).ready(function() {-->
-<!--            console.log("profile-create");-->
-<!--        });-->
-
-<!--        $("#createBtn").on("click", function () {-->
-<!--            createProfiles();-->
-<!--        });-->
-
-<!--        var createProfiles = function () {-->
-
-<!--            var profilesName = $("#profilesName").val();-->
-<!--            var profilesTypes = $("#profilesTypes option:selected").val();-->
-<!--            var profilesManager = $("#profilesManager").val();-->
-<!--            var profilesEmail = $("#profilesEmail").val();-->
-<!--            var profilesSiteUrl = $("#profilesSiteUrl").val();-->
-
-<!--            var reqParam = {-->
-<!--                "id" : profilesName.toString(),-->
-<!--                "name" : profilesName,-->
-<!--                "type" : profilesTypes,-->
-<!--                "manager" : profilesManager,-->
-<!--                "email" : profilesEmail,-->
-<!--                "siteUrl" : profilesSiteUrl-->
-<!--            }-->
-
-<!--            alert(REST_URL);-->
-
-<!--            console.log(JSON.stringify(reqParam));-->
-
-<!--            procCallAjax(REST_URL, "POST", JSON.stringify(reqParam), null, callbackCreateProfiles);-->
-<!--        }-->
-
-<!--        var callbackCreateProfiles = function(data) {-->
-<!--            console.log("::callbackModifyProfiles DATA:: " + data);-->
-<!--            procMovePage("/profiles/{id}".replace("{id}",  $("#profilesName").val()));-->
-<!--        };-->
-
-<!--        /*]]>*/-->
-<!--    </script>-->
+        /*]]>*/
+    </script>
 </div>
 </html>
