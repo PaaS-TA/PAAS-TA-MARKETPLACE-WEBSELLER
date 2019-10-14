@@ -146,12 +146,7 @@
 
         // 상품 사용자 수
         var userCountPerSoftware = "[[${instanceUserCount}]]";
-        var resultCountList;
-        if(userCountPerSoftware == "") {
-            resultCountList = null;
-        } else {
-            resultCountList = JSON.parse(userCountPerSoftware.replace(/&quot;/g,'"'));
-        }
+        var resultCountList = JSON.parse(userCountPerSoftware.replace(/&quot;/g,'"'));
 
 
         // 판매 상품
