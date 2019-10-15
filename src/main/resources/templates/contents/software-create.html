@@ -180,8 +180,37 @@
                                 <tr>
                                     <th scope="row">판매가격<i class="i_star">필수입력</i></th>
                                     <td>
+<!--                                        <div class="form-group">-->
+<!--                                            <input style="width:100px;" type="text" th:field="*{pricePerMonth}"> 원 / 월-->
+<!--                                        </div>-->
+                                        <table>
+                                            <thead>
+                                            <th scope="col">
+                                                <input type=button value="&nbsp; - &nbsp;" onclick="del_row();">
+                                                &nbsp;플랜&nbsp;
+                                                <input type=button value="&nbsp; + &nbsp;" onclick="add_row();">
+                                            </th>
+                                            <th scope="col">설명</th>
+                                            <th scope="col">CPU</th>
+                                            <th scope="col">Memory</th>
+                                            <th scope="col">Disk</th>
+                                            <th scope="col">가격</th>
+                                            </thead>
+                                            <td><input type=text name='opt[0][]' size=10></td>
+                                            <td><input type=text name='opt[1][]' size=10></td>
+                                            <td><input type=text name='opt[2][]' size=10></td>
+                                            <td><input type=text name='opt[3][]' size=10></td>
+                                            <td><input type=text name='opt[4][]' size=10></td>
+                                            <td><input type=text name='opt[5][]' size=10></td>
+                                            <tbody id="pricePerMonth-tbody"></tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">판매금액 적용월</th>
+                                    <td>
                                         <div class="form-group">
-                                            <input style="width:100px;" type="text" th:field="*{pricePerMonth}"> 원 / 월
+                                            <input style="width:100px;" type="text">
                                         </div>
                                     </td>
                                 </tr>
@@ -242,6 +271,7 @@
     </div>
     <!-- //content -->
     <script type="text/javascript">
+        var pricePerMonthYYDD; // 팜내금액 적용월
 
         // 아이콘
         var getThumbnailPreview = function (html, $target) {
@@ -299,7 +329,6 @@
                 lastFileInput.attr('onchange', 'getThumbnailPreviewScreenshot(this,' + ' $(' + tag + '), ' + (countNum +1) + ')');
 
             }
-
         };
 
         // [공통] 파일 첨부 시 이름 추출
@@ -311,6 +340,29 @@
             $target.val(f_name);
         };
 
+        function del_row() {
+            var pricePerMonth_tbody = document.getElementById('pricePerMonth-tbody');
+            if (pricePerMonth_tbody.rows.length < 1) return;
+            pricePerMonth_tbody.deleteRow( pricePerMonth_tbody.rows.length-1 );        // 하단부터 삭제
+        }
+
+        function add_row() {
+            var pricePerMonth_tbody = document.getElementById('pricePerMonth-tbody');
+            var row = pricePerMonth_tbody.insertRow( pricePerMonth_tbody.rows.length ); // 하단에 추가
+            var cell1 = row.insertCell(0);  // 플랜
+            var cell2 = row.insertCell(1);  // 설명
+            var cell3 = row.insertCell(2);  // CPU
+            var cell4 = row.insertCell(3);  // Memory
+            var cell5 = row.insertCell(4);  // Disk
+            var cell6 = row.insertCell(5);  // 가격
+            cell1.innerHTML = "<input style=\"width:20px;\" type=\"checkbox\">&nbsp;"+"<input style=\"width:100px;\" type=\"text\">"
+            cell2.innerHTML = "<input style=\"width:160px;\" type=\"text\">"
+            cell3.innerHTML = "<input style=\"width:100px;\" type=\"text\">"
+            cell4.innerHTML = "<input style=\"width:100px;\" type=\"text\">&nbsp;"+"<input style=\"width:100px;\" type=\"text\">"
+            cell5.innerHTML = "<input style=\"width:100px;\" type=\"text\">&nbsp;"  +"<input style=\"width:100px;\" type=\"text\">"
+            cell6.innerHTML = "<input style=\"width:100px;\" type=\"text\"th:field=\"*{pricePerMonth}\">"
+
+        };
 
         // ON LOAD
         $(document).ready(function() {
