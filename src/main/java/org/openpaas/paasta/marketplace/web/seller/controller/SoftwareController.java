@@ -106,7 +106,7 @@ public class SoftwareController {
             }
         }
         if(count > 0){
-            return "contents/software-create";               // (1) 상품 등록 페이지
+            return "contents/software-create";                      // (1) 상품 등록 페이지
         }
 
         return "redirect:/profiles/create";                         // (2) 프로필 등록 페이지
