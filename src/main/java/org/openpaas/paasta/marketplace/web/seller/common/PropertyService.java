@@ -13,8 +13,4 @@ public class PropertyService {
 	@Value("${marketplace.api.url}")
     private String marketApiUri;
 
-	@Value("${objectStorage.swift.frontUri}")
-	private String objectStorageUri;
-
-
 }
