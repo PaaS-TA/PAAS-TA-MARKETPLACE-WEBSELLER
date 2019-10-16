@@ -406,8 +406,6 @@
                 "version" :  $("#softwareVersion").val()
             };
 
-            //console.log
-            console.log(JSON.stringify(reqParam));
 
             var reqUrl = "/softwares/" + id;
             procCallAjax(reqUrl, "PUT", JSON.stringify(reqParam), null, callbackModifySoftware);
@@ -563,9 +561,6 @@
                     + "[FILE_INFO.iconFilePath]: "+FILE_INFO.iconFilePath);
             }
 
-            //var storedFilename = data.storedFilename;
-            //var finalUrl = FILE_INFO.iconFilePath.split("http://")[1];
-
             var param = {
                 "filePath": FILE_INFO.iconFilePath,
                 "fileName": data.filename
@@ -658,10 +653,6 @@
         }
 
         var callbackDeleteScreenShotSwift = function (data) {
-            console.log("====================hola====================");
-            console.log(JSON.stringify(data));
-            console.log("====================hola====================");
-
             if ("SUCCESS" == data.result) {
                 deleteScreenShot(data.deletedImgPath);
             }
@@ -760,8 +751,6 @@
                     + "[FILE_INFO.prodFilePath]: "+FILE_INFO.prodFilePath);
             }
 
-            //var storedFilename = data.storedFilename;
-
             var param = {
                 "filePath": FILE_INFO.prodFilePath,
                 "fileName": data.filename
@@ -791,7 +780,6 @@
                 "fileName": data.filename
             };
 
-            //var storedFilename = data.storedFilename;
             var url = encodeURI("/softwares/file/"+ id + "/envFile");
 
             procCallAjax(url, "PUT", JSON.stringify(param), null, callbackFileDb);
