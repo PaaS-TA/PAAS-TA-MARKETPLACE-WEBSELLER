@@ -84,6 +84,11 @@
                                     <th scope="row">홈페이지주소</th>
                                     <td><input class="form-control" type="text" th:field="${profile.siteUrl}" id="profilesSiteUrl"></td>
                                 </tr>
+                                <tr>
+                                    <th scope="row">처리 상태</th>
+                                    <td th:text="${status[0]}"></td>
+<!--                                     <td th:text="${status[0].getName()}"></td>  //요청  -->
+                                </tr>
                                 </tbody>
                             </table>
                         </div>

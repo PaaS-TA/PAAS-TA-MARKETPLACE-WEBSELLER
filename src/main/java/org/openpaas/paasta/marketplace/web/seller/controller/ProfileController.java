@@ -68,6 +68,7 @@ public class ProfileController {
     @GetMapping(value = "/create")
     public String getProfilesCreatePage(Model model, @ModelAttribute Profile profile) {
         model.addAttribute("types", Profile.Type.values());
+        model.addAttribute("status", Profile.Status.values());
         return "contents/profile-create";
     }
 
