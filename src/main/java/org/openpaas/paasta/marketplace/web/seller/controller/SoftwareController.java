@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openpaas.paasta.marketplace.api.domain.*;
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
-import org.openpaas.paasta.marketplace.web.seller.common.PropertyService;
 import org.openpaas.paasta.marketplace.web.seller.service.ProfileService;
 import org.openpaas.paasta.marketplace.web.seller.service.SoftwareService;
 import org.openpaas.paasta.marketplace.web.seller.storageApi.store.swift.SwiftOSService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +25,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/softwares")
@@ -37,10 +36,7 @@ public class SoftwareController {
     private final SoftwareService softwareService;
     private final ProfileService profileService;
     private final CommonService commonService;
-    private final PropertyService propertyService;
-
-    @Autowired
-    SwiftOSService swiftOSService;
+    private final SwiftOSService swiftOSService;
     /**
      * 판매자의 상품 목록 조회 페이지 이동
      *
@@ -53,7 +49,6 @@ public class SoftwareController {
      */
     @GetMapping(value = "/list")
     public String getSoftwares(Model model, @AuthenticationPrincipal OAuth2User oauth2User, HttpSession httpSession, SoftwareSpecification spec, Authentication authentication) {
-//        httpSession.setAttribute("yourName", oauth2User.getAttributes().get("user_name"));
         model.addAttribute("categories", softwareService.getCategories());
         model.addAttribute("spec", new SoftwareSpecification());
         model.addAttribute("yns", Yn.values());
@@ -182,7 +177,6 @@ public class SoftwareController {
         model.addAttribute("types", Software.Type.values());
         model.addAttribute("status", Software.Status.values());
         model.addAttribute("categories", softwareService.getCategories());
-        model.addAttribute("objectStorageUri", propertyService.getObjectStorageUri());
 
         return "contents/software-update";
     }
@@ -193,11 +187,12 @@ public class SoftwareController {
     /**
      * 판매자 상품[파일] DB 수정
      */
-    @PutMapping(value = "/file/{id}/{fileType}/{filePath}")
+    @PutMapping(value = "/file/{id}/{fileType}")
     @ResponseBody
-    public Software updateFile(@PathVariable Long id, @PathVariable String  fileType, @PathVariable String filePath, @RequestParam(name = "fileName", required = false) String fileName) {
+    public Software updateFile(@PathVariable Long id, @PathVariable String  fileType, @RequestBody Map<String, String> params) {
         Software software = softwareService.getSoftware(id);
-        String finalUrl = propertyService.getObjectStorageUri() + filePath;
+        String finalUrl = params.get("filePath");
+        String fileName = params.get("fileName");
 
         // 스크린샷 DB 업데이트
         if(fileType.equals("screenShots")) {
@@ -255,13 +250,10 @@ public class SoftwareController {
         // 새로 넣어줄 스크린 샷 리스트
         List<String> screenshotPackList = new ArrayList<>();
 
-        String finalUrl = propertyService.getObjectStorageUri() + imgPath;
-
-
         // 어차피 삭제되는 애는 한 개씩
         if(originShotList.size() > 0) {
             for(int i = 0; i < originShotList.size(); i++){
-                if(!originShotList.get(i).equals(finalUrl)) {
+                if(!originShotList.get(i).contains(imgPath)) {
                     screenshotPackList.add(originShotList.get(i));
                 }
             }

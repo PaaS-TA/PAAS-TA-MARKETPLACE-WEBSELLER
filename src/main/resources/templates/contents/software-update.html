@@ -363,12 +363,10 @@
     <input type="hidden" id="iconPath" name="iconPath" th:value="${software.iconPath}" />
     <input type="hidden" id="manifestPath" name="manifestPath" th:value="${software.manifestPath}" />
     <input type="hidden" id="indexForScreenShot" name="index" value="" />
-    <input type="hidden" id="objectStorageUri" name="objectStorageUri" th:value="${objectStorageUri}" />
+
     <!-- //content -->
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
-
-        var OBJECT_STORAGE_URI = $("#objectStorageUri").val();
 
         FILE_INFO = {}; // 파일 초기화;
 
@@ -408,8 +406,6 @@
                 "version" :  $("#softwareVersion").val()
             };
 
-            //console.log
-            console.log(JSON.stringify(reqParam));
 
             var reqUrl = "/softwares/" + id;
             procCallAjax(reqUrl, "PUT", JSON.stringify(reqParam), null, callbackModifySoftware);
@@ -453,8 +449,8 @@
             var iconImagePath = jQuery('#iconFilePath').attr("src");
             console.log("지울 파일 이름 ::: " + iconImagePath);
 
-            var imgPath = iconImagePath.split(OBJECT_STORAGE_URI);
-            var reqUrl = "/v2/swift/{name}".replace("{name}", imgPath[1]);
+            var imgPath = iconImagePath.substring(iconImagePath.lastIndexOf("/") + 1);
+            var reqUrl = "/v2/swift/{name}".replace("{name}", imgPath);
 
             console.log("지울 파일 위치 ::: " + reqUrl);
             procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteIconSwift);
@@ -565,10 +561,14 @@
                     + "[FILE_INFO.iconFilePath]: "+FILE_INFO.iconFilePath);
             }
 
-            var storedFilename = data.storedFilename;
-            var url = encodeURI("/softwares/file/"+ id + "/icon/" + storedFilename + "?fileName=" + data.filename);
+            var param = {
+                "filePath": FILE_INFO.iconFilePath,
+                "fileName": data.filename
+            };
 
-            procCallAjax(url, "PUT", null, null, callbackFileDb);
+            var url = encodeURI("/softwares/file/"+ id + "/icon");
+
+            procCallAjax(url, "PUT", JSON.stringify(param), null, callbackFileDb);
         }
 
 
@@ -584,13 +584,15 @@
                 FILE_INFO.screenshotsFilePath  = data.fileURL;
                 FILE_INFO.screenshotsFileSize  = data.length;
                 console.log("[FILE_INFO.screenshots]: " + FILE_INFO.screenshots + " "
-                            + "[FILE_INFO.screenshotsFilePath]: "+FILE_INFO.screenshotsFilePath+ " "
-                            + "[FILE_INFO.screenshotsFileSize]: "+FILE_INFO.screenshotsFileSize);
+                    + "[FILE_INFO.screenshotsFilePath]: "+FILE_INFO.screenshotsFilePath+ " "
+                    + "[FILE_INFO.screenshotsFileSize]: "+FILE_INFO.screenshotsFileSize);
             }
 
-            var imgPath = FILE_INFO.screenshotsFilePath.split(OBJECT_STORAGE_URI);
+            var param = {
+                "filePath": FILE_INFO.screenshotsFilePath
+            };
 
-            procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath[1], "PUT", null, null, callbackFileDb);
+            procCallAjax("/softwares/file/"+ id + "/screenShots", "PUT", JSON.stringify(param), null, callbackFileDb);
         }
 
 
@@ -643,9 +645,10 @@
             console.log("index : " + index + " & id : " + selectId);
 
             var selectedScreenshot = $(selectId).attr("src");
-            var imgPath = selectedScreenshot.split(OBJECT_STORAGE_URI);
+            var imgPath = selectedScreenshot.substring(selectedScreenshot.lastIndexOf("/") + 1);
 
-            var reqUrl = "/v2/swift/{name}".replace("{name}", imgPath[1]);
+            console.log("selectedScreenshot : " + selectedScreenshot);
+            var reqUrl = "/v2/swift/{name}".replace("{name}", imgPath);
             procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteScreenShotSwift);
         }
 
@@ -669,7 +672,7 @@
 
 
         var deleteScreenShotDb  = function (data) {
-          totalScreenShotList(data);
+            totalScreenShotList(data);
         };
 
         // reqType 따른 파일 업로드/삭제 처리
@@ -748,10 +751,14 @@
                     + "[FILE_INFO.prodFilePath]: "+FILE_INFO.prodFilePath);
             }
 
-            var storedFilename = data.storedFilename;
-            var url = encodeURI("/softwares/file/"+ id + "/prodFile/" + storedFilename + "?fileName=" + data.filename);
+            var param = {
+                "filePath": FILE_INFO.prodFilePath,
+                "fileName": data.filename
+            };
 
-            procCallAjax(url, "PUT", null, null, callbackFileDb);
+            var url = encodeURI("/softwares/file/"+ id + "/prodFile");
+
+            procCallAjax(url, "PUT", JSON.stringify(param), null, callbackFileDb);
         };
 
 
@@ -768,10 +775,14 @@
                     + "[FILE_INFO.envFilePath]: "+FILE_INFO.envFilePath);
             }
 
-            var storedFilename = data.storedFilename;
-            var url = encodeURI("/softwares/file/"+ id + "/envFile/" + storedFilename + "?fileName=" + data.filename);
+            var param = {
+                "filePath": FILE_INFO.envFilePath,
+                "fileName": data.filename
+            };
 
-            procCallAjax(url, "PUT", null, null, callbackFileDb);
+            var url = encodeURI("/softwares/file/"+ id + "/envFile");
+
+            procCallAjax(url, "PUT", JSON.stringify(param), null, callbackFileDb);
         };
 
 
@@ -780,8 +791,8 @@
         $("#deleteProdFile").on("click", function () {
             var prodFilePath = $("#appPath").val();
 
-            var filePath = prodFilePath.split(OBJECT_STORAGE_URI);
-            var reqUrl = "/v2/swift/{name}".replace("{name}", filePath[1]);
+            var filePath = prodFilePath.substring(prodFilePath.lastIndexOf("/") + 1);
+            var reqUrl = "/v2/swift/{name}".replace("{name}", filePath);
             procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteProdFileSwift);
 
         });
@@ -799,8 +810,8 @@
         $("#deleteManifestFile").on("click", function () {
             var envFilePath = $("#manifestPath").val();
 
-            var filePath = envFilePath.split(OBJECT_STORAGE_URI);
-            var reqUrl = "/v2/swift/{name}".replace("{name}", filePath[1]);
+            var filePath = envFilePath.substring(envFilePath.lastIndexOf("/") + 1);
+            var reqUrl = "/v2/swift/{name}".replace("{name}", filePath);
             procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteEnvFileSwift);
         });
 
