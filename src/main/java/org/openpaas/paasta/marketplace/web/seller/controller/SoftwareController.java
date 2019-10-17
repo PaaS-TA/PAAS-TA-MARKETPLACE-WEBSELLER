@@ -87,6 +87,7 @@ public class SoftwareController {
         model.addAttribute("categories", softwareService.getCategories());
 
         int count = 0;
+        int statusCount = 0;
 
         CustomPage<Profile> profileList = profileService.getProfileList("?page=0&size=10&sort=id");
         Authentication finalAuth = SecurityContextHolder.getContext().getAuthentication();
@@ -98,13 +99,19 @@ public class SoftwareController {
         for(Profile profiles : profileList) {
             if(user.equals(profiles.getId())) {
                 count++;
+                if(Profile.Status.Approval == profiles.getStatus()) {
+                	statusCount++;
+                }
             }
         }
         if(count > 0){
-            return "contents/software-create";                      // (1) 상품 등록 페이지
+        	if(statusCount == 0)
+        		return "redirect:/profiles/" + user;				// (1) 프로필 상세 페이지
+            return "contents/software-create";                      // (2) 상품 등록 페이지        	
         }
 
-        return "redirect:/profiles/create";                         // (2) 프로필 등록 페이지
+        return "redirect:/profiles/create";                         // (3) 프로필 등록 페이지
+        
     }
 
 
