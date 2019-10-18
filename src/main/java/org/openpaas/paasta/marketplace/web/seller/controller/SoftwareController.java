@@ -189,8 +189,6 @@ public class SoftwareController {
     }
 
 
-
-
     /**
      * 판매자 상품[파일] DB 수정
      */
@@ -309,6 +307,7 @@ public class SoftwareController {
         newSoftware.setType(software.getType());
         newSoftware.setPricePerMonth(software.getPricePerMonth());
         newSoftware.setVersion(software.getVersion());
+        newSoftware.setHistoryDescription(software.getHistoryDescription());
 
         log.info(newSoftware.toString());
         return softwareService.updateSoftware(id,newSoftware);

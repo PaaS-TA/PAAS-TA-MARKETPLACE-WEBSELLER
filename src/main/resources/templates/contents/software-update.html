@@ -249,6 +249,14 @@
                                 <th scope="row">등록일자</th>
                                 <td><input class="form-control" type="text" th:value="${software.createdDate}" id="softwareCreatedDate" readonly></td>
                             </tr>
+                            <tr>                            	
+                                <th scope="row"><input style="width:15px;" type="checkbox" name="historyDescriptionCheck">변경사항 메모</th>
+                                <td>
+                                    <div class="tbw_inner_txt">
+                                        <pre><input class="form-control" type="text" th:value="${software.historyDescription}" id="softwareHistoryDescription"></pre>
+                                    </div>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -369,6 +377,8 @@
         /*<![CDATA[*/
 
         FILE_INFO = {}; // 파일 초기화;
+        
+        var softwareHistoryDescription = $("#softwareHistoryDescription").val();
 
         $(document).ready(function() {
             currentMenu('1_2');
@@ -386,13 +396,14 @@
 
         var saveBtn = function(id) {
             console.log("ID : " + id);
+
             modifySoftware(id);
         };
 
 
         // 상품 수정(텍스트)
         var modifySoftware = function (id) {
-
+        	
             var reqParam = {
                 "inUse" : $('input:radio[name="softwareInUse"]:checked').val(),
                 "name" :  $("#softwareName").val(),
@@ -403,7 +414,8 @@
                 "description" : $("#softwareDescription").val(),
                 "type" : $('input:radio[name="softwareType"]:checked').val(),
                 "pricePerMonth" : $("#softwarePricePerMonth").val(),
-                "version" :  $("#softwareVersion").val()
+                "version" :  $("#softwareVersion").val(),
+                "historyDescription" : softwareHistoryDescription
             };
 
 
