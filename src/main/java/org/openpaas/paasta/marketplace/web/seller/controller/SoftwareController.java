@@ -332,17 +332,4 @@ public class SoftwareController {
         return softwareService.getSoftwarePlanList(id, commonService.setParameters(httpServletRequest));
     }
 
-    @RequestMapping("/plan")
-    public String createSoftwarePlan(@ModelAttribute("softwarePlan") SoftwarePlan softwarePlan) {
-        // person.drinks will contain only the selected drinks
-        System.out.println(softwarePlan);
-        return "contents/software-list";
-    }
-
-//    @RequestMapping(value = "/softwares", method = RequestMethod.POST)
-//    public String saveFoo(final SoftwarePlan softwarePlan, final BindingResult bindingResult, Model model) {
-//        softwareService.createSoftwarePlan(softwarePlan);
-//        return "contents/software-create";
-//    }
-
 }
