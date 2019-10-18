@@ -107,11 +107,11 @@ public class SoftwareController {
         if(count > 0){
         	if(statusCount == 0)
         		return "redirect:/profiles/" + user;				// (1) 프로필 상세 페이지
-            return "contents/software-create";                      // (2) 상품 등록 페이지        	
+            return "contents/software-create";                      // (2) 상품 등록 페이지
         }
 
         return "redirect:/profiles/create";                         // (3) 프로필 등록 페이지
-        
+
     }
 
 
@@ -148,9 +148,18 @@ public class SoftwareController {
         software.setAppPath(URLDecoder.decode(swiftOSService.putObject(productFile).getFileURL(), "UTF-8"));
         software.setIconPath(URLDecoder.decode(swiftOSService.putObject(iconFile).getFileURL(), "UTF-8"));
         software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(environmentFile).getFileURL(), "UTF-8"));
-        log.info(software.toString());
+
+        // todo: to remove
+        software.setPricePerMonth(2000L);
+
+        //Add SoftwarePlan
+        List<SoftwarePlan> softwarePlanList = new ArrayList<>();
+        for(int i = 0; i < software.getSoftwarePlanList().size(); i++) {
+            softwarePlanList.add(software.getSoftwarePlanList().get(i));
+        }
 
         Software newSoftware = softwareService.createSoftware(software);
+        log.info("===================" + newSoftware + "==========================");
         return "redirect:/softwares/list";
     }
 
@@ -314,6 +323,27 @@ public class SoftwareController {
         return softwareService.updateSoftware(id,newSoftware);
     }
 
+    /**
+     * 판매자의 카탈로그(상품가격) 조회
+     */
+    @GetMapping(value = "/plan/{id}")
+    @ResponseBody
+    public List<SoftwarePlan> getSoftwarePlanList(@NotNull @PathVariable Long id, HttpServletRequest httpServletRequest) {
+        log.info(">> getSoftwareSalePriceList");
+        return softwareService.getSoftwarePlanList(id, commonService.setParameters(httpServletRequest));
+    }
 
+    @RequestMapping("/plan")
+    public String createSoftwarePlan(@ModelAttribute("softwarePlan") SoftwarePlan softwarePlan) {
+        // person.drinks will contain only the selected drinks
+        System.out.println(softwarePlan);
+        return "contents/software-list";
+    }
+
+//    @RequestMapping(value = "/softwares", method = RequestMethod.POST)
+//    public String saveFoo(final SoftwarePlan softwarePlan, final BindingResult bindingResult, Model model) {
+//        softwareService.createSoftwarePlan(softwarePlan);
+//        return "contents/software-create";
+//    }
 
 }

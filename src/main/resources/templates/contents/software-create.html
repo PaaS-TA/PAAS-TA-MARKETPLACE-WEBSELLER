@@ -185,35 +185,51 @@
 <!--                                        </div>-->
                                         <table>
                                             <thead>
-                                            <th scope="col">
+                                            <tr>
+                                            <th scope="row">
                                                 <input type=button value="&nbsp; - &nbsp;" onclick="del_row();">
                                                 &nbsp;플랜&nbsp;
                                                 <input type=button value="&nbsp; + &nbsp;" onclick="add_row();">
                                             </th>
-                                            <th scope="col">설명</th>
-                                            <th scope="col">CPU</th>
-                                            <th scope="col">Memory</th>
-                                            <th scope="col">Disk</th>
-                                            <th scope="col">가격</th>
+                                            <th scope="row">설명</th>
+                                            <th scope="row">CPU</th>
+                                            <th scope="row">Memory</th>
+                                            <th scope="row">Disk</th>
+                                            <th scope="row">가격</th>
+                                            <th scope="row">판매금액 적용월</th>
+                                            </tr>
                                             </thead>
-                                            <td><input type=text name='opt[0][]' size=10></td>
-                                            <td><input type=text name='opt[1][]' size=10></td>
-                                            <td><input type=text name='opt[2][]' size=10></td>
-                                            <td><input type=text name='opt[3][]' size=10></td>
-                                            <td><input type=text name='opt[4][]' size=10></td>
-                                            <td><input type=text name='opt[5][]' size=10></td>
+                                            <tr th:each="softwarePlanList, stat : ${T(org.openpaas.paasta.marketplace.api.domain.SoftwarePlan)}">
+                                                <td>
+                                                    <input type="checkbox"
+                                                           th:name="'checkbox1-'+${stat.index}"
+                                                           th:value="${id}"
+                                                           th:checked="${stat.index}"/>&nbsp;<input type=text th:field="*{softwarePlanList[__${stat.index}__].name}">
+                                                </td>
+                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].description}"></td>
+
+                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].cpuAmt}"></td>
+                                                <td>
+                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memorySize}"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memoryAmt}">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskSize}"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskAmt}">
+                                                </td>
+                                                <td><input class="form-control" type="text" th:id="softwarePlanPriceP" readonly></td>
+                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].applyMonth}"></td>
+                                            </tr>
                                             <tbody id="pricePerMonth-tbody"></tbody>
                                         </table>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">판매금액 적용월</th>
-                                    <td>
-                                        <div class="form-group">
-                                            <input style="width:100px;" type="text">
-                                        </div>
-                                    </td>
-                                </tr>
+<!--                                <tr>-->
+<!--                                    <th scope="row">판매금액 적용월</th>-->
+<!--                                    <td>-->
+<!--                                        <div class="form-group">-->
+<!--                                            <input style="width:100px;" type="text">-->
+<!--                                        </div>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
                                 <tr>
                                     <th scope="row">전시여부<i class="i_star">필수입력</i></th>
                                     <td>
@@ -270,8 +286,8 @@
         </form>
     </div>
     <!-- //content -->
+
     <script type="text/javascript">
-        var pricePerMonthYYDD; // 팜내금액 적용월
 
         // 아이콘
         var getThumbnailPreview = function (html, $target) {
@@ -355,12 +371,15 @@
             var cell4 = row.insertCell(3);  // Memory
             var cell5 = row.insertCell(4);  // Disk
             var cell6 = row.insertCell(5);  // 가격
-            cell1.innerHTML = "<input style=\"width:20px;\" type=\"checkbox\">&nbsp;"+"<input style=\"width:100px;\" type=\"text\">"
-            cell2.innerHTML = "<input style=\"width:160px;\" type=\"text\">"
-            cell3.innerHTML = "<input style=\"width:100px;\" type=\"text\">"
-            cell4.innerHTML = "<input style=\"width:100px;\" type=\"text\">&nbsp;"+"<input style=\"width:100px;\" type=\"text\">"
-            cell5.innerHTML = "<input style=\"width:100px;\" type=\"text\">&nbsp;"  +"<input style=\"width:100px;\" type=\"text\">"
-            cell6.innerHTML = "<input style=\"width:100px;\" type=\"text\"th:field=\"*{pricePerMonth}\">"
+            var cell7 = row.insertCell(6);  // 판매가격 적용월
+
+            cell1.innerHTML = "<input type=\"checkbox\"><input class=\"form-control\" type=\"text\">"
+            cell2.innerHTML = "<input class=\"form-control\" type=\"text\">"
+            cell3.innerHTML = "<input class=\"form-control\" type=\"text\">"
+            cell4.innerHTML = "<input class=\"form-control\" type=\"text\">&nbsp;"+"<input class=\"form-control\" type=\"text\">"
+            cell5.innerHTML = "<input class=\"form-control\" type=\"text\">&nbsp;"  +"<input class=\"form-control\" type=\"text\">"
+            cell6.innerHTML = "<input class=\"form-control\" type=\"text\"th:field=\"*{pricePerMonth}\">"
+            cell7.innerHTML = "<input class=\"form-control\" type=\"text\"th:field=\"*{pricePerMonth}\">"
 
         };
 
