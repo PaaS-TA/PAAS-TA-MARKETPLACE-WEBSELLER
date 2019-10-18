@@ -3,12 +3,8 @@ package org.openpaas.paasta.marketplace.web.seller.service;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.openpaas.paasta.marketplace.api.domain.Category;
-import org.openpaas.paasta.marketplace.api.domain.CustomPage;
-import org.openpaas.paasta.marketplace.api.domain.Software;
-import org.openpaas.paasta.marketplace.api.domain.SoftwareHistory;
+import org.openpaas.paasta.marketplace.api.domain.*;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,7 +29,6 @@ public class SoftwareService {
     public List<Category> getCategories() {
         return paasApiRest.getForObject("/categories", List.class);
     }
-
 
     public CustomPage<Software> getSoftwareList(String queryParamString) {
         ResponseEntity<CustomPage<Software>> responseEntity = paasApiRest.exchange("/softwares/my/page" + queryParamString, HttpMethod.GET, null, new ParameterizedTypeReference<CustomPage<Software>>() {});
@@ -67,6 +62,16 @@ public class SoftwareService {
 
     public List<SoftwareHistory> getHistoryList(Long id, String queryParamString) {
         return paasApiRest.getForObject("/softwares/" + id + "/histories" + queryParamString, List.class);
+    }
+
+    public List<SoftwarePlan> getSoftwarePlanList(Long id, String queryParamString) {
+        log.info(">> getSoftwareSalePriceList ID " + id);
+        return paasApiRest.getForObject("/softwares/plan/" + id + queryParamString, List.class);
+    }
+
+    @SneakyThrows
+    public SoftwarePlan createSoftwarePlan(SoftwarePlan SoftwarePlan) {
+        return paasApiRest.postForObject("/softwares/plan", SoftwarePlan, SoftwarePlan.class);
     }
 
 }
