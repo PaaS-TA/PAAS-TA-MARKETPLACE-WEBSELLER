@@ -149,9 +149,6 @@ public class SoftwareController {
         software.setIconPath(URLDecoder.decode(swiftOSService.putObject(iconFile).getFileURL(), "UTF-8"));
         software.setManifestPath(URLDecoder.decode(swiftOSService.putObject(environmentFile).getFileURL(), "UTF-8"));
 
-        // todo: to remove
-        software.setPricePerMonth(2000L);
-
         //Add SoftwarePlan
         List<SoftwarePlan> softwarePlanList = new ArrayList<>();
         for(int i = 0; i < software.getSoftwarePlanList().size(); i++) {

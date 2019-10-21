@@ -180,9 +180,6 @@
                                 <tr>
                                     <th scope="row">판매가격<i class="i_star">필수입력</i></th>
                                     <td>
-<!--                                        <div class="form-group">-->
-<!--                                            <input style="width:100px;" type="text" th:field="*{pricePerMonth}"> 원 / 월-->
-<!--                                        </div>-->
                                         <table>
                                             <thead>
                                             <tr>
@@ -202,7 +199,7 @@
                                             <tbody id="pricePerMonth-tbody">
                                             <tr th:each="softwarePlanList, stat : ${T(org.openpaas.paasta.marketplace.api.domain.SoftwarePlan)}">
                                                 <td>
-                                                    <input type="checkbox" th:name="checkRow"/>&nbsp;<input type=text th:field="*{softwarePlanList[__${stat.index}__].name}">
+                                                    <input type="checkbox" th:name="checkRow"/>&nbsp;<input type=text th:field="*{softwarePlanList[__${stat.index}__].name}" id="name">
                                                 </td>
 <!--                                                <td>-->
 <!--                                                    <input type="checkbox"-->
@@ -210,19 +207,19 @@
 <!--                                                           th:value="${id}"-->
 <!--                                                           th:checked="${stat.index}"/>&nbsp;<input type=text th:field="*{softwarePlanList[__${stat.index}__].name}">-->
 <!--                                                </td>-->
-                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].description}"></td>
+                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].description}" id="description"></td>
 
                                                 <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].cpuAmt}" id="cpuAmt" onkeyup='amt()'></td>
                                                 <td>
-                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memorySize}"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memoryAmt}" id="memoryAmt" onkeyup='amt()'>
+                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memorySize}" id="memorySize"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memoryAmt}" id="memoryAmt" onkeyup='amt()'>
                                                 </td>
                                                 <td>
-                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskSize}"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskAmt}" id="diskAmt" onkeyup='amt()'>
+                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskSize}" id="diskSize"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskAmt}" id="diskAmt" onkeyup='amt()'>
                                                 </td>
-                                                <td><input class="form-control" type="text" id="sumAmt" readonly ></td>
-                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].applyMonth}"></td>
+                                                <td><input class="form-control" type="text" th:field="*{pricePerMonth}" id="sumAmt" readonly ></td>
+                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].applyMonth}" id="applyMonth"></td>
                                             </tr>
-                                            </tbody>
+                                           </tbody>
                                         </table>
                                     </td>
                                 </tr>
@@ -286,7 +283,6 @@
         </form>
     </div>
     <!-- //content -->
-
     <script type="text/javascript">
 
         // 아이콘
@@ -356,45 +352,49 @@
             $target.val(f_name);
         };
 
-
-        function del_row(){
-           console.log($("input:checkbox[name=checkRow]:checked").length);
-
-           var pricePerMonth_tbody = document.getElementById('pricePerMonth-tbody');
-           if (pricePerMonth_tbody.rows.length < 1) return;
-           pricePerMonth_tbody.deleteRow( pricePerMonth_tbody.rows.length-1 );        // 하단부터 삭제
-        }
-
-        function add_row() {
-            var pricePerMonth_tbody = document.getElementById('pricePerMonth-tbody');
-            var row = pricePerMonth_tbody.insertRow(pricePerMonth_tbody.rows.length); // 하단에 추가
-
-            var cell1 = row.insertCell(0);  // 플랜
-            var cell2 = row.insertCell(1);  // 설명
-            var cell3 = row.insertCell(2);  // CPU
-            var cell4 = row.insertCell(3);  // Memory
-            var cell5 = row.insertCell(4);  // Disk
-            var cell6 = row.insertCell(5);  // 가격
-            var cell7 = row.insertCell(6);  // 판매가격 적용월
-
-            cell1.innerHTML = "  <input type=\"checkbox\"\n" +
-                "               th:name=\"'checkbox1-'+${stat.index}\"\n" +
-                "               th:value=\"${id}\"\n" +
-                "               th:checked=\"${stat.index}\"/>&nbsp;<input type=text th:field=\"*{softwarePlanList[__${stat.index}__].name}\">"
-            cell2.innerHTML = "<input class=\"form-control\" type=\"text\" th:field=\"*{softwarePlanList[__${stat.index}__].description}\">"
-            cell3.innerHTML = "<input class=\"form-control\" type=\"text\" th:field=\"*{softwarePlanList[__${stat.index}__].cpuAmt}\">"
-            cell4.innerHTML = "<input class=\"form-control\" type=\"text\" th:field=\"*{softwarePlanList[__${stat.index}__].memorySize}\">&nbsp;<input class=\"form-control\" type=\"text\" th:field=\"*{softwarePlanList[__${stat.index}__].memorySize}\">"
-            cell5.innerHTML = "<input class=\"form-control\" type=\"text\" th:field=\"*{softwarePlanList[__${stat.index}__].memoryAmt}\">&nbsp;<input class=\"form-control\" type=\"text\" th:field=\"*{softwarePlanList[__${stat.index}__].diskAmt}\">"
-            cell6.innerHTML = "<input class=\"form-control\" type=\"text\" th:id=\"softwarePlanPriceP\" readonly>"
-            cell7.innerHTML = "<input class=\"form-control\" type=\"text\" th:field=\"*{softwarePlanList[__${stat.index}__].applyMonth}\">"
-
-        };
-
+        //[테이블] 가격
         function amt(){
             if(document.getElementById("cpuAmt").value && document.getElementById("memoryAmt").value && document.getElementById("diskAmt").value ){
                 document.getElementById('sumAmt').value = parseInt(document.getElementById('cpuAmt').value) + parseInt(document.getElementById('memoryAmt').value) + parseInt(document.getElementById('diskAmt').value);
             }
         }
+
+        //[테이블] 행 삭제
+        function del_row(){
+            var checkbox = $("input[name='checkRow']");
+            var checkCount = checkbox.size();
+            for (var i=0; i<checkCount; i++) {
+                if (checkbox.eq(i).is(":checked")) {
+                    checkbox.eq(i).parent().parent().remove();
+                }
+            }
+            // var i=row.parentNode.parentNode.rowIndex;
+            // document.getElementById('pricePerMonth-tbody').deleteRow(i);
+
+        }
+
+
+        //[테이블] 행 추가
+        function add_row() {
+            console.log("add_row");
+            document.getElementById("pricePerMonth-tbody").insertRow(-1).innerHTML =
+                '<tr>' +
+                '<td>\n' +
+                '<input type="checkbox" th:name="checkRow"/>&nbsp;<input type=text id="name">\n' +
+                '</td>\n' +
+                '<td><input class="form-control" type="text" id="description"></td>\n' +
+                '\n' +
+                '<td><input class="form-control" type="text" id="cpuAmt" onkeyup=\'amt()\'></td>\n' +
+                '<td>\n' +
+                '<input class="form-control" type="text" id="memorySize"> &nbsp;<input class="form-control" type="text" id="memoryAmt" onkeyup=\'amt()\'>\n' +
+                '</td>\n' +
+                '<td>\n' +
+                '<input class="form-control" type="text" id="diskSize"> &nbsp;<input class="form-control" type="text" id="diskAmt" onkeyup=\'amt()\'>\n' +
+                '</td>\n' +
+                '<td><input class="form-control" type="text" id="sumAmt" readonly ></td>\n' +
+                '<td><input class="form-control" type="text" id="applyMonth"></td>\n' +
+                '</tr>';
+        };
 
         /*
         function today(){
