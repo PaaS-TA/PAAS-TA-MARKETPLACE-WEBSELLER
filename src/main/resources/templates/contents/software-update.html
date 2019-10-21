@@ -269,7 +269,7 @@
         <!-- //cBox1 -->
         <div class="cont_btnBox">
             <div class="pull-right">
-                <button name="button" class="btn btn-color1 btn-md" type="button" data-toggle="modal" data-target="#myModal_ok">저장</button>
+                <button name="button" class="btn btn-color1 btn-md" type="button" id="saveBtn">저장</button>
                 <!-- Modal -->
                 <div class="modal fade" id="myModal_ok" tabindex="-1" role="dialog" aria-labelledby="modalLabel_update" aria-hidden="true">
                     <div class="modal-dialog">
@@ -284,13 +284,35 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" name="button" class="btn btn-color1"  th:onclick="'javascript:saveBtn(\''+ ${software.id} +'\');'">확인</button>
+                                <button type="button" name="button" class="btn btn-color1"  th:onclick="'javascript:modifySoftware(\''+ ${software.id} +'\');'">확인</button>
                                 <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- //Modal -->
+                <!-- Modal -->
+                <div class="modal fade" id="myModal_check" tabindex="-1" role="dialog" aria-labelledby="modalLabel_check" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-sm"><!-- 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  -->
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="modalLabel_check">상품 수정</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="only-text">
+                                    변경사항 메모를 입력하지 않았습니다.<br> 변경 이력 없이 상품을 수정하시겠습니까?
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" name="button" class="btn btn-color1"  th:onclick="'javascript:modifySoftware(\''+ ${software.id} +'\');'">확인</button>
+                                <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- //Modal -->
+                
                 <button name="button" class="btn btn-color7 btn-md" type="button" data-toggle="modal" data-target="#myModal_cancel">취소</button>
                 <!-- Modal -->
                 <div class="modal fade" id="myModal_cancel" tabindex="-1" role="dialog" aria-labelledby="modalLabel_cancel" aria-hidden="true">
@@ -312,7 +334,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Modal -->
+                <!-- Modal -->                
             </div>
         </div>
         </form>
@@ -392,25 +414,42 @@
         };
 
 
-        var saveBtn = function(id) {
-            console.log("ID : " + id);
-         	if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
-        		var historyDescriptionNullCheck = $("#softwareHistoryDescription").val();
+//         var saveBtn = function(id) {
+//             //console.log("ID : " + id);
+//          	if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
+//         		var historyDescriptionNullCheck = $("#softwareHistoryDescription").val();
         	 
-        		if(historyDescriptionNullCheck === null || historyDescriptionNullCheck === '') {
-					//alert(확인 누르면 modifySoftware() 실행)
-					alert("null");
-        		} else {
-                	modifySoftware(id);
-             	}
-        	} else {
-            	modifySoftware(id);
-         	}
-        };
+//         		if(historyDescriptionNullCheck === null || historyDescriptionNullCheck === '') {
+// 					//alert(확인 누르면 modifySoftware() 실행)
+// 					$('div #myModal_check').modal();
+//         		} 
+//         	} else {
+//         		$('div #myModal_ok').modal();
+//          	}
+//         };
 
+
+		$('#saveBtn').click(function(){
+     		if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
+    			var historyDescriptionNullCheck = $("#softwareHistoryDescription").val();
+    	 
+    			if(historyDescriptionNullCheck === null || historyDescriptionNullCheck === '') {
+					//alert(확인 누르면 modifySoftware() 실행)
+					$('div #myModal_check').modal();
+    			} else {
+    				$('div #myModal_ok').modal();
+    			}
+    		} 	else {
+    			$('div #myModal_ok').modal();
+     		}
+		});
 
         // 상품 수정(텍스트)
         var modifySoftware = function (id) {
+        	var softwareHistoryDescription = "";
+        	if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
+        		softwareHistoryDescription = $("#softwareHistoryDescription").val();
+        	}
             var reqParam = {
                 "inUse" : $('input:radio[name="softwareInUse"]:checked').val(),
                 "name" :  $("#softwareName").val(),
@@ -422,7 +461,7 @@
                 "type" : $('input:radio[name="softwareType"]:checked').val(),
                 "pricePerMonth" : $("#softwarePricePerMonth").val(),
                 "version" :  $("#softwareVersion").val(),
-                "historyDescription" : $("#softwareHistoryDescription").val()
+                "historyDescription" : softwareHistoryDescription
             };
 
             var reqUrl = "/softwares/" + id;
