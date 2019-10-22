@@ -8,7 +8,6 @@
 
 <!-- index.html 고유 스크립트 추가 -->
 <th:block layout:fragment="script">
-
 </th:block>
 
 <div class="rightCnt" layout:fragment="content">
@@ -92,8 +91,39 @@
                                 <td th:text="${software.manifest}"></td>
                             </tr>
                             <tr>
-                                <th scope="row">판매가격</th>
-                                <td><span class="price" th:text="${software.pricePerMonth} + ' 원 / 월'"></span></td>
+                                <th scope="row">판매금액 적용월</th>
+                                <td th:text="${software.createdDate}"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">판매금액</th>
+                                <td>
+                                    <table class="table" border="1">
+                                        <tr>
+                                            <th scope="row" rowspan="2">적용월</th>
+                                            <th scope="row" col style="width:auto;" colspan="3">Plan</th>
+                                            <th scope="row" col style="width:auto;" colspan="3">기준금액</th>
+                                            <th scope="row" rowspan="2">판매금액</th>
+                                        </tr>
+                                        <tr style="width:auto;" align=center>
+                                            <td >Name</td>
+                                            <td >Memory</td>
+                                            <td >Disk</td>
+                                            <td >CPU</td>
+                                            <td >Memory</td>
+                                            <td >Disk</td>
+                                        </tr>
+                                        <tr style="width:auto;" align=center>
+                                            <td >2019-10 </td>
+                                            <td >small</td>
+                                            <td >256M</td>
+                                            <td >1G</td>
+                                            <td >1000</td>
+                                            <td >1000</td>
+                                            <td >1000</td>
+                                            <td><span class="price" th:text="'￦ '+ ${software.pricePerMonth}"></span></td>
+                                        </tr>
+                                    </table>
+                                </td>
                             </tr>
                             <tr>
                                 <th scope="row">전시여부</th>
