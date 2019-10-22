@@ -92,7 +92,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">판매금액 적용월</th>
-                                <td th:text="${software.createdDate}"></td>
+                                <td th:text="${softwareplan.applyMonth}"></td>
                             </tr>
                             <tr>
                                 <th scope="row">판매금액</th>
@@ -113,13 +113,13 @@
                                             <td >Disk</td>
                                         </tr>
                                         <tr style="width:auto;" align=center>
-                                            <td >2019-10 </td>
-                                            <td >small</td>
-                                            <td >256M</td>
-                                            <td >1G</td>
-                                            <td >1000</td>
-                                            <td >1000</td>
-                                            <td >1000</td>
+                                            <td th:text="${#temporals.format(software.createdDate, 'yyyy-MM')}"></td>
+                                            <td th:text="${softwareplan.name}"></td>
+                                            <td th:text="${softwareplan.memorySize}"></td>
+                                            <td th:text="${softwareplan.diskSize}"></td>
+                                            <td th:text="${softwareplan.cpuAmt}"></td>
+                                            <td th:text="${softwareplan.memoryAmt}"></td>
+                                            <td th:text="${softwareplan.diskAmt}">1000</td>
                                             <td><span class="price" th:text="'￦ '+ ${software.pricePerMonth}"></span></td>
                                         </tr>
                                     </table>

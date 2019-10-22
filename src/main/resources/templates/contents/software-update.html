@@ -224,6 +224,45 @@
                                 </td>
                             </tr>
                             <tr>
+                                <th scope="row">판매금액 적용월</th>
+                                <td><input class="form-control" style="width:100px;" type="text" th:value="${softwareplan.applyMonth}" id="softwareplanApplyMonth" readonly></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">판매가격<i class="i_star">필수입력</i></th>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <th scope="row">
+                                                <input type="button" value="&nbsp; - &nbsp;" onclick="delRow();">
+                                                &nbsp;플랜&nbsp;
+                                                <input type="button" value="&nbsp; + &nbsp;" onclick="addRow();">
+                                            </th>
+                                            <th scope="row">설명</th>
+                                            <th scope="row">CPU</th>
+                                            <th scope="row">Memory</th>
+                                            <th scope="row">Disk</th>
+                                            <th scope="row">가격</th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" th:name="checkRow"/>&nbsp;<input type=text th:value="${softwareplan.name}" name="name" placeholder="Small">
+                                            </td>
+                                            <td><input class="form-control" type="text" th:value="${softwareplan.description}" id="description" name="description" placeholder="1CPU/256M/1G"></td>
+
+                                            <td><input class="form-control" type="text" th:value="${softwareplan.cpuAmt}" id="cpuAmt" name="cpuAmt" onkeyup='amt()'></td>
+                                            <td>
+                                                <input class="form-control" type="text" th:value="${softwareplan.memorySize}" id="memorySize" name="memorySize" placeholder="256M"> &nbsp;<input class="form-control" type="text" th:value="${softwareplan.memoryAmt}" id="memoryAmt" name="memoryAmt" onkeyup='amt()'>
+                                            </td>
+                                            <td>
+                                                <input class="form-control" type="text" th:value="${softwareplan.diskSize}" id="diskSize" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text" th:value="${softwareplan.diskAmt}" id="diskAmt" name="diskAmt" onkeyup='amt()'>
+                                            </td>
+                                            <td><input class="form-control" type="text" th:value="${software.pricePerMonth}" id="sumAmt" name="sumAmt" readonly></td>
+                                        </tr>
+                                        <tbody id="pricePerMonth-tbody"></tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
                                 <th scope="row">판매가격<i class="i_star">필수입력</i></th>
                                 <td>
                                     <div class="form-group">
@@ -231,7 +270,6 @@
                                     </div>
                                 </td>
                             </tr>
-
                             <tr>
                                 <th scope="row">전시여부<i class="i_star">필수입력</i></th>
                                 <td>
@@ -247,9 +285,9 @@
                             </tr>
                             <tr>
                                 <th scope="row">등록일자</th>
-                                <td><input class="form-control" type="text" th:value="${#temporals.format(software.createdDate, 'yyyy-MM-dd')}" id="softwareCreatedDate" readonly></td>
+                                <td><input class="form-control" style="width:100px;" type="text" th:value="${#temporals.format(software.createdDate, 'yyyy-MM-dd')}" id="softwareCreatedDate" readonly></td>
                             </tr>
-                            <tr>                            	
+                            <tr>
                                 <th scope="row"><input style="width:15px;" type="checkbox" name="historyDescriptionCheck">변경사항 메모</th>
                                 <td>
                                     <div class="tbw_inner_txt">
@@ -312,7 +350,7 @@
                     </div>
                 </div>
                 <!-- //Modal -->
-                
+
                 <button name="button" class="btn btn-color7 btn-md" type="button" data-toggle="modal" data-target="#myModal_cancel">취소</button>
                 <!-- Modal -->
                 <div class="modal fade" id="myModal_cancel" tabindex="-1" role="dialog" aria-labelledby="modalLabel_cancel" aria-hidden="true">
@@ -334,7 +372,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Modal -->                
+                <!-- Modal -->
             </div>
         </div>
         </form>
@@ -418,11 +456,11 @@
 //             //console.log("ID : " + id);
 //          	if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
 //         		var historyDescriptionNullCheck = $("#softwareHistoryDescription").val();
-        	 
+
 //         		if(historyDescriptionNullCheck === null || historyDescriptionNullCheck === '') {
 // 					//alert(확인 누르면 modifySoftware() 실행)
 // 					$('div #myModal_check').modal();
-//         		} 
+//         		}
 //         	} else {
 //         		$('div #myModal_ok').modal();
 //          	}
@@ -432,7 +470,7 @@
 		$('#saveBtn').click(function(){
      		if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
     			var historyDescriptionNullCheck = $("#softwareHistoryDescription").val();
-    	 
+
     			if(historyDescriptionNullCheck === null || historyDescriptionNullCheck === '') {
 					//alert(확인 누르면 modifySoftware() 실행)
 					$('div #myModal_check').modal();
@@ -860,9 +898,6 @@
             alert("반드시 상품 파일을 추가해주시기 바랍니다.");
         };
 
-
-
-
         // 환경 파일 삭제
         $("#deleteManifestFile").on("click", function () {
             var envFilePath = $("#manifestPath").val();
@@ -876,6 +911,56 @@
             $("#softwareManifestFileDiv").contents('input').attr('value', "");
 
             alert("반드시 환경 파일을 추가해주시기 바랍니다.");
+        };
+
+        //[테이블] 가격
+        function amt(){
+            if(document.getElementById("cpuAmt").value && document.getElementById("memoryAmt").value && document.getElementById("diskAmt").value){
+                document.getElementById('sumAmt').value = parseInt(document.getElementById('cpuAmt').value) + parseInt(document.getElementById('memoryAmt').value) + parseInt(document.getElementById('diskAmt').value);
+            }
+        };
+
+        //[테이블] 행 삭제
+        function delRow(){
+            var checkbox = $("input[id='checkRow']");
+            var checkCount = checkbox.size();
+
+
+            for (var i=0; i<checkCount; i++) {
+                if (checkbox.eq(i).is(":checked")) {
+                    checkbox.eq(i).parent().parent().remove();
+                }
+            }
+
+            if(checkbox.size() == 0){
+                alert("판매가격은 필수입력 사항입니다.");
+                $("input[type=checkbox]").prop("checked", false);
+            }
+        };
+
+        //[테이블] 행 추가
+        var count = 0;
+        function addRow() {
+            count++;
+            console.log("[count]: "+count);
+
+            document.getElementById("pricePerMonth-tbody").insertRow(0).innerHTML =
+                '<tr>' +
+                '<td>\n' +
+                '<input type="checkbox" id="checkRow"/>&nbsp;<input type=text name="name"+k placeholder="Small">\n' +
+                '</td>\n' +
+                '<td><input class="form-control" type="text" name="description" placeholder="1CPU/256M/1G"></td>\n' +
+                '\n' +
+                '<td><input class="form-control" type="text" name="cpuAmt" onkeyup=\'amt()\'></td>\n' +
+                '<td>\n' +
+                '<input class="form-control" type="text" name="memorySize" placeholder="256M"> &nbsp;<input class="form-control" type="text"  name="memoryAmt"+k onkeyup=\'amt()\'>\n' +
+                '</td>\n' +
+                '<td>\n' +
+                '<input class="form-control" type="text" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text"  name="diskAmt"+k onkeyup=\'amt()\'>\n' +
+                '</td>\n' +
+                '<td><input class="form-control" type="text" name="sumAmt" readonly ></td>\n' +
+                '</tr>';
+
         };
 
         /*]]>*/

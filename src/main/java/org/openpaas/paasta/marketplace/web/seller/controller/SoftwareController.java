@@ -171,6 +171,7 @@ public class SoftwareController {
     @GetMapping(value = "/{id}")
     public String getSoftware(Model model, @PathVariable Long id) {
         model.addAttribute("software", softwareService.getSoftware(id));
+        model.addAttribute("softwareplan", softwareService.getSoftwarePlan(id));
         return "contents/software-detail";
     }
 
@@ -190,6 +191,7 @@ public class SoftwareController {
         model.addAttribute("types", Software.Type.values());
         model.addAttribute("status", Software.Status.values());
         model.addAttribute("categories", softwareService.getCategories());
+        model.addAttribute("softwareplan", softwareService.getSoftwarePlan(id));
 
         return "contents/software-update";
     }
@@ -314,6 +316,7 @@ public class SoftwareController {
         newSoftware.setPricePerMonth(software.getPricePerMonth());
         newSoftware.setVersion(software.getVersion());
         newSoftware.setHistoryDescription(software.getHistoryDescription());
+        newSoftware.setSoftwarePlanList(software.getSoftwarePlanList());
 
         log.info(newSoftware.toString());
         return softwareService.updateSoftware(id,newSoftware);
