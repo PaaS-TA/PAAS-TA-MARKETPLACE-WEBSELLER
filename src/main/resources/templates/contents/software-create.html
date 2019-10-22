@@ -188,7 +188,7 @@
                                 <tr>
                                     <th scope="row">판매가격<i class="i_star">필수입력</i></th>
                                     <td>
-                                        <table id="tableID" th:each="softwarePlanList, stat : ${T(org.openpaas.paasta.marketplace.api.domain.SoftwarePlan)}" th:name="plan" th:id="'plan_' + ${stat.index}" name="trname">
+                                        <table>
                                             <tr>
                                                 <th scope="row">
                                                     <input type="button" value="&nbsp; - &nbsp;" onclick="delRow();">
@@ -201,7 +201,7 @@
                                                 <th scope="row">Disk</th>
                                                 <th scope="row">가격</th>
                                             </tr>
-                                            <tr>
+                                            <tr th:each="softwarePlanList, stat : ${T(org.openpaas.paasta.marketplace.api.domain.SoftwarePlan)}" th:name="plan" th:id="'plan_' + ${stat.index}" name="trname">
                                                 <td>
                                                     <input type="checkbox" th:name="checkRow"/>&nbsp;<input type=text th:field="*{softwarePlanList[__${stat.index}__].name}" id="text" name="name" placeholder="Small">
                                                 </td>
@@ -216,7 +216,7 @@
                                                 </td>
                                                 <td><input class="form-control" type="text" th:field="*{pricePerMonth}" id="sumAmt" name="sumAmt" readonly ></td>
                                             </tr>
-                                            <tbody></tbody>
+                                            <tbody id="pricePerMonth-tbody"></tbody>
                                         </table>
                                     </td>
                                 </tr>
@@ -375,23 +375,28 @@
         };
 
         //[테이블] 행 추가
+        var count = 0;
         function addRow() {
-            $('#tableID > tbody:last').append(
+            count++;
+            console.log("[count]: "+count);
+
+            document.getElementById("pricePerMonth-tbody").insertRow(0).innerHTML =
                 '<tr>' +
                 '<td>\n' +
-                '<input type="checkbox" id="checkRow"/>&nbsp;<input type=text name="name" placeholder="Small">\n' +
+                '<input type="checkbox" id="checkRow"/>&nbsp;<input type=text name="name"+k placeholder="Small">\n' +
                 '</td>\n' +
                 '<td><input class="form-control" type="text" name="description" placeholder="1CPU/256M/1G"></td>\n' +
                 '\n' +
                 '<td><input class="form-control" type="text" name="cpuAmt" onkeyup=\'amt()\'></td>\n' +
                 '<td>\n' +
-                '<input class="form-control" type="text" name="memorySize" placeholder="256M"> &nbsp;<input class="form-control" type="text"  name="memoryAmt" onkeyup=\'amt()\'>\n' +
+                '<input class="form-control" type="text" name="memorySize" placeholder="256M"> &nbsp;<input class="form-control" type="text"  name="memoryAmt"+k onkeyup=\'amt()\'>\n' +
                 '</td>\n' +
                 '<td>\n' +
-                '<input class="form-control" type="text" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text"  name="diskAmt" onkeyup=\'amt()\'>\n' +
+                '<input class="form-control" type="text" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text"  name="diskAmt"+k onkeyup=\'amt()\'>\n' +
                 '</td>\n' +
                 '<td><input class="form-control" type="text" name="sumAmt" readonly ></td>\n' +
-                '</tr>');
+                '</tr>';
+
         };
 
         function today(){
