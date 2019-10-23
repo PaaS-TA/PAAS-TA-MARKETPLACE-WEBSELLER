@@ -316,9 +316,13 @@ public class SoftwareController {
         newSoftware.setPricePerMonth(software.getPricePerMonth());
         newSoftware.setVersion(software.getVersion());
         newSoftware.setHistoryDescription(software.getHistoryDescription());
+
+        for (SoftwarePlan softwarePlan:software.getSoftwarePlanList()) {
+            log.info(">> updateSoftware softwarePlan.toString: " + softwarePlan.toString());
+        }
+
         newSoftware.setSoftwarePlanList(software.getSoftwarePlanList());
 
-        log.info(newSoftware.toString());
         return softwareService.updateSoftware(id,newSoftware);
     }
 

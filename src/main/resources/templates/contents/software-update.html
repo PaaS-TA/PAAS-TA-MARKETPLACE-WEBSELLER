@@ -225,7 +225,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">판매금액 적용월</th>
-                                <td><input class="form-control" style="width:100px;" type="text" th:value="${softwareplan.applyMonth}" id="softwareplanApplyMonth" readonly></td>
+                                <td><input class="form-control" style="width:100px;" type="text" th:value="${softwareplan.applyMonth}" id="applyMonth" name="applyMonth" readonly></td>
                             </tr>
                             <tr>
                                 <th scope="row">판매가격<i class="i_star">필수입력</i></th>
@@ -245,7 +245,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="checkbox" th:name="checkRow"/>&nbsp;<input type=text th:value="${softwareplan.name}" name="name" placeholder="Small">
+                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwareplan.id}" id="planid" name="planid">&nbsp;<input type=text th:value="${softwareplan.name}" name="name" placeholder="Small">
                                             </td>
                                             <td><input class="form-control" type="text" th:value="${softwareplan.description}" id="description" name="description" placeholder="1CPU/256M/1G"></td>
 
@@ -260,14 +260,6 @@
                                         </tr>
                                         <tbody id="pricePerMonth-tbody"></tbody>
                                     </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">판매가격<i class="i_star">필수입력</i></th>
-                                <td>
-                                    <div class="form-group">
-                                        <input style="width:100px;" type="text" th:value="${software.pricePerMonth}" id="softwarePricePerMonth"> 원 / 월
-                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -431,7 +423,6 @@
     <input type="hidden" id="iconPath" name="iconPath" th:value="${software.iconPath}" />
     <input type="hidden" id="manifestPath" name="manifestPath" th:value="${software.manifestPath}" />
     <input type="hidden" id="indexForScreenShot" name="index" value="" />
-
     <!-- //content -->
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
@@ -450,22 +441,6 @@
 
             console.log(software);
         };
-
-
-//         var saveBtn = function(id) {
-//             //console.log("ID : " + id);
-//          	if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
-//         		var historyDescriptionNullCheck = $("#softwareHistoryDescription").val();
-
-//         		if(historyDescriptionNullCheck === null || historyDescriptionNullCheck === '') {
-// 					//alert(확인 누르면 modifySoftware() 실행)
-// 					$('div #myModal_check').modal();
-//         		}
-//         	} else {
-//         		$('div #myModal_ok').modal();
-//          	}
-//         };
-
 
 		$('#saveBtn').click(function(){
      		if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
@@ -497,11 +472,25 @@
                 "summary" :  $("#softwareSummary").val(),
                 "description" : $("#softwareDescription").val(),
                 "type" : $('input:radio[name="softwareType"]:checked').val(),
-                "pricePerMonth" : $("#softwarePricePerMonth").val(),
+                "pricePerMonth" : $("#sumAmt").val(),
                 "version" :  $("#softwareVersion").val(),
-                "historyDescription" : softwareHistoryDescription
+                "historyDescription" : softwareHistoryDescription,
+                "softwarePlanList" :
+                    [{
+                        "id": $("#planid").val(),
+                        "softwareId": $("#id").val(),
+                        "name": $("input[type=text][name=name]").val(),
+                        "applyMonth": $("#applyMonth").val(),
+                        "description": $("input[type=text][name=description]").val(),
+                        "cpuAmt": $("input[type=text][name=cpuAmt]").val(),
+                        "memorySize": $("input[type=text][name=memorySize]").val(),
+                        "diskSize": $("input[type=text][name=diskSize]").val(),
+                        "memoryAmt": $("input[type=text][name=memoryAmt]").val(),
+                        "diskAmt": $("input[type=text][name=diskAmt]").val()
+                    }]
             };
 
+        	console.log("[JSON.stringify]: " +JSON.stringify(reqParam));
             var reqUrl = "/softwares/" + id;
             procCallAjax(reqUrl, "PUT", JSON.stringify(reqParam), null, callbackModifySoftware);
         };
