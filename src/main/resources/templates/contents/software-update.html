@@ -225,7 +225,16 @@
                             </tr>
                             <tr>
                                 <th scope="row">판매금액 적용월</th>
-                                <td><input class="form-control" style="width:100px;" type="text" th:value="${softwareplan.applyMonth}" id="applyMonth" name="applyMonth" readonly></td>
+                                <td>
+                                    <div class="input-group">
+                                        <input class="bootstrap-filestyle input-group" type="text" th:value="${softwareplan.applyMonth}" id="applyMonth" name="applyMonth" readonly>
+                                        <span tabindex="0" class="group-span-filestyle input-group-btn">
+                                                <label class="btn btn-dfefault">
+                                                    <button name="button" class="btn btn-color2 btn-md" type="button" data-toggle="modal" data-target="#myAmtModal" id="amtBtn">이력보기</button>
+                                                </label>
+                                            </span>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <th scope="row">판매가격<i class="i_star">필수입력</i></th>
@@ -416,6 +425,49 @@
     </div>
     <!-- Modal -->
 
+    <!-- amtModal -->
+    <div class="modal fade" id="myAmtModal" tabindex="-1" role="dialog" aria-labelledby="myAmtModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content"><!-- 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myAmtModalLabel">판매금액 목록</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- table -->
+                    <div class="tbl type1">
+                        <td>
+                            <table class="table" border="1">
+                                <tr>
+                                    <th scope="row" rowspan="2">적용월</th>
+                                    <th scope="row" col style="width:auto;" colspan="3">Plan</th>
+                                    <th scope="row" col style="width:auto;" colspan="3">기준금액</th>
+                                    <th scope="row" rowspan="2">판매금액</th>
+                                </tr>
+                                <tr style="width:auto;" align=center>
+                                    <td >Name</td>
+                                    <td >Memory</td>
+                                    <td >Disk</td>
+                                    <td >CPU</td>
+                                    <td >Memory</td>
+                                    <td >Disk</td>
+                                </tr>
+                                <tbody id="amtArea">
+                                <tr style="width:auto;" align=center>
+                                </tbody>
+                            </table>
+                        </td>
+                    </div>
+                    <!--//table -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- amtModal -->
+
     <input type="hidden" id="software" name="software" th:value="${software}" />
     <input type="hidden" id="id" name="id" th:value="${software.id}" />
     <input type="hidden" id="appPath" name="appPath" th:value="${software.appPath}" />
@@ -423,6 +475,7 @@
     <input type="hidden" id="iconPath" name="iconPath" th:value="${software.iconPath}" />
     <input type="hidden" id="manifestPath" name="manifestPath" th:value="${software.manifestPath}" />
     <input type="hidden" id="indexForScreenShot" name="index" value="" />
+    <input type="hidden" id="pricePerMonth" name="sumAmt" th:value="${software.pricePerMonth}"/>
     <!-- //content -->
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
@@ -869,8 +922,6 @@
             procCallAjax(url, "PUT", JSON.stringify(param), null, callbackFileDb);
         };
 
-
-
         // 상품 파일 삭제
         $("#deleteProdFile").on("click", function () {
             var prodFilePath = $("#appPath").val();
@@ -900,6 +951,44 @@
             $("#softwareManifestFileDiv").contents('input').attr('value', "");
 
             alert("반드시 환경 파일을 추가해주시기 바랍니다.");
+        };
+
+        //판매금액이력 조회
+        $("#amtBtn").on("click", function () {
+            var id = $("#id").val();
+
+            var reqUrl = "/softwares/plan/" + id + "/histories" + "?sort=lastModifiedDate,desc";
+            procCallAjax(reqUrl, "GET", null, null, callbackGetSoftwarePlanHistoryList);
+        });
+
+        var callbackGetSoftwarePlanHistoryList = function (data) {
+            console.log(data);
+            var amtArea = $("#amtArea");
+            var htmlString = [];
+
+            if(data.length > 0){
+                for(var i = 0; i < data.length; i++){
+                    var totalAmt = data[i].cpuAmt+data[i].memoryAmt+data[i].diskAmt;
+
+                    htmlString.push(
+                        '<tr style="width:auto;" align=center>'
+                        + '<td>'+data[i].applyMonth+'</td>'
+                        + '<td>'+data[i].name+'</td>'
+                        + '<td>'+data[i].memorySize+'</td>'
+                        + '<td>'+data[i].diskSize+'</td>'
+                        + '<td>'+data[i].cpuAmt+'</td>'
+                        + '<td>'+data[i].memoryAmt+'</td>'
+                        + '<td>'+data[i].diskAmt+'</td>'
+                        + '<td>'+totalAmt+'</td>'
+                        + '</tr>'
+                    );
+                }
+            }else{
+                htmlString = "<tr>"
+                    + "<td colspan='8'><p class='user_p'>판매금액 이력이 존재하지 않습니다.</p></td>" + "</tr>"
+            }
+
+            amtArea.html(htmlString);
         };
 
         //[테이블] 가격

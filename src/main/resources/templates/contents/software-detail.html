@@ -304,7 +304,7 @@
                 }
             }else{
                 htmlString = "<tr>"
-                    + "<td colspan='4'><p class='user_p'>상품 수정 이력이 존재하지 않습니다.</p></td>" + "</tr>"
+                    + "<td colspan='4'><p class='user_p'>상품수정 이력이 존재하지 않습니다.</p></td>" + "</tr>"
             }
             historyArea.html(htmlString);
         };
@@ -319,10 +319,13 @@
         var callbackGetSoftwarePlanHistoryList = function (data) {
             var amtArea = $("#amtArea");
             var htmlString = [];
-            var softwarePicePerMonth = "[[${software.pricePerMonth}]]";
+
+            console.log(data);
 
             if(data.length > 0){
                 for(var i = 0; i < data.length; i++){
+                    var totalAmt = data[i].cpuAmt+data[i].memoryAmt+data[i].diskAmt;
+
                     htmlString.push(
                         '<tr style="width:auto;" align=center>'
                         + '<td>'+data[i].applyMonth+'</td>'
@@ -332,13 +335,13 @@
                         + '<td>'+data[i].cpuAmt+'</td>'
                         + '<td>'+data[i].memoryAmt+'</td>'
                         + '<td>'+data[i].diskAmt+'</td>'
-                        + '<td>'+'￦'+softwarePicePerMonth+'</td>'
+                        + '<td>'+totalAmt+'</td>'
                         + '</tr>'
                     );
                 }
             }else{
                 htmlString = "<tr>"
-                    + "<td colspan='4'><p class='user_p'>판매 금액 이력이 존재하지 않습니다.</p></td>" + "</tr>"
+                    + "<td colspan='8'><p class='user_p'>판매금액 이력이 존재하지 않습니다.</p></td>" + "</tr>"
             }
 
             amtArea.html(htmlString);
