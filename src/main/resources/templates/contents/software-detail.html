@@ -95,7 +95,9 @@
                                 <td th:text="${softwareplan.applyMonth}"></td>
                             </tr>
                             <tr>
-                                <th scope="row">판매금액</th>
+                                <th scope="row">판매금액
+                                    <br><button name="button" class="btn btn-color2 btn-md" type="button" data-toggle="modal" data-target="#myAmtModal" id="amtBtn">이력보기</button>
+                                </th>
                                 <td>
                                     <table class="table" border="1">
                                         <tr>
@@ -175,11 +177,56 @@
                 <!-- //inner -->
             </div>
         </div>
+
+
+        <!-- amtModal -->
+        <div class="modal fade" id="myAmtModal" tabindex="-1" role="dialog" aria-labelledby="myAmtModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content"><!-- 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title" id="myAmtModalLabel">판매금액 목록</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!-- table -->
+                        <div class="tbl type1">
+                            <td>
+                                <table class="table" border="1">
+                                    <tr>
+                                        <th scope="row" rowspan="2">적용월</th>
+                                        <th scope="row" col style="width:auto;" colspan="3">Plan</th>
+                                        <th scope="row" col style="width:auto;" colspan="3">기준금액</th>
+                                        <th scope="row" rowspan="2">판매금액</th>
+                                    </tr>
+                                    <tr style="width:auto;" align=center>
+                                        <td >Name</td>
+                                        <td >Memory</td>
+                                        <td >Disk</td>
+                                        <td >CPU</td>
+                                        <td >Memory</td>
+                                        <td >Disk</td>
+                                    </tr>
+                                    <tbody id="amtArea">
+                                    <tr style="width:auto;" align=center>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </div>
+                        <!--//table -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- amtModal -->
+
         <!-- //cBox1 -->
         <div class="cont_btnBox">
             <div class="pull-left">
                 <button name="button" class="btn btn-color1 btn-md" type="button" data-toggle="modal" data-target="#myModal" id="historyBtn">수정이력</button>
-                <!-- Modal -->
+                <!-- historyModal -->
                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content"><!-- 개발에서 사용하는 다른 팝업모듈 사용시 이부분만 사용하세요.  -->
@@ -192,9 +239,6 @@
                                 <div class="tbl type1">
                                     <table class="table">
                                         <colgroup>
-                                            <!-- <col style="width:15%;">
-                                            <col style="width:30%;">
-                                            <col style="width:55%;"> -->
 										<col style="width:10%;">
 										<col style="width:20%;">
 										<col style="width:40%;">
@@ -221,7 +265,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- //Modal -->
+                <!-- //historyModal -->
             </div>
             <div class="pull-right">
                 <button name="button" class="btn btn-color7 btn-md" type="button" th:onclick="'location.href = \'' + @{/softwares/{id}(id=${software.id})} + '/update\''">수정</button>
@@ -258,8 +302,46 @@
                         + '</tr>'
                     );
                 }
-                historyArea.html(htmlString);
+            }else{
+                htmlString = "<tr>"
+                    + "<td colspan='4'><p class='user_p'>상품 수정 이력이 존재하지 않습니다.</p></td>" + "</tr>"
             }
+            historyArea.html(htmlString);
+        };
+
+        $("#amtBtn").on("click", function () {
+            var softwareId = "[[${software.id}]]";
+
+            var reqUrl = "/softwares/plan/" + softwareId + "/histories" + "?sort=lastModifiedDate,desc";
+            procCallAjax(reqUrl, "GET", null, null, callbackGetSoftwarePlanHistoryList);
+        });
+
+        var callbackGetSoftwarePlanHistoryList = function (data) {
+            var amtArea = $("#amtArea");
+            var htmlString = [];
+            var softwarePicePerMonth = "[[${software.pricePerMonth}]]";
+
+            if(data.length > 0){
+                for(var i = 0; i < data.length; i++){
+                    htmlString.push(
+                        '<tr style="width:auto;" align=center>'
+                        + '<td>'+data[i].applyMonth+'</td>'
+                        + '<td>'+data[i].name+'</td>'
+                        + '<td>'+data[i].memorySize+'</td>'
+                        + '<td>'+data[i].diskSize+'</td>'
+                        + '<td>'+data[i].cpuAmt+'</td>'
+                        + '<td>'+data[i].memoryAmt+'</td>'
+                        + '<td>'+data[i].diskAmt+'</td>'
+                        + '<td>'+'￦'+softwarePicePerMonth+'</td>'
+                        + '</tr>'
+                    );
+                }
+            }else{
+                htmlString = "<tr>"
+                    + "<td colspan='4'><p class='user_p'>판매 금액 이력이 존재하지 않습니다.</p></td>" + "</tr>"
+            }
+
+            amtArea.html(htmlString);
         };
 
         // ON LOAD

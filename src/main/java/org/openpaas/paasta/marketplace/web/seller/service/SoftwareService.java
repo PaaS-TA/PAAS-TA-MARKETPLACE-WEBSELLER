@@ -86,6 +86,11 @@ public class SoftwareService {
         return paasApiRest.getForObject("/softwares/" + id + "/histories" + queryParamString, List.class);
     }
 
+
+    public List<SoftwarePlanHistory> getPlanHistoryList(Long id, String queryParamString) {
+        return paasApiRest.getForObject("/softwares/plan/" + id + "/histories" + queryParamString, List.class);
+    }
+
     public List<SoftwarePlan> getSoftwarePlanList(Long id, String queryParamString) {
         log.info(">> getSoftwareSalePriceList ID " + id);
         return paasApiRest.getForObject("/softwares/plan/" + id + queryParamString, List.class);

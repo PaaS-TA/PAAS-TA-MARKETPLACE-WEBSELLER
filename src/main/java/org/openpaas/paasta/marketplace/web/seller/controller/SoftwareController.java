@@ -293,6 +293,19 @@ public class SoftwareController {
 
 
     /**
+     * 상품 판매가격 수정이력 조회
+     *
+     * @param id
+     * @param httpServletRequest
+     * @return
+     */
+    @GetMapping(value = "/plan/{id}/histories")
+    @ResponseBody
+    public List<SoftwarePlanHistory> getPlanHistoryList(@NotNull @PathVariable Long id, HttpServletRequest httpServletRequest) {
+        return softwareService.getPlanHistoryList(id, commonService.setParameters(httpServletRequest));
+    }
+
+    /**
      * 판매자가 등록한 상품 수정
      *
      * @param id
