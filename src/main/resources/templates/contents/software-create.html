@@ -180,7 +180,7 @@
                                 <tr>
                                     <th scope="row">판매금액 적용월</th>
                                     <td>
-                                        <div class="form-group "th:each="softwarePlanList, stat : ${T(org.openpaas.paasta.marketplace.api.domain.SoftwarePlan)}">
+                                        <div class="form-group" th:each="softwarePlanList, stat : ${T(org.openpaas.paasta.marketplace.api.domain.SoftwarePlan)}">
                                             <input style="width:100px;" type="text" th:field="*{softwarePlanList[__${stat.index}__].applyMonth}" id="applyMonth" readonly>
                                         </div>
                                     </td>
@@ -201,22 +201,23 @@
                                                 <th scope="row">Disk</th>
                                                 <th scope="row">가격</th>
                                             </tr>
-                                            <tr th:each="softwarePlanList, stat : ${T(org.openpaas.paasta.marketplace.api.domain.SoftwarePlan)}" th:name="plan" th:id="'plan_' + ${stat.index}" name="trname">
+                                            <tbody id="pricePerMonth-tbody">
+                                            <tr th:each="softwarePlanList, stat : ${T(org.openpaas.paasta.marketplace.api.domain.SoftwarePlan)}">
                                                 <td>
-                                                    <input type="checkbox" th:name="checkRow"/>&nbsp;<input type=text th:field="*{softwarePlanList[__${stat.index}__].name}" id="text" name="name" placeholder="Small">
+                                                    <input type="checkbox" th:name="checkRow"/>&nbsp;<input type=text th:field="*{softwarePlanList[__${stat.index}__].name}" th:id="'name_'+ ${stat.index}" name="name" placeholder="Small">
                                                 </td>
                                                 <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].description}" id="description" name="description" placeholder="1CPU/256M/1G"></td>
 
-                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].cpuAmt}" id="cpuAmt" name="cpuAmt" onkeyup='amt()'></td>
+                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].cpuAmt}" th:id="'cpuAmt_' +${stat.index}" name="cpuAmt" th:onkeyup="'amt('+${stat.index}+')'"></td>
                                                 <td>
-                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memorySize}" id="memorySize" name="memorySize" placeholder="256M"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memoryAmt}" id="memoryAmt" name="memoryAmt" onkeyup='amt()'>
+                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memorySize}" id="memorySize" name="memorySize" placeholder="256M"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memoryAmt}" th:id="'memoryAmt_' +${stat.index}" name="memoryAmt" th:onkeyup="'amt('+${stat.index}+')'">
                                                 </td>
                                                 <td>
-                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskSize}" id="diskSize" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskAmt}" id="diskAmt" name="diskAmt" onkeyup='amt()'>
+                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskSize}" id="diskSize" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'">
                                                 </td>
-                                                <td><input class="form-control" type="text" th:field="*{pricePerMonth}" id="sumAmt" name="sumAmt" readonly ></td>
+                                                <td><input class="form-control" type="text" th:field="*{pricePerMonth}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly ></td>
                                             </tr>
-                                            <tbody id="pricePerMonth-tbody"></tbody>
+                                           </tbody>
                                         </table>
                                     </td>
                                 </tr>
@@ -297,7 +298,6 @@
 
         };
 
-
         // 스크린샷
         var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
             var currentTag = "#li_" + countNum;
@@ -352,17 +352,14 @@
         };
 
         //[테이블] 가격
-        function amt(){
-            if(document.getElementById("cpuAmt").value && document.getElementById("memoryAmt").value && document.getElementById("diskAmt").value){
-                document.getElementById('sumAmt').value = parseInt(document.getElementById('cpuAmt').value) + parseInt(document.getElementById('memoryAmt').value) + parseInt(document.getElementById('diskAmt').value);
-            }
+        function amt(id){
+            $("#sumAmt_"+id).val(Number($("#cpuAmt_"+id).val())+ Number($("#memoryAmt_"+id).val())+ Number($("#diskAmt_"+id).val()));
         };
 
         //[테이블] 행 삭제
         function delRow(){
-            var checkbox = $("input[id='checkRow']");
+            var checkbox = $("input[name='checkRow']");
             var checkCount = checkbox.size();
-
 
             for (var i=0; i<checkCount; i++) {
                 if (checkbox.eq(i).is(":checked")) {
@@ -370,34 +367,30 @@
                 }
             }
 
-            if(checkbox.size() == 0){
-                alert("판매가격은 필수입력 사항입니다.");
-                $("input[type=checkbox]").prop("checked", false);
-            }
         };
 
+
         //[테이블] 행 추가
-        var count = 0;
+        var index = 1000;
         function addRow() {
-            count++;
-            console.log("[count]: "+count);
+            index++;
+            console.log("[index]: "+index);
 
             document.getElementById("pricePerMonth-tbody").insertRow(0).innerHTML =
-                '<tr>' +
-                '<td>\n' +
-                '<input type="checkbox" id="checkRow"/>&nbsp;<input type=text name="name"+k placeholder="Small">\n' +
-                '</td>\n' +
-                '<td><input class="form-control" type="text" name="description" placeholder="1CPU/256M/1G"></td>\n' +
-                '\n' +
-                '<td><input class="form-control" type="text" name="cpuAmt" onkeyup=\'amt()\'></td>\n' +
-                '<td>\n' +
-                '<input class="form-control" type="text" name="memorySize" placeholder="256M"> &nbsp;<input class="form-control" type="text"  name="memoryAmt"+k onkeyup=\'amt()\'>\n' +
-                '</td>\n' +
-                '<td>\n' +
-                '<input class="form-control" type="text" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text"  name="diskAmt"+k onkeyup=\'amt()\'>\n' +
-                '</td>\n' +
-                '<td><input class="form-control" type="text" name="sumAmt" readonly ></td>\n' +
-                '</tr>';
+                "<tr>"
+                +"<td>"
+                +"<input type='checkbox' id='checkRow' name='checkRow'>&nbsp;<input type='text' id='name_"+index+"' name='name' placeholder='Small'>"
+                +"</td>"
+                +"<td><input class='form-control' type='text'  name='description' placeholder='1CPU/256M/1G'></td>"
+                +"<td><input class='form-control' type='text'  id='cpuAmt_"+index+"' name='cpuAmt' onkeyup='amt("+index +")'></td>"
+                +"<td>"
+                +"<input class='form-control' type='text' id='memorySize' name='memorySize' placeholder='256M'> &nbsp;<input class='form-control' type='text' id='memoryAmt_"+index+"' name='memoryAmt' onkeyup='amt("+index +")'>"
+                +"</td>"
+                +"<td>"
+                +"<input class='form-control' type='text'  id='diskSize' name='diskSize' placeholder='1G'> &nbsp;<input class='form-control' type='text' id='diskAmt_"+index+"' name='diskAmt' onkeyup='amt("+index +")'>"
+                +"</td>"
+                +"<td><input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' readonly ></td>"
+                +"</tr>";
 
         };
 

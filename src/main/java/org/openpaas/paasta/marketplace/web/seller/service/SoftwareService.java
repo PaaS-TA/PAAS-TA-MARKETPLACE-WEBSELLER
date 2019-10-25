@@ -46,25 +46,6 @@ public class SoftwareService {
         return paasApiRest.getForObject(url, Software.class);
     }
 
-    public SoftwarePlan getSoftwarePlan(Long id) {
-        log.info("getSoftwarePlan :: " + id );
-        String url = UriComponentsBuilder.newInstance().path("/softwares/plan/{id}")
-                .build()
-                .expand(id)
-                .toString();
-
-        return paasApiRest.getForObject(url, SoftwarePlan.class);
-    }
-
-    public List<SoftwarePlan> getSoftwarePlanList(Long id) {
-        String url = UriComponentsBuilder.newInstance().path("/softwares/plan/{id}/list?sort=name,asc")
-                .build()
-                .expand(id)
-                .toString();
-        return paasApiRest.getForObject(url, List.class);
-    }
-
-
 
     public Software updateSoftware(Long id, Software software) {
         String url = UriComponentsBuilder.newInstance().path("/softwares/{id}")
@@ -79,26 +60,30 @@ public class SoftwareService {
     }
 
 
-    public SoftwarePlan updateSoftwarePlan(Long id, SoftwarePlan softwarePlan) {
+    public SoftwarePlan getSoftwarePlan(Long id) {
+        log.info("getSoftwarePlan :: " + id );
         String url = UriComponentsBuilder.newInstance().path("/softwares/plan/{id}")
                 .build()
                 .expand(id)
                 .toString();
 
-        log.info("updateSoftware url :: " + url + " Software " + softwarePlan.toString());
-
-        paasApiRest.put(url, softwarePlan);
-        return softwarePlan;
+        return paasApiRest.getForObject(url, SoftwarePlan.class);
     }
-
-    public List<SoftwareHistory> getHistoryList(Long id, String queryParamString) {
-        return paasApiRest.getForObject("/softwares/" + id + "/histories" + queryParamString, List.class);
-    }
-
 
     public List<SoftwarePlanHistory> getPlanHistoryList(Long id, String queryParamString) {
         return paasApiRest.getForObject("/softwares/plan/" + id + "/histories" + queryParamString, List.class);
     }
 
+    public List<SoftwarePlan> getSoftwarePlanList(Long id) {
+        String url = UriComponentsBuilder.newInstance().path("/softwares/plan/{id}/list?sort=name,asc")
+                .build()
+                .expand(id)
+                .toString();
+        return paasApiRest.getForObject(url, List.class);
+    }
+
+    public List<SoftwareHistory> getHistoryList(Long id, String queryParamString) {
+        return paasApiRest.getForObject("/softwares/" + id + "/histories" + queryParamString, List.class);
+    }
 
 }
