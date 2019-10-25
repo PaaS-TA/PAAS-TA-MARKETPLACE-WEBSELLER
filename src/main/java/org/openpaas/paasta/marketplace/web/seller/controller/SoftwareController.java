@@ -171,7 +171,7 @@ public class SoftwareController {
     @GetMapping(value = "/{id}")
     public String getSoftware(Model model, @PathVariable Long id) {
         model.addAttribute("software", softwareService.getSoftware(id));
-        model.addAttribute("softwareplan", softwareService.getSoftwarePlan(id));
+        model.addAttribute("softwarePlanList", softwareService.getSoftwarePlanList(id));
         return "contents/software-detail";
     }
 
@@ -191,8 +191,7 @@ public class SoftwareController {
         model.addAttribute("types", Software.Type.values());
         model.addAttribute("status", Software.Status.values());
         model.addAttribute("categories", softwareService.getCategories());
-        model.addAttribute("softwareplan", softwareService.getSoftwarePlan(id));
-
+        model.addAttribute("softwarePlanList", softwareService.getSoftwarePlanList(id));
         return "contents/software-update";
     }
 
@@ -337,16 +336,6 @@ public class SoftwareController {
         newSoftware.setSoftwarePlanList(software.getSoftwarePlanList());
 
         return softwareService.updateSoftware(id,newSoftware);
-    }
-
-    /**
-     * 판매자의 카탈로그(상품가격) 조회
-     */
-    @GetMapping(value = "/plan/{id}")
-    @ResponseBody
-    public List<SoftwarePlan> getSoftwarePlanList(@NotNull @PathVariable Long id, HttpServletRequest httpServletRequest) {
-        log.info(">> getSoftwareSalePriceList");
-        return softwareService.getSoftwarePlanList(id, commonService.setParameters(httpServletRequest));
     }
 
 }

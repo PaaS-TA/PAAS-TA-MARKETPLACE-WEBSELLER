@@ -56,6 +56,15 @@ public class SoftwareService {
         return paasApiRest.getForObject(url, SoftwarePlan.class);
     }
 
+    public List<SoftwarePlan> getSoftwarePlanList(Long id) {
+        String url = UriComponentsBuilder.newInstance().path("/softwares/plan/{id}/list?sort=name,asc")
+                .build()
+                .expand(id)
+                .toString();
+        return paasApiRest.getForObject(url, List.class);
+    }
+
+
 
     public Software updateSoftware(Long id, Software software) {
         String url = UriComponentsBuilder.newInstance().path("/softwares/{id}")
@@ -91,9 +100,5 @@ public class SoftwareService {
         return paasApiRest.getForObject("/softwares/plan/" + id + "/histories" + queryParamString, List.class);
     }
 
-    public List<SoftwarePlan> getSoftwarePlanList(Long id, String queryParamString) {
-        log.info(">> getSoftwareSalePriceList ID " + id);
-        return paasApiRest.getForObject("/softwares/plan/" + id + queryParamString, List.class);
-    }
 
 }
