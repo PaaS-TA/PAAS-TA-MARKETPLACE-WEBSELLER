@@ -2,6 +2,8 @@ package org.openpaas.paasta.marketplace.web.seller.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang.StringUtils;
 import org.openpaas.paasta.marketplace.api.domain.*;
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.service.ProfileService;
@@ -152,8 +154,12 @@ public class SoftwareController {
         //Add SoftwarePlan
         List<SoftwarePlan> softwarePlanList = new ArrayList<>();
         for(int i = 0; i < software.getSoftwarePlanList().size(); i++) {
-            softwarePlanList.add(software.getSoftwarePlanList().get(i));
+        	SoftwarePlan temp = software.getSoftwarePlanList().get(i);
+        	if (StringUtils.isNotBlank(temp.getName()) && StringUtils.isNotBlank(temp.getApplyMonth())) {
+        		softwarePlanList.add(temp);
+        	}
         }
+        software.setSoftwarePlanList(softwarePlanList);
 
         Software newSoftware = softwareService.createSoftware(software);
         log.info("===================" + newSoftware + "==========================");

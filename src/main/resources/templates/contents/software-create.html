@@ -181,7 +181,7 @@
                                     <th scope="row">판매금액 적용월</th>
                                     <td>
                                         <div class="form-group" th:each="softwarePlanList, stat : ${T(org.openpaas.paasta.marketplace.api.domain.SoftwarePlan)}">
-                                            <input style="width:100px;" type="text" th:field="*{softwarePlanList[__${stat.index}__].applyMonth}" id="applyMonth" readonly>
+                                            <input style="width:100px;" type="text" id="applyMonth" readonly>
                                         </div>
                                     </td>
                                 </tr>
@@ -215,7 +215,10 @@
                                                 <td>
                                                     <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskSize}" id="diskSize" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'">
                                                 </td>
-                                                <td><input class="form-control" type="text" th:field="*{pricePerMonth}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly ></td>
+                                                <td>
+                                                	<input class="form-control" type="text" th:id="'sumAmt_'+${stat.index}" name="sumAmt" readonly />
+                                                	<input type="hidden" id="applyMonth_0" name="softwarePlanList[0].applyMonth" />
+                                                </td>
                                             </tr>
                                            </tbody>
                                         </table>
@@ -280,6 +283,7 @@
 
                 </div>
             </div>
+            <input type="hidden" id="finalPricePerMonth" name="pricePerMonth" value="7777"/>
         </form>
     </div>
     <!-- //content -->
@@ -372,27 +376,35 @@
 
         //[테이블] 행 추가
         var index = 1000;
+        var nameIndex = 0;
         function addRow() {
             index++;
+            nameIndex++;
             console.log("[index]: "+index);
+            
+            var toDayValue = $('#applyMonth').val();
 
             document.getElementById("pricePerMonth-tbody").insertRow(0).innerHTML =
                 "<tr>"
-                +"<td>"
-                +"<input type='checkbox' id='checkRow' name='checkRow'>&nbsp;<input type='text' id='name_"+index+"' name='name' placeholder='Small'>"
-                +"</td>"
-                +"<td><input class='form-control' type='text'  name='description' placeholder='1CPU/256M/1G'></td>"
-                +"<td><input class='form-control' type='text'  id='cpuAmt_"+index+"' name='cpuAmt' onkeyup='amt("+index +")'></td>"
-                +"<td>"
-                +"<input class='form-control' type='text' id='memorySize' name='memorySize' placeholder='256M'> &nbsp;<input class='form-control' type='text' id='memoryAmt_"+index+"' name='memoryAmt' onkeyup='amt("+index +")'>"
-                +"</td>"
-                +"<td>"
-                +"<input class='form-control' type='text'  id='diskSize' name='diskSize' placeholder='1G'> &nbsp;<input class='form-control' type='text' id='diskAmt_"+index+"' name='diskAmt' onkeyup='amt("+index +")'>"
-                +"</td>"
-                +"<td><input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' readonly ></td>"
+                +"	<td>"
+                +"		<input type='checkbox' id='checkRow' name='checkRow'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' placeholder='Small'>"
+                +"	</td>"
+                +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' placeholder='1CPU/256M/1G'></td>"
+                +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' onkeyup='amt("+index +")'></td>"
+                +"	<td>"
+                +"		<input class='form-control' type='text' id='memorySize' name='softwarePlanList["+nameIndex+"].memorySize' placeholder='256M'>"
+                +"		<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' onkeyup='amt("+index+")'>"
+                +"	</td>"
+                +"	<td>"
+                +"		<input class='form-control' type='text' id='diskSize' name='softwarePlanList["+nameIndex+"].diskSize' placeholder='1G'>"
+                +"		<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' onkeyup='amt("+index+")'>"
+                +"	</td>"
+                +"	<td>"
+                +"		<input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' readonly>"
+                +"		<input type='hidden' name='softwarePlanList["+nameIndex+"].applyMonth' value='"+toDayValue+"'>"
+                +"	</td>"
                 +"</tr>";
-
-        };
+         };
 
         function today(){
             var date = new Date();
@@ -410,6 +422,7 @@
 
             var today = yyyy+''+mm; //yyyy+'-'+mm+'-'+dd;
             document.getElementById('applyMonth').value = today;
+            document.getElementById('applyMonth_0').value = today;
         }
 
         // ON LOAD
@@ -417,7 +430,6 @@
             currentMenu('1_2');
             today();
         });
-
     </script>
 </div>
 </html>
