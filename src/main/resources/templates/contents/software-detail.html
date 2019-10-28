@@ -93,7 +93,7 @@
                             <tr>
                                 <th scope="row">판매금액 적용월</th>
                                 <td th:each="softwarePlan,index : ${softwarePlanList}"
-                                    th:if="${index.index} > 0"
+                                    th:if="${index.index} >= 0"
                                     th:text="${softwarePlan.applyMonth}">
                                 </td>
                             </tr>
