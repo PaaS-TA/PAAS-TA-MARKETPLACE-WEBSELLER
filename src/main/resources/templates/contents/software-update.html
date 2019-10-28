@@ -230,7 +230,7 @@
                                         <input class="bootstrap-filestyle input-group" type="text"
                                                th:each="softwarePlan,index : ${softwarePlanList}"
                                                th:value="${softwarePlan.applyMonth}"
-                                               th:if="${index.index} > 0"
+                                               th:if="${index.index} >= 0"
                                                id="applyMonth" name="applyMonth" readonly>
                                         <span tabindex="0" class="group-span-filestyle input-group-btn">
                                             <label class="btn btn-dfefault">
@@ -259,7 +259,7 @@
                                         <tbody id="pricePerMonth-tbody">
                                         <tr th:each="softwarePlan, stat : ${softwarePlanList}">
                                             <td>
-                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwarePlan.id}" id="planid" name="planid">&nbsp;<input type=text th:value="${softwarePlan.name}" th:id="'name_'+ ${stat.index}" placeholder="Small">
+                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwarePlan.id}" id="planid" name="planid">&nbsp;<input type=text th:value="${softwarePlan.name}" th:id="'name_'+ ${stat.index}" name="planName" placeholder="Small">
                                             </td>
                                             <td><input class="form-control" type="text" th:value="${softwarePlan.description}" id="description" name="description" placeholder="1CPU/256M/1G"></td>
 
@@ -270,7 +270,7 @@
                                             <td>
                                                 <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" id="diskSize" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text" th:value="${softwarePlan.diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'">
                                             </td>
-                                            <td><input class="form-control" type="text" th:value="${software.pricePerMonth}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly></td>
+                                            <td><input class="form-control" type="text" th:value="${software.pricePerMonth}" th:id="'pricePerMonth_' +${stat.index}" name="pricePerMonth" readonly></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -480,7 +480,7 @@
     <input type="hidden" id="iconPath" name="iconPath" th:value="${software.iconPath}" />
     <input type="hidden" id="manifestPath" name="manifestPath" th:value="${software.manifestPath}" />
     <input type="hidden" id="indexForScreenShot" name="index" value="" />
-    <input type="hidden" id="pricePerMonth" name="sumAmt" th:value="${software.pricePerMonth}"/>
+    <input type="hidden" id="pricePerMonth" name="pricePerMonth" th:value="${software.pricePerMonth}"/>
     <!-- //content -->
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
@@ -530,14 +530,14 @@
                 "summary" :  $("#softwareSummary").val(),
                 "description" : $("#softwareDescription").val(),
                 "type" : $('input:radio[name="softwareType"]:checked').val(),
-                "pricePerMonth" : $("#sumAmt").val(),
+                "pricePerMonth" : $("input[type=text][name=pricePerMonth]").val(),
                 "version" :  $("#softwareVersion").val(),
                 "historyDescription" : softwareHistoryDescription,
                 "softwarePlanList" :
                     [{
                         "id": $("#planid").val(),
                         "softwareId": $("#id").val(),
-                        "name": $("input[type=text][name=name]").val(),
+                        "name": $("input[type=text][name=planName]").val(),
                         "applyMonth": $("#applyMonth").val(),
                         "description": $("input[type=text][name=description]").val(),
                         "cpuAmt": $("input[type=text][name=cpuAmt]").val(),
@@ -998,7 +998,7 @@
 
         //[테이블] 가격
         function amt(id){
-            $("#sumAmt_"+id).val(Number($("#cpuAmt_"+id).val())+ Number($("#memoryAmt_"+id).val())+ Number($("#diskAmt_"+id).val()));
+            $("#pricePerMonth_"+id).val(Number($("#cpuAmt_"+id).val())+ Number($("#memoryAmt_"+id).val())+ Number($("#diskAmt_"+id).val()));
         };
 
         //[테이블] 행 삭제
@@ -1038,7 +1038,7 @@
                 +"<td>"
                 +"<input class='form-control' type='text'  id='diskSize' name='diskSize' placeholder='1G'> &nbsp;<input class='form-control' type='text' id='diskAmt_"+index+"' name='diskAmt' onkeyup='amt("+index +")'>"
                 +"</td>"
-                +"<td><input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' readonly ></td>"
+                +"<td><input class='form-control' type='text' id='pricePerMonth_"+index+"' name='sumAmt' readonly ></td>"
                 +"</tr>";
 
         };
