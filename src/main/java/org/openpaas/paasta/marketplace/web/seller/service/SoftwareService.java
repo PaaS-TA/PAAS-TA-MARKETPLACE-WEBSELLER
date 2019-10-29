@@ -70,10 +70,6 @@ public class SoftwareService {
         return paasApiRest.getForObject(url, SoftwarePlan.class);
     }
 
-    public List<SoftwarePlanHistory> getPlanHistoryList(Long id, String queryParamString) {
-        return paasApiRest.getForObject("/softwares/plan/" + id + "/histories" + queryParamString, List.class);
-    }
-
     public List<SoftwarePlan> getSoftwarePlanList(Long id) {
         String url = UriComponentsBuilder.newInstance().path("/softwares/plan/{id}/list?sort=name,asc")
                 .build()
@@ -81,6 +77,7 @@ public class SoftwareService {
                 .toString();
         return paasApiRest.getForObject(url, List.class);
     }
+
 
     public List<SoftwareHistory> getHistoryList(Long id, String queryParamString) {
         return paasApiRest.getForObject("/softwares/" + id + "/histories" + queryParamString, List.class);

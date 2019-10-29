@@ -230,7 +230,7 @@
                                         <input class="bootstrap-filestyle input-group" type="text"
                                                th:each="softwarePlan,index : ${softwarePlanList}"
                                                th:value="${softwarePlan.applyMonth}"
-                                               th:if="${index.index} >= 0"
+                                               th:if="${index.index} == 0"
                                                id="applyMonth" name="applyMonth" readonly>
                                         <span tabindex="0" class="group-span-filestyle input-group-btn">
                                             <label class="btn btn-dfefault">
@@ -270,7 +270,7 @@
                                             <td>
                                                 <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" id="diskSize" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text" th:value="${softwarePlan.diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'">
                                             </td>
-                                            <td><input class="form-control" type="text" th:value="${software.pricePerMonth}" th:id="'pricePerMonth_' +${stat.index}" name="pricePerMonth" readonly></td>
+                                            <td><input class="form-control" type="text" th:value="${software.pricePerMonth}" th:id="'sumAmt_' +${stat.index}" name="pricePerMonth" readonly></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -457,8 +457,17 @@
                                     <td >Memory</td>
                                     <td >Disk</td>
                                 </tr>
-                                <tbody id="amtArea">
+                                <tbody id="amtArea" th:each="softwarePlan,index : ${softwarePlanList}">
                                 <tr style="width:auto;" align=center>
+                                    <td th:text="${softwarePlan.applyMonth}"></td>
+                                    <td th:text="${softwarePlan.name}"></td>
+                                    <td th:text="${softwarePlan.memorySize}"></td>
+                                    <td th:text="${softwarePlan.diskSize}"></td>
+                                    <td th:text="${#numbers.formatInteger(softwarePlan.memoryAmt, 0, 'COMMA')}"></td>
+                                    <td th:text="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}"></td>
+                                    <td th:text="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}"></td>
+                                    <td th:text="${#numbers.formatInteger(softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt , 0, 'COMMA')}"></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </td>
@@ -958,54 +967,15 @@
             alert("반드시 환경 파일을 추가해주시기 바랍니다.");
         };
 
-        //판매금액이력 조회
-        $("#amtBtn").on("click", function () {
-            var id = $("#id").val();
-
-            var reqUrl = "/softwares/plan/" + id + "/histories" + "?sort=lastModifiedDate,desc";
-            procCallAjax(reqUrl, "GET", null, null, callbackGetSoftwarePlanHistoryList);
-        });
-
-        var callbackGetSoftwarePlanHistoryList = function (data) {
-            console.log(data);
-            var amtArea = $("#amtArea");
-            var htmlString = [];
-
-            if(data.length > 0){
-                for(var i = 0; i < data.length; i++){
-                    var totalAmt = data[i].cpuAmt+data[i].memoryAmt+data[i].diskAmt;
-
-                    htmlString.push(
-                        '<tr style="width:auto;" align=center>'
-                        + '<td>'+data[i].applyMonth+'</td>'
-                        + '<td>'+data[i].name+'</td>'
-                        + '<td>'+data[i].memorySize+'</td>'
-                        + '<td>'+data[i].diskSize+'</td>'
-                        + '<td>'+data[i].cpuAmt+'</td>'
-                        + '<td>'+data[i].memoryAmt+'</td>'
-                        + '<td>'+data[i].diskAmt+'</td>'
-                        + '<td>'+totalAmt+'</td>'
-                        + '</tr>'
-                    );
-                }
-            }else{
-                htmlString = "<tr>"
-                    + "<td colspan='8'><p class='user_p'>판매금액 이력이 존재하지 않습니다.</p></td>" + "</tr>"
-            }
-
-            amtArea.html(htmlString);
-        };
-
         //[테이블] 가격
         function amt(id){
-            $("#pricePerMonth_"+id).val(Number($("#cpuAmt_"+id).val())+ Number($("#memoryAmt_"+id).val())+ Number($("#diskAmt_"+id).val()));
+            $("#sumAmt_"+id).val(Number($("#cpuAmt_"+id).val())+ Number($("#memoryAmt_"+id).val())+ Number($("#diskAmt_"+id).val()));
         };
 
         //[테이블] 행 삭제
         function delRow(){
-            var checkbox = $("input[id='checkRow']");
+            var checkbox = $("input[name='checkRow']");
             var checkCount = checkbox.size();
-
 
             for (var i=0; i<checkCount; i++) {
                 if (checkbox.eq(i).is(":checked")) {
@@ -1013,34 +983,38 @@
                 }
             }
 
-            if(checkbox.size() == 0){
-                alert("판매금액은 필수입력 사항입니다.");
-                $("input[type=checkbox]").prop("checked", false);
-            }
         };
 
         //[테이블] 행 추가
         var index = 1000;
+        var nameIndex = 0;
         function addRow() {
             index++;
+            nameIndex++;
             console.log("[index]: "+index);
 
-            document.getElementById("pricePerMonth-tbody").insertRow(0).innerHTML =
-                "<tr>"
-                +"<td>"
-                +"<input type='checkbox' id='checkRow' name='checkRow'>&nbsp;<input type='text' id='name_"+index+"' name='name' placeholder='Small'>"
-                +"</td>"
-                +"<td><input class='form-control' type='text'  name='description' placeholder='1CPU/256M/1G'></td>"
-                +"<td><input class='form-control' type='text'  id='cpuAmt_"+index+"' name='cpuAmt' onkeyup='amt("+index +")'></td>"
-                +"<td>"
-                +"<input class='form-control' type='text' id='memorySize' name='memorySize' placeholder='256M'> &nbsp;<input class='form-control' type='text' id='memoryAmt_"+index+"' name='memoryAmt' onkeyup='amt("+index +")'>"
-                +"</td>"
-                +"<td>"
-                +"<input class='form-control' type='text'  id='diskSize' name='diskSize' placeholder='1G'> &nbsp;<input class='form-control' type='text' id='diskAmt_"+index+"' name='diskAmt' onkeyup='amt("+index +")'>"
-                +"</td>"
-                +"<td><input class='form-control' type='text' id='pricePerMonth_"+index+"' name='sumAmt' readonly ></td>"
-                +"</tr>";
+            var toDayValue = $('#applyMonth').val();
 
+            document.getElementById("pricePerMonth-tbody").insertRow(-1).innerHTML =
+                "<tr>"
+                +"	<td>"
+                +"		<input type='checkbox' id='checkRow' name='checkRow'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' placeholder='Small'>"
+                +"	</td>"
+                +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' placeholder='1CPU/256M/1G'></td>"
+                +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' onkeyup='amt("+index +")'></td>"
+                +"	<td>"
+                +"		<input class='form-control' type='text' id='memorySize' name='softwarePlanList["+nameIndex+"].memorySize' placeholder='256M'>"
+                +"		<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' onkeyup='amt("+index+")'>"
+                +"	</td>"
+                +"	<td>"
+                +"		<input class='form-control' type='text' id='diskSize' name='softwarePlanList["+nameIndex+"].diskSize' placeholder='1G'>"
+                +"		<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' onkeyup='amt("+index+")'>"
+                +"	</td>"
+                +"	<td>"
+                +"		<input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' readonly>"
+                +"		<input type='hidden' name='softwarePlanList["+nameIndex+"].applyMonth' value='"+toDayValue+"'>"
+                +"	</td>"
+                +"</tr>";
         };
 
         /*]]>*/
