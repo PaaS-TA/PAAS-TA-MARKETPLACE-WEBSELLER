@@ -259,7 +259,7 @@
                                         <tbody id="pricePerMonth-tbody">
                                         <tr th:each="softwarePlan, stat : ${softwarePlanList}">
                                             <td>
-                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwarePlan.id}" id="planid" name="planid">&nbsp;<input type=text th:value="${softwarePlan.name}" th:id="'name_'+ ${stat.index}" name="planName" placeholder="Small">
+                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwarePlan.id}" id="planid" name="planid">&nbsp;<input type=text th:value="${softwarePlan.name}"  th:id="'name_'+ ${stat.index}" name="planName" placeholder="Small">
                                             </td>
                                             <td><input class="form-control" type="text" th:value="${softwarePlan.description}" id="description" name="description" placeholder="1CPU/256M/1G"></td>
 
@@ -270,7 +270,7 @@
                                             <td>
                                                 <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" id="diskSize" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text" th:value="${softwarePlan.diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'">
                                             </td>
-                                            <td><input class="form-control" type="text" th:value="${software.pricePerMonth}" th:id="'sumAmt_' +${stat.index}" name="pricePerMonth" readonly></td>
+                                            <td><input class="form-control" th:value="${#numbers.formatInteger(softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt , 0, 'COMMA')}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -381,6 +381,7 @@
                 <!-- Modal -->
             </div>
         </div>
+            <input type="hidden" id="finalPricePerMonth" name="pricePerMonth" value="7777"/>
         </form>
     </div>
 
@@ -463,10 +464,10 @@
                                     <td th:text="${softwarePlan.name}"></td>
                                     <td th:text="${softwarePlan.memorySize}"></td>
                                     <td th:text="${softwarePlan.diskSize}"></td>
+                                    <td th:text="${#numbers.formatInteger(softwarePlan.cpuAmt, 0, 'COMMA')}"></td>
                                     <td th:text="${#numbers.formatInteger(softwarePlan.memoryAmt, 0, 'COMMA')}"></td>
                                     <td th:text="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}"></td>
-                                    <td th:text="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}"></td>
-                                    <td th:text="${#numbers.formatInteger(softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt , 0, 'COMMA')}"></td>
+                                    <td th:text="${#numbers.formatInteger(softwarePlan.cpuAmt + softwarePlan.memoryAmt + softwarePlan.diskAmt , 0, 'COMMA')}"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -489,7 +490,7 @@
     <input type="hidden" id="iconPath" name="iconPath" th:value="${software.iconPath}" />
     <input type="hidden" id="manifestPath" name="manifestPath" th:value="${software.manifestPath}" />
     <input type="hidden" id="indexForScreenShot" name="index" value="" />
-    <input type="hidden" id="pricePerMonth" name="pricePerMonth" th:value="${software.pricePerMonth}"/>
+    <input type="hidden" name="pricePerMonth" th:value="${software.pricePerMonth}"/>
     <!-- //content -->
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
@@ -539,7 +540,7 @@
                 "summary" :  $("#softwareSummary").val(),
                 "description" : $("#softwareDescription").val(),
                 "type" : $('input:radio[name="softwareType"]:checked').val(),
-                "pricePerMonth" : $("input[type=text][name=pricePerMonth]").val(),
+                "pricePerMonth" : $("#finalPricePerMonth").val(),
                 "version" :  $("#softwareVersion").val(),
                 "historyDescription" : softwareHistoryDescription,
                 "softwarePlanList" :

@@ -120,11 +120,10 @@
                                             <td th:text="${softwarePlan.name}"></td>
                                             <td th:text="${softwarePlan.memorySize}"></td>
                                             <td th:text="${softwarePlan.diskSize}"></td>
+                                            <td th:text="${#numbers.formatInteger(softwarePlan.cpuAmt, 0, 'COMMA')}"></td>
                                             <td th:text="${#numbers.formatInteger(softwarePlan.memoryAmt, 0, 'COMMA')}"></td>
                                             <td th:text="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}"></td>
-                                            <td th:text="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}"></td>
-                                            <td hidden class="price" th:text="'￦ '+ ${software.pricePerMonth}"></td>
-                                            <td th:text="'￦'+${#numbers.formatInteger(softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt , 0, 'COMMA')}"></td>
+                                            <td th:text="${#numbers.formatInteger(softwarePlan.cpuAmt + softwarePlan.memoryAmt + softwarePlan.diskAmt , 0, 'COMMA')}"></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -214,10 +213,10 @@
                                         <td th:text="${softwarePlan.name}"></td>
                                         <td th:text="${softwarePlan.memorySize}"></td>
                                         <td th:text="${softwarePlan.diskSize}"></td>
+                                        <td th:text="${#numbers.formatInteger(softwarePlan.cpuAmt, 0, 'COMMA')}"></td>
                                         <td th:text="${#numbers.formatInteger(softwarePlan.memoryAmt, 0, 'COMMA')}"></td>
                                         <td th:text="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}"></td>
-                                        <td th:text="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}"></td>
-                                        <td th:text="${#numbers.formatInteger(softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt , 0, 'COMMA')}"></td>
+                                        <td th:text="${#numbers.formatInteger(softwarePlan.cpuAmt + softwarePlan.memoryAmt + softwarePlan.diskAmt , 0, 'COMMA')}"></td>
                                     </tr>
                                     </tbody>
                                 </table>
