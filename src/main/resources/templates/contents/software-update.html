@@ -977,14 +977,41 @@
         function delRow(){
             var checkbox = $("input[name='checkRow']");
             var checkCount = checkbox.size();
+            var swpId =  $("#planid").val();
+
+            console.log(swpId);
 
             for (var i=0; i<checkCount; i++) {
                 if (checkbox.eq(i).is(":checked")) {
                     checkbox.eq(i).parent().parent().remove();
                 }
             }
-
+            var reqUrl = "/softwares/plan/"+ swpId;
+            procCallAjax(reqUrl, "DELETE", null, null, callbackDeleteRow);
         };
+
+
+        var callbackDeleteRow  = function (data) {
+            console.log("data :::" + JSON.stringify(data));
+            $('#pricePerMonth-tbody').find('tbody').append(
+                "<tr>"
+                + "<td>"
+                + "<input type=\"checkbox\" th:name=\"checkRow\"/><input type=hidden th:value=\"${softwarePlan.id}\" id=\"planid\" name=\"planid\">&nbsp;<input type=text th:value=\"${softwarePlan.name}\"  th:id=\"'name_'+ ${stat.index}\" name=\"planName\" placeholder=\"Small\">"
+                + "</td>"
+                + "<td><input class=\"form-control\" type=\"text\" th:value=\"${softwarePlan.description}\" id=\"description\" name=\"description\" placeholder=\"1CPU/256M/1G\"></td>"
+                + ""
+                + "<td><input class=\"form-control\" type=\"text\" th:value=\"${softwarePlan.cpuAmt}\" th:id=\"'cpuAmt_' +${stat.index}\" name=\"cpuAmt\" th:onkeyup=\"'amt('+${stat.index}+')'\"></td>"
+                + "<td>"
+                + "<input class=\"form-control\" type=\"text\" th:value=\"${softwarePlan.memorySize}\" id=\"memorySize\" name=\"memorySize\" placeholder=\"256M\"> &nbsp;<input class=\"form-control\" type=\"text\" th:value=\"${softwarePlan.memoryAmt}\" th:id=\"'memoryAmt_' +${stat.index}\" name=\"memoryAmt\" th:onkeyup=\"'amt('+${stat.index}+')'\">"
+                + "</td>"
+                + "<td>"
+                + "<input class=\"form-control\" type=\"text\" th:value=\"${softwarePlan.diskSize}\" id=\"diskSize\" name=\"diskSize\" placeholder=\"1G\"> &nbsp;<input class=\"form-control\" type=\"text\" th:value=\"${softwarePlan.diskAmt}\" th:id=\"'diskAmt_' +${stat.index}\" name=\"diskAmt\" th:onkeyup=\"'amt('+${stat.index}+')'\">"
+                + "</td>"
+                + "<td><input class=\"form-control\" th:value=\"${#numbers.formatInteger(softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt , 0, 'COMMA')}\" th:id=\"'sumAmt_' +${stat.index}\" name=\"sumAmt\" readonly></td>"
+                + "</tr>"
+            );
+        };
+
 
         //[테이블] 행 추가
         var index = 1000;
@@ -1005,11 +1032,11 @@
                 +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' onkeyup='amt("+index +")'></td>"
                 +"	<td>"
                 +"		<input class='form-control' type='text' id='memorySize' name='softwarePlanList["+nameIndex+"].memorySize' placeholder='256M'>"
-                +"		<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' onkeyup='amt("+index+")'>"
+                +"		&nbsp;<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' onkeyup='amt("+index+")'>"
                 +"	</td>"
                 +"	<td>"
                 +"		<input class='form-control' type='text' id='diskSize' name='softwarePlanList["+nameIndex+"].diskSize' placeholder='1G'>"
-                +"		<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' onkeyup='amt("+index+")'>"
+                +"		&nbsp;<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' onkeyup='amt("+index+")'>"
                 +"	</td>"
                 +"	<td>"
                 +"		<input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' readonly>"

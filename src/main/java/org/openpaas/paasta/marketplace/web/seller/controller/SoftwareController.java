@@ -330,4 +330,11 @@ public class SoftwareController {
         return softwareService.updateSoftware(id,newSoftware);
     }
 
+    @DeleteMapping("/plan/{id}")
+    @ResponseBody
+    public List<SoftwarePlan> deleteCategory(@PathVariable Long id){
+        softwareService.deleteSwpId(id);
+        return softwareService.getSoftwarePlanList(id);
+    }
+
 }

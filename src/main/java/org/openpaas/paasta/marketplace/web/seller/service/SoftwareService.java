@@ -83,4 +83,8 @@ public class SoftwareService {
         return paasApiRest.getForObject("/softwares/" + id + "/histories" + queryParamString, List.class);
     }
 
+    public void deleteSwpId(Long id) {
+        paasApiRest.delete("/softwares/plan/" + id);
+    }
+
 }
