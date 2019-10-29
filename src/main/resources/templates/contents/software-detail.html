@@ -92,10 +92,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">판매금액 적용월</th>
-                                <td th:each="softwarePlan,index : ${softwarePlanList}"
-                                    th:if="${index.index} >= 0"
-                                    th:text="${softwarePlan.applyMonth}">
-                                </td>
+                                <td th:text="${#temporals.format(software.createdDate, 'yyyy-MM')}"></td>
                             </tr>
                             <tr>
                                 <th scope="row">판매금액
@@ -119,14 +116,15 @@
                                         </tr>
                                         <tbody>
                                         <tr th:each="softwarePlan,index : ${softwarePlanList}" style="width:auto;" align=center>
-                                            <td th:text="${#temporals.format(software.createdDate, 'yyyy-MM')}"></td>
+                                            <td th:text="${softwarePlan.applyMonth}"></td>
                                             <td th:text="${softwarePlan.name}"></td>
                                             <td th:text="${softwarePlan.memorySize}"></td>
                                             <td th:text="${softwarePlan.diskSize}"></td>
-                                            <td th:text="${softwarePlan.cpuAmt}"></td>
-                                            <td th:text="${softwarePlan.memoryAmt}"></td>
-                                            <td th:text="${softwarePlan.diskAmt}">1000</td>
-                                            <td><span class="price" th:text="'￦ '+ ${software.pricePerMonth}"></span></td>
+                                            <td th:text="${#numbers.formatInteger(softwarePlan.memoryAmt, 0, 'COMMA')}"></td>
+                                            <td th:text="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}"></td>
+                                            <td th:text="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}"></td>
+                                            <td hidden class="price" th:text="'￦ '+ ${software.pricePerMonth}"></td>
+                                            <td th:text="'￦'+${#numbers.formatInteger(softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt , 0, 'COMMA')}"></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -183,7 +181,6 @@
             </div>
         </div>
 
-
         <!-- amtModal -->
         <div class="modal fade" id="myAmtModal" tabindex="-1" role="dialog" aria-labelledby="myAmtModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -211,8 +208,17 @@
                                         <td >Memory</td>
                                         <td >Disk</td>
                                     </tr>
-                                    <tbody id="amtArea">
+                                    <tbody id="amtArea" th:each="softwarePlan,index : ${softwarePlanList}">
                                     <tr style="width:auto;" align=center>
+                                        <td th:text="${softwarePlan.applyMonth}"></td>
+                                        <td th:text="${softwarePlan.name}"></td>
+                                        <td th:text="${softwarePlan.memorySize}"></td>
+                                        <td th:text="${softwarePlan.diskSize}"></td>
+                                        <td th:text="${#numbers.formatInteger(softwarePlan.memoryAmt, 0, 'COMMA')}"></td>
+                                        <td th:text="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}"></td>
+                                        <td th:text="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}"></td>
+                                        <td th:text="${#numbers.formatInteger(softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt , 0, 'COMMA')}"></td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </td>
@@ -278,9 +284,15 @@
             </div>
         </div>
     </div>
+
     <!-- //content -->
     <script th:inline="javascript" type="text/javascript" layout:fragment="custom-script">
         /*<![CDATA[*/
+
+        // ON LOAD
+        $(document).ready(function() {
+            currentMenu('1_1');
+        });
 
         $("#historyBtn").on("click", function () {
             var softwareId = "[[${software.id}]]";
@@ -313,50 +325,6 @@
             }
             historyArea.html(htmlString);
         };
-
-        $("#amtBtn").on("click", function () {
-            var softwareId = "[[${software.id}]]";
-
-            var reqUrl = "/softwares/plan/" + softwareId + "/histories" + "?sort=lastModifiedDate,desc";
-            procCallAjax(reqUrl, "GET", null, null, callbackGetSoftwarePlanHistoryList);
-        });
-
-        var callbackGetSoftwarePlanHistoryList = function (data) {
-            var amtArea = $("#amtArea");
-            var htmlString = [];
-
-            console.log(data);
-
-            if(data.length > 0){
-                for(var i = 0; i < data.length; i++){
-                    var totalAmt = data[i].cpuAmt+data[i].memoryAmt+data[i].diskAmt;
-
-                    htmlString.push(
-                        '<tr style="width:auto;" align=center>'
-                        + '<td>'+data[i].applyMonth+'</td>'
-                        + '<td>'+data[i].name+'</td>'
-                        + '<td>'+data[i].memorySize+'</td>'
-                        + '<td>'+data[i].diskSize+'</td>'
-                        + '<td>'+data[i].cpuAmt+'</td>'
-                        + '<td>'+data[i].memoryAmt+'</td>'
-                        + '<td>'+data[i].diskAmt+'</td>'
-                        + '<td>'+totalAmt+'</td>'
-                        + '</tr>'
-                    );
-                }
-            }else{
-                htmlString = "<tr>"
-                    + "<td colspan='8'><p class='user_p'>판매금액 이력이 존재하지 않습니다.</p></td>" + "</tr>"
-            }
-
-            amtArea.html(htmlString);
-        };
-
-        // ON LOAD
-        $(document).ready(function() {
-            currentMenu('1_1');
-        });
-
 
         /*]]>*/
     </script>
