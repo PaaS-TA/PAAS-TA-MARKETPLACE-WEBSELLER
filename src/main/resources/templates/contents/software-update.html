@@ -223,20 +223,47 @@
                                     <!-- //첨부파일 -->
                                 </td>
                             </tr>
+<!--                            <tr>-->
+<!--                                <th scope="row">판매금액 적용월</th>-->
+<!--                                <td>-->
+<!--                                    <div class="input-group">-->
+<!--                                        <input class="bootstrap-filestyle input-group" type="text"-->
+<!--                                               th:each="softwarePlan,index : ${softwarePlanList}"-->
+<!--                                               th:value="${softwarePlan.applyMonth}"-->
+<!--                                               th:if="${index.index} == 0"-->
+<!--                                               id="applyMonth" name="applyMonth" readonly>-->
+<!--                                        <span tabindex="0" class="group-span-filestyle input-group-btn">-->
+<!--                                            <label class="btn btn-dfefault">-->
+<!--                                                <button name="button" class="btn btn-color2 btn-md" type="button" data-toggle="modal" data-target="#myAmtModal" id="amtBtn">이력보기</button>-->
+<!--                                            </label>-->
+<!--                                        </span>-->
+<!--                                    </div>-->
+<!--                                </td>-->
+<!--                            </tr>-->
                             <tr>
                                 <th scope="row">판매금액 적용월</th>
                                 <td>
-                                    <div class="input-group">
-                                        <input class="bootstrap-filestyle input-group" type="text"
-                                               th:each="softwarePlan,index : ${softwarePlanList}"
-                                               th:value="${softwarePlan.applyMonth}"
-                                               th:if="${index.index} == 0"
-                                               id="applyMonth" name="applyMonth" readonly>
-                                        <span tabindex="0" class="group-span-filestyle input-group-btn">
-                                            <label class="btn btn-dfefault">
+                                    <div class="searchBox"><!--검색폼 두줄일 때 class="fm-row-2"-->
+                                        <!-- Form 날짜 -->
+                                        <div class="form-group">
+                                            <div class="form-group-area">
+                                                <div class="fm_box w_auto pr10">
+                                                    <select name="selectDateYear" id="selectDateYear" th:onchange="selectYear()"></select>
+                                                </div>
+                                                <div class="fm_box w_auto">
+                                                    <select name="selectDateMonth" id="selectDateMonth" th:onchange="selectMonth()"></select>
+                                                </div>
+                                                <button type="button" name="searchBtn" class="btn btn-sch" title="검색" id="searchBtn"><span class="ico">검색</span></button>
+                                            </div>
+                                        </div>
+                                        <!-- //Form 날짜 -->
+                                        <!-- Form 이력보기 -->
+                                        <div class="form-group" style="float:right">
+                                            <div class="form-group-area">
                                                 <button name="button" class="btn btn-color2 btn-md" type="button" data-toggle="modal" data-target="#myAmtModal" id="amtBtn">이력보기</button>
-                                            </label>
-                                        </span>
+                                            </div>
+                                        </div>
+                                        <!-- Form 이력보기 -->
                                     </div>
                                 </td>
                             </tr>
@@ -268,7 +295,7 @@
                                                 <input class="form-control" type="text" th:value="${softwarePlan.memorySize}" id="memorySize" name="memorySize" placeholder="256M"> &nbsp;<input class="form-control" type="text" th:value="${softwarePlan.memoryAmt}" th:id="'memoryAmt_' +${stat.index}" name="memoryAmt" th:onkeyup="'amt('+${stat.index}+')'">
                                             </td>
                                             <td>
-                                                <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" id="diskSize" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text" th:value="${softwarePlan.diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'">
+                                                <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" id="diskSize" name="diskSize" placeholder="1G">&nbsp;<input class="form-control" type="text" th:value="${softwarePlan.diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'">
                                             </td>
                                             <td><input class="form-control" th:value="${#numbers.formatInteger(softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt , 0, 'COMMA')}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly></td>
                                         </tr>
@@ -382,6 +409,7 @@
             </div>
         </div>
             <input type="hidden" id="finalPricePerMonth" name="pricePerMonth" value="7777"/>
+            <input type="hidden" id="applyMonth" name="applyMonth" value="201910"/>
         </form>
     </div>
 
@@ -496,11 +524,6 @@
         /*<![CDATA[*/
 
         FILE_INFO = {}; // 파일 초기화;
-
-        $(document).ready(function() {
-            currentMenu('1_2');
-            $('div[name=reSelectPreview]').hide();
-        });
 
         // [상품] 리스트
         var getSoftwareList = function () {
@@ -987,12 +1010,17 @@
                 }
             }
             var reqUrl = "/softwares/plan/"+ swpId;
-            procCallAjax(reqUrl, "DELETE", null, null, callbackDeleteRow);
+            procCallAjax(reqUrl, "DELETE", null, null, callbackRow);
         };
 
 
-        var callbackDeleteRow  = function (data) {
-            console.log("data :::" + JSON.stringify(data));
+        var callbackRow  = function () {
+            console.log("[yearValue]: " + yearValue + "[monthValue]: " + monthValue);
+
+            //[이용기간] 검색조건
+            var yy = yearValue;        // 이번 해
+            var mm = monthValue;       // 이번 달
+
             $('#pricePerMonth-tbody').find('tbody').append(
                 "<tr>"
                 + "<td>"
@@ -1011,7 +1039,6 @@
                 + "</tr>"
             );
         };
-
 
         //[테이블] 행 추가
         var index = 1000;
@@ -1044,6 +1071,56 @@
                 +"	</td>"
                 +"</tr>";
         };
+
+        //[공통] 년,월(select box)
+        function selectCal(monthfield, yearfield) {
+
+            var today = new Date();
+            yearValue = today.getFullYear();
+            monthValue = (today.getMonth() + 1);
+
+            for (var i = 1; i < 13; i++) {
+                if ((today.getMonth() + 1) == i) $("#" + monthfield).append("<option value='" + i + "' selected='selected'>" + i + "</option>");
+                else $("#" + monthfield).append("<option value='" + i + "'>" + i + "</option>");
+            }
+
+            var thisyear = today.getFullYear();
+            for (var y = thisyear - 10; y < thisyear + 10; y++) {
+
+                if (thisyear == y) $("#" + yearfield).append("<option value='" + y + "' selected='selected'>" + y + "</option>");
+                else $("#" + yearfield).append("<option value='" + y + "'>" + y + "</option>");
+            }
+        }
+
+        var selectYear = function() {
+            var selectedYearValue = $("#selectDateYear option:selected").val();
+            yearValue = selectedYearValue;
+            console.log("Year ::: " + selectedYearValue);
+        };
+
+        var selectMonth = function() {
+            var selectedMonthValue = $("#selectDateMonth option:selected").val();
+            monthValue = selectedMonthValue;
+            console.log("Month ::: " + selectedMonthValue);
+        };
+
+
+        //eventBtn
+        $("#searchBtn").on("click", function () {
+            console.log("searchBtn Event");
+            callbackRow();
+        });
+
+
+        //년/월
+        var yearValue = $("#selectDateYear option:selected").val();
+        var monthValue = $("#selectDateMonth option:selected").val();
+
+        $(document).ready(function() {
+            currentMenu('1_2');
+            $('div[name=reSelectPreview]').hide();
+            selectCal('selectDateMonth', 'selectDateYear');
+        });
 
         /*]]>*/
     </script>
