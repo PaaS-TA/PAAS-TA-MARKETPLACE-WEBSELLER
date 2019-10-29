@@ -381,10 +381,10 @@
             index++;
             nameIndex++;
             console.log("[index]: "+index);
-            
+
             var toDayValue = $('#applyMonth').val();
 
-            document.getElementById("pricePerMonth-tbody").insertRow(0).innerHTML =
+            document.getElementById("pricePerMonth-tbody").insertRow(-1).innerHTML =
                 "<tr>"
                 +"	<td>"
                 +"		<input type='checkbox' id='checkRow' name='checkRow'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' placeholder='Small'>"
