@@ -767,7 +767,8 @@
                 "filePath": FILE_INFO.screenshotsFilePath
             };
 
-            procCallAjax("/softwares/file/"+ id + "/screenShots", "PUT", JSON.stringify(param), null, callbackFileDb);
+            var url = encodeURI("/softwares/file/"+ id + "/screenShots");
+            procCallAjax(url, "PUT", JSON.stringify(param), null, callbackFileDb);
         }
 
 
@@ -836,11 +837,7 @@
         // [스크린 샷] 삭제
         function deleteScreenShot(imgPath) {
             console.log("image Path ::: " + imgPath);
-
             var id = $("#id").val();
-
-            FILE_INFO.screenshotListSRC  = jQuery('#image_form_url').attr("src");
-            console.log("FILE_INFO.screenshotListSRC: " + FILE_INFO.screenshotListSRC);
 
             procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath, "DELETE", null, null, deleteScreenShotDb);
         }
