@@ -208,12 +208,13 @@
 
             if(listLength > 0){
                 for(var i = 0; i < listLength; i++){
+                	var index = i + pageNumSave * data.size;
                 	// Format Date
                 	var createdDateValue = new Date(content[i].createdDate);
                 	var createdDate = getFormatDate(createdDateValue);
                 	
                     //var soldInstanceMap= soldInstanceCount[i].replace(/(\s*)/g, "");
-                    var soldInstanceMap= soldInstanceCount[i+pageNumSave*PAGING_SIZE].replace(/(\s*)/g, "");
+                    var soldInstanceMap= soldInstanceCount[index].replace(/(\s*)/g, "");
                     console.log("index= "+(i+pageNumSave*PAGING_SIZE));
                     var value = soldInstanceMap.split("=");
                     
@@ -222,7 +223,7 @@
                     // TODO ::: 판매액 -> 판매량 안에서도 상품별 각각 사용한 일 수 구해서 다시 곱해줘야 함!!
                     htmlString.push(
                         "<tr>"
-                        + "<td>" + (i + 1)  + "</td>"
+                        + "<td>" + (index + 1)  + "</td>"
                         + "<td><span class=\"pn_cate type"+ content[i].category.id +"\">" + content[i].category.name + "</span></td>"
                         + "<td>" + content[i].name+ "</td>"
                         + "<td>" + content[i].version + "</td>"
@@ -284,7 +285,12 @@
                 }
                                     
                 for(var i=first; i < last; i++){
-                    htmlStringPage += "<li class='active' id='" + i + "'><a href='javascript:void(0);' onclick=moveSoftwareListPage('"+ i +"')>" + (i + 1) + "</a></li> ";
+                	if (i==currentPage) {
+                		htmlStringPage += "<li class='active' id='" + i + "'><a href='javascript:void(0);' onclick=moveSoftwareListPage('"+ i +"')>" + (i + 1) + "</a></li> ";
+                	}
+                	else {
+                    	htmlStringPage += "<li id='" + i + "'><a href='javascript:void(0);' onclick=moveSoftwareListPage('"+ i +"')>" + (i + 1) + "</a></li> ";
+                	}
                 }
                 
                 if(next > totalPage-1) {
