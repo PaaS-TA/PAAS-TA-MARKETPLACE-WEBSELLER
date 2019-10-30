@@ -337,4 +337,17 @@ public class SoftwareController {
         return softwareService.getSoftwarePlanList(id);
     }
 
+    /**
+     * 상품 판매가격 수정이력 조회
+     *
+     * @param id
+     * @param httpServletRequest
+     * @return
+     */
+    @GetMapping(value = "/plan/{id}/histories")
+    @ResponseBody
+    public List<SoftwarePlan> getPlanHistoryList(@NotNull @PathVariable Long id, HttpServletRequest httpServletRequest) {
+        return softwareService.getPlanHistoryList(id, commonService.setParameters(httpServletRequest));
+    }
+
 }
