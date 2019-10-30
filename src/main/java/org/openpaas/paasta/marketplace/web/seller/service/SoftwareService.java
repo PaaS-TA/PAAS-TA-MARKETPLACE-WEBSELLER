@@ -87,6 +87,10 @@ public class SoftwareService {
         return paasApiRest.getForObject("/softwares/plan/" + id + "/histories" + queryParamString, List.class);
     }
 
+    public List<SoftwarePlan> getApplyMonth(Long id, String applyMonth) {
+        return paasApiRest.getForObject("/softwares/plan/" + id + "/applyMonth?applyMonth=" + applyMonth, List.class);
+    }
+
     public void deleteSwpId(Long id) {
         paasApiRest.delete("/softwares/plan/" + id);
     }

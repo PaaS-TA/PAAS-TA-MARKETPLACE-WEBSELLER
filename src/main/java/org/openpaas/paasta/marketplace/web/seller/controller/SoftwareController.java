@@ -355,4 +355,11 @@ public class SoftwareController {
         return softwareService.getPlanHistoryList(id, commonService.setParameters(httpServletRequest));
     }
 
+    @GetMapping(value = "/plan/{id}/applyMonth")
+    @ResponseBody
+    public List<SoftwarePlan> getApplyMonth(@NotNull @PathVariable Long id,@RequestParam (name="applyMonth") String applyMonth) {
+        return softwareService.getApplyMonth(id, applyMonth);
+    }
+
+
 }
