@@ -210,10 +210,10 @@
 
                                                 <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].cpuAmt}" th:id="'cpuAmt_' +${stat.index}" name="cpuAmt" th:onkeyup="'amt('+${stat.index}+')'"></td>
                                                 <td>
-                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memorySize}" id="memorySize" name="memorySize" placeholder="256M"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memoryAmt}" th:id="'memoryAmt_' +${stat.index}" name="memoryAmt" th:onkeyup="'amt('+${stat.index}+')'">
+                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memorySize}" th:id="'memorySize_' +${stat.index}"  name="memorySize" placeholder="256M" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memoryAmt}" th:id="'memoryAmt_' +${stat.index}" name="memoryAmt" th:onkeyup="'amt('+${stat.index}+')'">
                                                 </td>
                                                 <td>
-                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskSize}" id="diskSize" name="diskSize" placeholder="1G"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'">
+                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskSize}" th:id="'diskSize_' +${stat.index}" name="diskSize" placeholder="1G" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'">
                                                 </td>
                                                 <td>
                                                 	<input class="form-control" type="text" th:id="'sumAmt_'+${stat.index}" name="sumAmt" readonly />
@@ -284,7 +284,7 @@
 
                 </div>
             </div>
-            <input type="hidden" id="finalPricePerMonth" name="pricePerMonth" value="7777"/>
+            <input type="hidden" id="finalPricePerMonth" name="pricePerMonth" value="0"/>
         </form>
     </div>
     <!-- //content -->
@@ -393,11 +393,11 @@
                 +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' placeholder='1CPU/256M/1G'></td>"
                 +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' onkeyup='amt("+index +")'></td>"
                 +"	<td>"
-                +"		<input class='form-control' type='text' id='memorySize' name='softwarePlanList["+nameIndex+"].memorySize' placeholder='256M'>"
+                +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' placeholder='256M' onkeyup='chk("+index+")'>"
                 +"		<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' onkeyup='amt("+index+")'>"
                 +"	</td>"
                 +"	<td>"
-                +"		<input class='form-control' type='text' id='diskSize' name='softwarePlanList["+nameIndex+"].diskSize' placeholder='1G'>"
+                +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' placeholder='1G' onkeyup='chk("+index+")'>"
                 +"		<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' onkeyup='amt("+index+")'>"
                 +"	</td>"
                 +"	<td>"
@@ -427,11 +427,36 @@
             document.getElementById('applyMonth_0').value = today;
         }
 
+        //Pattern Matching
+        var chk = function(id) {
+            var str1 = $("#memorySize_"+id).val();
+            var str2 = $("#diskSize_"+id).val();
+
+            for (i = 0; i < str1.length; i++) {
+                ch = str1.charAt(i);
+                if (!(ch >= '0' && ch <= '9') && !(ch == 'G' || ch == 'M')) {
+                    alert("입력 형식은 숫자와 M 또는 G 입니다.");
+                    $("#memorySize_"+id).val("");
+                    return false;
+                }
+            }
+
+            for (i = 0; i < str2.length; i++) {
+                ch = str2.charAt(i);
+                if (!(ch >= '0' && ch <= '9') && !(ch == 'G' || ch == 'M')) {
+                    alert("입력 형식은 숫자와 M 또는 G 입니다.");
+                    $("#memorySize_"+id).val("");
+                    return false;
+                }
+            }
+        };
+
         // ON LOAD
         $(document).ready(function() {
             currentMenu('1_2');
             today();
         });
+
     </script>
 </div>
 </html>
