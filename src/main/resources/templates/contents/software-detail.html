@@ -322,7 +322,7 @@
         $("#amtHistoryBtn").on("click", function () {
             var softwareId = "[[${software.id}]]";
 
-            var reqUrl = "/softwares/plan/" + softwareId + "/histories" + "?sort=lastModifiedDate,desc";
+            var reqUrl = "/softwares/plan/" + softwareId + "/histories" + "?sort=applyMonth,asc";
             procCallAjax(reqUrl, "GET", null, null, callbackGetSoftwarePlanHistoryList);
         });
 
