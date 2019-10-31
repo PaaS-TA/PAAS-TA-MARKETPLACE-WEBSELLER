@@ -217,6 +217,7 @@
                                                 </td>
                                                 <td>
                                                 	<input class="form-control" type="text" th:id="'sumAmt_'+${stat.index}" name="sumAmt" readonly />
+                                                    <input type="hidden" id="inUse_0" name="softwarePlanList[0].inUse" value='Y'/>
                                                 	<input type="hidden" id="applyMonth_0" name="softwarePlanList[0].applyMonth" />
                                                 </td>
                                             </tr>
@@ -402,6 +403,7 @@
                 +"	<td>"
                 +"		<input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' readonly>"
                 +"		<input type='hidden' name='softwarePlanList["+nameIndex+"].applyMonth' value='"+toDayValue+"'>"
+                +"      <input type='hidden' id='inUse_"+index+"' name='softwarePlanList["+nameIndex+"].inUse' value='Y' >"
                 +"	</td>"
                 +"</tr>";
          };

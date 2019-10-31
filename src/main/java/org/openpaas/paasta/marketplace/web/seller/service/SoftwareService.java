@@ -59,6 +59,18 @@ public class SoftwareService {
         return software;
     }
 
+    public Software updateSoftware(Long id, String softwarePlaneOriginalList, Software software) {
+        String url = UriComponentsBuilder.newInstance().path("/softwares/{id}?softwarePlaneOriginalList="+softwarePlaneOriginalList)
+                .build()
+                .expand(id)
+                .toString();
+
+        log.info("updateSoftware url :: " + url + " Software " + software.toString());
+
+        paasApiRest.put(url, software);
+        return software;
+    }
+
 
     public SoftwarePlan getSoftwarePlan(Long id) {
         log.info("getSoftwarePlan :: " + id );
