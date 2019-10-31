@@ -1270,7 +1270,7 @@
             for (i = 0; i < str1.length; i++) {
                 ch = str1.charAt(i);
                 if (!(ch >= '0' && ch <= '9') && !(ch == 'G' || ch == 'M')) {
-                    alert("G,M 숫자만 입력가능합니다.");
+                    alert("입력 형식은 숫자와 M 또는 G 입니다.");
                     $("#memorySize_"+id).val("");
                     return false;
                 }
@@ -1279,7 +1279,7 @@
             for (i = 0; i < str2.length; i++) {
                 ch = str2.charAt(i);
                 if (!(ch >= '0' && ch <= '9') && !(ch == 'G' || ch == 'M')) {
-                    alert("G,M 숫자만 입력가능합니다.");
+                    alert("입력 형식은 숫자와 M 또는 G 입니다.");
                     $("#memorySize_"+id).val("");
                     return false;
                 }
