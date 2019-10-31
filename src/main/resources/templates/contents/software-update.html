@@ -286,7 +286,7 @@
                                         <tbody id="pricePerMonth-tbody">
                                         <tr th:each="softwarePlan, stat : ${softwarePlanList}">
                                             <td>
-                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwarePlan.id}" th:id="'planid_'+ ${stat.index}" name="planid">&nbsp;<input type=text th:value="${softwarePlan.name}" th:id="'name_'+ ${stat.index}" name="planName" placeholder="Small">
+                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwarePlan.id}" th:id="'planid_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].id'">&nbsp;<input type=text th:value="${softwarePlan.name}" th:id="'name_'+ ${stat.index}" name="planName" placeholder="Small">
                                             </td>
                                             <td><input class="form-control" type="text" th:value="${softwarePlan.description}" th:id="'description_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].description'" placeholder="1CPU/256M/1G"></td>
 
@@ -297,7 +297,10 @@
                                             <td>
                                                 <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" th:id="'diskSize_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskSize'" placeholder="1G">&nbsp;<input class="form-control" type="text" th:value="${softwarePlan.diskAmt}" th:id="'diskAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskAmt'"  th:onkeyup="'amt('+${stat.index}+')'">
                                             </td>
-                                            <td><input class="form-control" th:value="${#numbers.formatInteger(softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt , 0, 'COMMA')}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly></td>
+                                            <td><input class="form-control" th:value="${#numbers.formatInteger(softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt , 0, 'COMMA')}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly>
+                                                <input type="hidden" th:id="'inUse_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].inUse'" th:value='${softwarePlan.inUse}'/>
+                                                <input type="hidden" th:id="'applyMonth_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].applyMonth'" th:value='${softwarePlan.applyMonth}'/>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -408,7 +411,8 @@
             </div>
         </div>
             <input type="hidden" id="finalPricePerMonth" name="pricePerMonth" value="7777"/>
-            <input type="hidden" id="applyMonth" name="applyMonth" value="201910"/>
+            <input type="hidden" id="applyMonth" name="applyMonth"/>
+            <input type="hidden" id="softwarePlaneOriginalList" name="softwarePlaneOriginalList" value="111"/>
         </form>
     </div>
 
@@ -510,13 +514,44 @@
     <input type="hidden" id="indexForScreenShot" name="index" value="" />
     <input type="hidden" name="pricePerMonth" th:value="${software.pricePerMonth}"/>
 
-    <input type="hidden" id="softwarePlaneOriginalList" name="softwarePlaneOriginalList"/>
-
     <!-- //content -->
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
 
         FILE_INFO = {}; // 파일 초기화;
+
+        //년/월
+        var yearValue = $("#selectDateYear option:selected").val();
+        var monthValue = $("#selectDateMonth option:selected").val();
+
+        $(document).ready(function() {
+            currentMenu('1_2');
+            $('div[name=reSelectPreview]').hide();
+
+            selectCal('selectDateMonth', 'selectDateYear');
+
+            //최초화면 로딩
+            nameIndex = $("#pricePerMonth-tbody tr").length;
+
+            //최초 읽어돈 데이터의 applyMonth를 전역변수에 저장
+            $("#applyMonth").val($("#pricePerMonth-tbody tr").eq(0).children().eq(5).children().eq(2).val());
+
+            console.log($("#applyMonth").val());
+
+            var softwarePlaneOriginalList = "";
+
+            for (var idx=0; idx<nameIndex ;idx++) {
+                if (idx == 0) {
+                    softwarePlaneOriginalList += $("#planid_"+idx).val();
+                } else {
+                    softwarePlaneOriginalList += "^"+ $("#planid_"+idx).val();
+                }
+            }
+            $("#softwarePlaneOriginalList").val(softwarePlaneOriginalList);
+
+            // alert($("#softwarePlaneOriginalList").val());
+        });
+
 
         // [상품] 리스트
         var getSoftwareList = function () {
@@ -542,8 +577,8 @@
 		});
 
         // 상품 수정(텍스트)
-        var modifySoftware = function (id) {
-        	var softwareHistoryDescription = "";
+        var modifySoftware = function (argSoftwareId) {
+           	var softwareHistoryDescription = "";
         	if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
         		softwareHistoryDescription = $("#softwareHistoryDescription").val();
         	}
@@ -559,23 +594,67 @@
                 "pricePerMonth" : $("#finalPricePerMonth").val(),
                 "version" :  $("#softwareVersion").val(),
                 "historyDescription" : softwareHistoryDescription,
-                "softwarePlanList" :
-                    [{
-                        "id" : $('input:checkbox[name="softwareType"]:checked').val(),
-                        "softwareId": $("#id").val(),
-                        "name": $("input[type=text][name=planName]").val(),
-                        "applyMonth": $("#applyMonth").val(),
-                        "description": $("input[type=text][name=description]").val(),
-                        "cpuAmt": $("input[type=text][name=cpuAmt]").val(),
-                        "memorySize": $("input[type=text][name=memorySize]").val(),
-                        "diskSize": $("input[type=text][name=diskSize]").val(),
-                        "memoryAmt": $("input[type=text][name=memoryAmt]").val(),
-                        "diskAmt": $("input[type=text][name=diskAmt]").val()
-                    }]
+                "softwarePlanList" : []
+                    // [{
+                    //     "id" : $('input:checkbox[name="softwareType"]:checked').val(),
+                    //     "softwareId": $("#id").val(),
+                    //     "name": $("input[type=text][name=planName]").val(),
+                    //     "applyMonth": $("#applyMonth").val(),
+                    //     "description": $("input[type=text][name=description]").val(),
+                    //     "cpuAmt": $("input[type=text][name=cpuAmt]").val(),
+                    //     "memorySize": $("input[type=text][name=memorySize]").val(),
+                    //     "diskSize": $("input[type=text][name=diskSize]").val(),
+                    //     "memoryAmt": $("input[type=text][name=memoryAmt]").val(),
+                    //     "diskAmt": $("input[type=text][name=diskAmt]").val()
+                    // }]
             };
 
-        	console.log("[JSON.stringify]: " +JSON.stringify(reqParam));
-            var reqUrl = "/softwares/" + id;
+        	var softwarePlanList = [];
+        	var trRows = $("#pricePerMonth-tbody tr");
+            console.log(">>>>>>>>>>> trRows: %o", trRows);
+
+            // TR Rows
+        	trRows.each(function(index, item){
+        	    var tdRows = $(this).children("td");
+        	    var softwarePlanInfo = {};
+
+        	    // TD Rows
+        	    tdRows.each(function(index, item){
+                    var tdChildrenObj = $(this).children();
+                    // console.log("");
+                    // console.log(">>>>>>>>>>> tdChildrenObj: %o", tdChildrenObj);
+                    // console.log(">>>>>>>>>>> tdChildrenObj.eq(n).val(): %o", tdChildrenObj.eq(0).val());
+
+                    if (index == 0) {
+                        softwarePlanInfo.softwareId = argSoftwareId;
+                        softwarePlanInfo.id = tdChildrenObj.eq(1).val();
+                        softwarePlanInfo.name = tdChildrenObj.eq(2).val();
+                    } else if (index == 1) {
+                        softwarePlanInfo.description = tdChildrenObj.eq(0).val();
+                    } else if (index == 2) {
+                        softwarePlanInfo.cpuAmt = tdChildrenObj.eq(0).val();
+                    } else if (index == 3) {
+                        softwarePlanInfo.memorySize = tdChildrenObj.eq(0).val();
+                        softwarePlanInfo.memoryAmt = tdChildrenObj.eq(1).val();
+                    } else if (index == 4) {
+                        softwarePlanInfo.diskSize = tdChildrenObj.eq(0).val();
+                        softwarePlanInfo.diskAmt = tdChildrenObj.eq(1).val();
+                    }
+                    else if (index == 5) {
+                        softwarePlanInfo.inUse = tdChildrenObj.eq(1).val();
+                        softwarePlanInfo.applyMonth = tdChildrenObj.eq(2).val();
+                    }
+                })
+                // console.log("");
+                // console.log(">>>>>>> softwarePlanInfo: %o", softwarePlanInfo);
+                softwarePlanList[softwarePlanList.length] = softwarePlanInfo;
+            });
+            reqParam.softwarePlanList = softwarePlanList;
+
+        	// console.log("]]]]]]]]]]]]]]] reqParam: %o", reqParam);
+
+        	var softwarePlaneOriginalList = encodeURI($("#softwarePlaneOriginalList").val());
+            var reqUrl = "/softwares/" + argSoftwareId +"?softwarePlaneOriginalList="+ softwarePlaneOriginalList;
             procCallAjax(reqUrl, "PUT", JSON.stringify(reqParam), null, callbackModifySoftware);
         };
 
@@ -1054,7 +1133,7 @@
             document.getElementById("pricePerMonth-tbody").insertRow(-1).innerHTML =
                 "<tr>"
                 +"	<td>"
-                +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"'name='softwarePlanList["+nameIndex+"].planid'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' placeholder='Small'>"
+                +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"' name='softwarePlanList["+nameIndex+"].id'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' placeholder='Small'>"
                 +"	</td>"
                 +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' placeholder='1CPU/256M/1G'></td>"
                 +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' onkeyup='amt("+index +")'></td>"
@@ -1068,6 +1147,7 @@
                 +"	</td>"
                 +"	<td>"
                 +"		<input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' readonly>"
+                +"      <input type='hidden' id='inUse_"+index+"' name='softwarePlanList["+nameIndex+"].inUse' value='Y'>"
                 +"		<input type='hidden' name='softwarePlanList["+nameIndex+"].applyMonth' value='"+toDayValue+"'>"
                 +"	</td>"
                 +"</tr>";
@@ -1105,28 +1185,6 @@
             console.log("Month ::: " + selectedMonthValue);
         };
 
-        //년/월
-        var yearValue = $("#selectDateYear option:selected").val();
-        var monthValue = $("#selectDateMonth option:selected").val();
-
-        $(document).ready(function() {
-            currentMenu('1_2');
-            $('div[name=reSelectPreview]').hide();
-            selectCal('selectDateMonth', 'selectDateYear');
-            nameIndex = $("#pricePerMonth-tbody tr").length;
-
-            var softwarePlaneOriginalList = "";
-            for (var idx=0; idx<nameIndex ;idx++) {
-                if (idx == 0) {
-                    softwarePlaneOriginalList += $("#planid_"+idx).val();
-                } else {
-                    softwarePlaneOriginalList += "^"+ $("#planid_"+idx).val();
-                }
-            }
-            $("#softwarePlaneOriginalList").val(softwarePlaneOriginalList);
-
-            // alert($("#softwarePlaneOriginalList").val());
-        });
 
         //eventBtn
         $("#searchBtn").on("click", function () {
@@ -1135,7 +1193,8 @@
             var selectDateYear = $("#selectDateYear").val();
             var selectDateMonth = $("#selectDateMonth").val();
             var applyMonth = selectDateYear +  fncDateValueDigit(selectDateMonth);
-
+            $('#applyMonth').val(applyMonth);
+            console.log("날짜: "+ $('#applyMonth').val());
             var url = encodeURI("/softwares/plan/" + id + "/applyMonth");
             procCallAjax(url+"?applyMonth="+ applyMonth, "GET", "", null, callbackRow);
         });
@@ -1149,22 +1208,26 @@
             return result;
         }
 
+        //리로드시, 값 초기화 셋팅(data)
         var callbackRow  = function (data) {
             console.log("[yearValue]: " + yearValue + "[monthValue]: " + monthValue);
-
             console.log(">>>>>>> data: %o", data);
 
             $('#pricePerMonth-tbody').html("");
+            $("#softwarePlaneOriginalList").val("");
 
+            var orginPlanIdList = "";
             index = 1000;
             nameIndex = 0;
 
             if(data.length > 0){
                 for(var i = 0; i < data.length; i++){
+                    orginPlanIdList += "^"+ data[i].id;
+
                     $('#pricePerMonth-tbody').append(
                         "<tr>"
                         +"	<td>"
-                        +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"'name='softwarePlanList["+nameIndex+"].planid' value='"+data[i].index+"'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' value='"+data[i].name+"' placeholder='Small'>"
+                        +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"' name='softwarePlanList["+nameIndex+"].id' value='"+data[i].id+"'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' value='"+data[i].name+"' placeholder='Small'>"
                         +"	</td>"
                         +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' value='"+data[i].description+"' placeholder='1CPU/256M/1G'></td>"
                         +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' value='"+data[i].cpuAmt+"' onkeyup='amt("+index +")'></td>"
@@ -1178,19 +1241,15 @@
                         +"	</td>"
                         +"	<td>"
                         +"		<input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' readonly>"
+                        +"      <input type='hidden' id='inUse_"+index+"' name='softwarePlanList["+nameIndex+"].inUse' value='"+data[i].inUse+"' >"
                         +"		<input type='hidden' name='softwarePlanList["+nameIndex+"].applyMonth' value='"+data[i].applyMonth+"'>"
                         +"	</td>"
                         +"</tr>"
                     );
-
                     nameIndex++;
                 }
-
+                $("#softwarePlaneOriginalList").val(orginPlanIdList);
             }
-
-
-
-
         };
 
         /*]]>*/

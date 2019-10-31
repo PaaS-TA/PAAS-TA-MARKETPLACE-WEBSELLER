@@ -9,6 +9,7 @@ import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.service.ProfileService;
 import org.openpaas.paasta.marketplace.web.seller.service.SoftwareService;
 import org.openpaas.paasta.marketplace.web.seller.storageApi.store.swift.SwiftOSService;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -311,7 +312,7 @@ public class SoftwareController {
      */
     @PutMapping(value = "/{id}")
     @ResponseBody
-    public Software updateSoftware(@PathVariable Long id, @RequestBody Software software) throws IOException {
+    public Software updateSoftware(@PathVariable Long id, @RequestParam(name ="softwarePlaneOriginalList") String softwarePlaneOriginalList, @RequestBody Software software) throws IOException {
         log.info(">> updateSoftware" + software.toString());
 
         // 이미 파일 관련은 처리된 상태
@@ -332,7 +333,7 @@ public class SoftwareController {
 
         newSoftware.setSoftwarePlanList(software.getSoftwarePlanList());
 
-        return softwareService.updateSoftware(id,newSoftware);
+        return softwareService.updateSoftware(id,softwarePlaneOriginalList,newSoftware);
     }
 
     @DeleteMapping("/plan/{id}")
