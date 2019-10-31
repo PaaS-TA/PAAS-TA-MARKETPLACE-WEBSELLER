@@ -90,9 +90,9 @@
                                 <th scope="row">환경파일</th>
                                 <td th:text="${software.manifest}"></td>
                             </tr>
-                            <tr>
+                            <tr th:each="softwarePlan,index : ${softwarePlanList}" style="width:auto;">
                                 <th scope="row">판매금액 적용월</th>
-                                <td th:text="${#temporals.format(software.createdDate, 'yyyy-MM')}"></td>
+                                <td th:text="${softwarePlan.applyMonth}"></td>
                             </tr>
                             <tr>
                                 <th scope="row">판매금액
@@ -319,7 +319,7 @@
         $("#amtHistoryBtn").on("click", function () {
             var softwareId = "[[${software.id}]]";
 
-            var reqUrl = "/softwares/plan/" + softwareId + "/histories" + "?sort=lastModifiedDate,desc";
+            var reqUrl = "/softwares/plan/" + softwareId + "/histories" + "?sort=applyMonth,asc";
             procCallAjax(reqUrl, "GET", null, null, callbackGetSoftwarePlanHistoryList);
         });
 
