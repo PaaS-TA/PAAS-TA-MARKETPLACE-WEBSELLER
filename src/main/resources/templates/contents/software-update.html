@@ -297,7 +297,7 @@
                                             <td>
                                                 <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" th:id="'diskSize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskSize'" placeholder="1G" th:onkeyup="'chk('+${stat.index}+')'">&nbsp;<input class="form-control" type="text" th:value="${softwarePlan.diskAmt}" th:id="'diskAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskAmt'" th:onkeyup="'amt('+${stat.index}+')'">
                                             </td>
-                                            <td><input class="form-control" th:value="${#numbers.formatInteger(softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt , 0, 'COMMA')}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly>
+                                            <td><input class="form-control" th:value="${softwarePlan.memoryAmt+ softwarePlan.diskAmt+softwarePlan.memoryAmt}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly>
                                                 <input type="hidden" th:id="'inUse_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].inUse'" th:value='${softwarePlan.inUse}'/>
                                                 <input type="hidden" th:id="'applyMonth_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].applyMonth'" th:value='${softwarePlan.applyMonth}'/>
                                             </td>
