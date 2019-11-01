@@ -562,6 +562,18 @@
             console.log(software);
         };
 
+        //[저장] 버튼 다중 클릭 방지
+        var doubleSubmitFlag = false;
+        function doubleSubmitCheck(){
+            if(doubleSubmitFlag){
+                return doubleSubmitFlag;
+            }else{
+                doubleSubmitFlag = true;
+                return false;
+            }
+        }
+
+        //[저장]버튼
 		$('#saveBtn').click(function(){
      		if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
     			var historyDescriptionNullCheck = $("#softwareHistoryDescription").val();
@@ -580,6 +592,8 @@
         // 상품 수정(텍스트)
         var modifySoftware = function (argSoftwareId) {
 
+            if(doubleSubmitCheck()) return;
+
            	var softwareHistoryDescription = "";
         	if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
         		softwareHistoryDescription = $("#softwareHistoryDescription").val();
@@ -597,18 +611,6 @@
                 "version" :  $("#softwareVersion").val(),
                 "historyDescription" : softwareHistoryDescription,
                 "softwarePlanList" : []
-                    // [{
-                    //     "id" : $('input:checkbox[name="softwareType"]:checked').val(),
-                    //     "softwareId": $("#id").val(),
-                    //     "name": $("input[type=text][name=planName]").val(),
-                    //     "applyMonth": $("#applyMonth").val(),
-                    //     "description": $("input[type=text][name=description]").val(),
-                    //     "cpuAmt": $("input[type=text][name=cpuAmt]").val(),
-                    //     "memorySize": $("input[type=text][name=memorySize]").val(),
-                    //     "diskSize": $("input[type=text][name=diskSize]").val(),
-                    //     "memoryAmt": $("input[type=text][name=memoryAmt]").val(),
-                    //     "diskAmt": $("input[type=text][name=diskAmt]").val()
-                    // }]
             };
 
         	var softwarePlanList = [];
