@@ -574,8 +574,58 @@
         }
 
         //[저장]버튼
+        function isEmpty(val) {
+            return (val == null || val == "");
+        };
+
 		$('#saveBtn').click(function(){
+
+            // TR Rows
+            var trRows = $("#pricePerMonth-tbody tr");
+            var manCheck = false;
+            var msg = "";
+            trRows.each(function(index, item){
+                var tdRows = $(this).children("td");
+                var softwarePlanInfo = {};
+
+
+                if(!manCheck && isEmpty($("#name_"+index).val())) {
+                    msg = "플랜명을 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#description_"+index).val())) {
+                    msg = "플랜 설명을 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#cpuAmt_"+index).val())) {
+                    msg = "CPU 가격을 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#memorySize_"+index).val())) {
+                    msg = "메모리 크기를 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#memoryAmt_"+index).val())) {
+                    msg = "메모리 가격을 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#diskSize_"+index).val())) {
+                    msg = "디스크 크기를 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#diskAmt_"+index).val())) {
+                    msg = "디스크 가격을 입력하십시오.";
+                    manCheck = true;
+                }
+            })
+
+            if(manCheck) {
+                alert(msg);
+                return;
+            }
+
      		if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
+
     			var historyDescriptionNullCheck = $("#softwareHistoryDescription").val();
 
     			if(historyDescriptionNullCheck === null || historyDescriptionNullCheck === '') {
@@ -648,7 +698,18 @@
                         softwarePlanInfo.inUse = tdChildrenObj.eq(1).val();
                         softwarePlanInfo.applyMonth = tdChildrenObj.eq(2).val();
                     }
+
+                    // if(softwarePlanInfo.diskSize == null){
+                    //     alert("diskSize는 필수입력입니다.");
+                    //     return;
+                    // }
+                    //
+                    // if(softwarePlanInfo.memorySize == null){
+                    //     alert("memorySize는 필수입력입니다.");
+                    //     return;
+                    // }
                 })
+
                 // console.log("");
                 // console.log(">>>>>>> softwarePlanInfo: %o", softwarePlanInfo);
                 softwarePlanList[softwarePlanList.length] = softwarePlanInfo;
@@ -658,6 +719,8 @@
         	// console.log("]]]]]]]]]]]]]]] reqParam: %o", reqParam);
 
         	var softwarePlaneOriginalList = encodeURI($("#softwarePlaneOriginalList").val());
+
+
             var reqUrl = "/softwares/" + argSoftwareId +"?softwarePlaneOriginalList="+ softwarePlaneOriginalList;
             procCallAjax(reqUrl, "PUT", JSON.stringify(reqParam), null, callbackModifySoftware);
         };
