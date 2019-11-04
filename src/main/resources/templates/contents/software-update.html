@@ -285,8 +285,8 @@
                                         </tr>
                                         <tbody id="pricePerMonth-tbody">
                                         <tr th:each="softwarePlan, stat : ${softwarePlanList}">
-                                            <td>
-                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwarePlan.id}" th:id="'planid_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].id'">&nbsp;<input type=text th:value="${softwarePlan.name}" th:id="'name_'+ ${stat.index}" name="planName">
+                                            <td data-th-data-element-index="${stat.index}">
+                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwarePlan.id}" th:id="'planid_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].id'">&nbsp;<input type=text th:value="${softwarePlan.name}" th:id="'name_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].name'">
                                             </td>
                                             <td><input class="form-control" type="text" th:value="${softwarePlan.description}" th:id="'description_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].description'"></td>
 
@@ -579,41 +579,41 @@
         };
 
 		$('#saveBtn').click(function(){
-
             // TR Rows
             var trRows = $("#pricePerMonth-tbody tr");
             var manCheck = false;
             var msg = "";
+
             trRows.each(function(index, item){
                 var tdRows = $(this).children("td");
+                var eleindex = tdRows.eq(0).data("elementIndex");
                 var softwarePlanInfo = {};
 
-
-                if(!manCheck && isEmpty($("#name_"+index).val())) {
+                if(!manCheck && isEmpty($("#name_"+eleindex).val())) {
                     msg = "플랜명을 입력하십시오.";
                     manCheck = true;
                 }
-                if(!manCheck && isEmpty($("#description_"+index).val())) {
+                if(!manCheck && isEmpty($("#description_"+eleindex).val())) {
                     msg = "플랜 설명을 입력하십시오.";
                     manCheck = true;
                 }
-                if(!manCheck && isEmpty($("#cpuAmt_"+index).val())) {
+                if(!manCheck && isEmpty($("#cpuAmt_"+eleindex).val())) {
                     msg = "CPU 가격을 입력하십시오.";
                     manCheck = true;
                 }
-                if(!manCheck && isEmpty($("#memorySize_"+index).val())) {
+                if(!manCheck && isEmpty($("#memorySize_"+eleindex).val())) {
                     msg = "메모리 크기를 입력하십시오.";
                     manCheck = true;
                 }
-                if(!manCheck && isEmpty($("#memoryAmt_"+index).val())) {
+                if(!manCheck && isEmpty($("#memoryAmt_"+eleindex).val())) {
                     msg = "메모리 가격을 입력하십시오.";
                     manCheck = true;
                 }
-                if(!manCheck && isEmpty($("#diskSize_"+index).val())) {
+                if(!manCheck && isEmpty($("#diskSize_"+eleindex).val())) {
                     msg = "디스크 크기를 입력하십시오.";
                     manCheck = true;
                 }
-                if(!manCheck && isEmpty($("#diskAmt_"+index).val())) {
+                if(!manCheck && isEmpty($("#diskAmt_"+eleindex).val())) {
                     msg = "디스크 가격을 입력하십시오.";
                     manCheck = true;
                 }
@@ -698,16 +698,6 @@
                         softwarePlanInfo.inUse = tdChildrenObj.eq(1).val();
                         softwarePlanInfo.applyMonth = tdChildrenObj.eq(2).val();
                     }
-
-                    // if(softwarePlanInfo.diskSize == null){
-                    //     alert("diskSize는 필수입력입니다.");
-                    //     return;
-                    // }
-                    //
-                    // if(softwarePlanInfo.memorySize == null){
-                    //     alert("memorySize는 필수입력입니다.");
-                    //     return;
-                    // }
                 })
 
                 // console.log("");
@@ -778,7 +768,6 @@
 
             alert("반드시 아이콘을 추가해주시기 바랍니다.");
         };
-
 
         function clickModal(target) {
             var index = $(target).attr('id');
@@ -1188,7 +1177,6 @@
             }
         };
 
-
         //[테이블] 행 추가
         var index = 1000;
         var nameIndex = 0;
@@ -1201,10 +1189,10 @@
 
             document.getElementById("pricePerMonth-tbody").insertRow(-1).innerHTML =
                 "<tr>"
-                +"	<td>"
+                +"	<td data-element-index='"+index+"'>"
                 +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"' name='softwarePlanList["+nameIndex+"].id'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name'>"
                 +"	</td>"
-                +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description'></td>"
+                +"	<td><input class='form-control' type='text' id='description_"+index+"' name='softwarePlanList["+nameIndex+"].description'></td>"
                 +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' onkeyup='amt("+index +")'></td>"
                 +"	<td>"
                 +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' onkeyup='chk("+index+")'>"
@@ -1221,8 +1209,6 @@
                 +"	</td>"
                 +"</tr>";
         };
-
-
 
         //[공통] 년,월(select box)
         function selectCal(monthfield, yearfield) {
@@ -1255,7 +1241,6 @@
             monthValue = selectedMonthValue;
             console.log("Month ::: " + selectedMonthValue);
         };
-
 
         //eventBtn
         $("#searchBtn").on("click", function () {
@@ -1298,11 +1283,11 @@
 
                     $('#pricePerMonth-tbody').append(
                         "<tr>"
-                        +"	<td>"
+                        +"	<td data-element-index='"+index+"'>"
                         +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"' name='softwarePlanList["+nameIndex+"].id' value='"+data[i].id+"'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' value='"+data[i].name+"'>"
                         +"	</td>"
-                        +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' value='"+data[i].description+"'></td>"
-                        +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' value='"+data[i].cpuAmt+"' onkeyup='amt("+index +")'></td>"
+                        +"	<td><input class='form-control' type='text' id='description_"+index+"' name='softwarePlanList["+nameIndex+"].description' value='"+data[i].description+"'></td>"
+                        +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"'  name='softwarePlanList["+nameIndex+"].cpuAmt' value='"+data[i].cpuAmt+"' onkeyup='amt("+index +")'></td>"
                         +"	<td>"
                         +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' value='"+data[i].memorySize+"' onkeyup='chk("+index+")'>"
                         +"		<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' value='"+data[i].memoryAmt+"' onkeyup='amt("+index+")'>"
