@@ -562,23 +562,14 @@
             console.log(software);
         };
 
-        //[저장] 버튼 다중 클릭 방지
-        var doubleSubmitFlag = false;
-        function doubleSubmitCheck(){
-            if(doubleSubmitFlag){
-                return doubleSubmitFlag;
-            }else{
-                doubleSubmitFlag = true;
-                return false;
-            }
-        }
 
         //[저장]버튼
         function isEmpty(val) {
             return (val == null || val == "");
         };
 
-		$('#saveBtn').click(function(){
+		$('#saveBtn').click(function() {
+
             // TR Rows
             var trRows = $("#pricePerMonth-tbody tr");
             var manCheck = false;
