@@ -286,16 +286,16 @@
                                         <tbody id="pricePerMonth-tbody">
                                         <tr th:each="softwarePlan, stat : ${softwarePlanList}">
                                             <td>
-                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwarePlan.id}" th:id="'planid_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].id'">&nbsp;<input type=text th:value="${softwarePlan.name}" th:id="'name_'+ ${stat.index}" name="planName" placeholder="Small">
+                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwarePlan.id}" th:id="'planid_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].id'">&nbsp;<input type=text th:value="${softwarePlan.name}" th:id="'name_'+ ${stat.index}" name="planName">
                                             </td>
-                                            <td><input class="form-control" type="text" th:value="${softwarePlan.description}" th:id="'description_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].description'" placeholder="1CPU/256M/1G"></td>
+                                            <td><input class="form-control" type="text" th:value="${softwarePlan.description}" th:id="'description_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].description'"></td>
 
                                             <td><input class="form-control" type="text" th:value="${softwarePlan.cpuAmt}" th:id="'cpuAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].cpu'" th:onkeyup="'amt('+${stat.index}+')'"></td>
                                             <td>
-                                                <input class="form-control" type="text" th:value="${softwarePlan.memorySize}" th:id="'memorySize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].memorySize'" placeholder="256M" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:value="${softwarePlan.memoryAmt}" th:id="'memoryAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].memoryAmt'" th:onkeyup="'amt('+${stat.index}+')'">
+                                                <input class="form-control" type="text" th:value="${softwarePlan.memorySize}" th:id="'memorySize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].memorySize'" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:value="${softwarePlan.memoryAmt}" th:id="'memoryAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].memoryAmt'" th:onkeyup="'amt('+${stat.index}+')'">
                                             </td>
                                             <td>
-                                                <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" th:id="'diskSize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskSize'" placeholder="1G" th:onkeyup="'chk('+${stat.index}+')'">&nbsp;<input class="form-control" type="text" th:value="${softwarePlan.diskAmt}" th:id="'diskAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskAmt'" th:onkeyup="'amt('+${stat.index}+')'">
+                                                <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" th:id="'diskSize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskSize'" th:onkeyup="'chk('+${stat.index}+')'">&nbsp;<input class="form-control" type="text" th:value="${softwarePlan.diskAmt}" th:id="'diskAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskAmt'" th:onkeyup="'amt('+${stat.index}+')'">
                                             </td>
                                             <td><input class="form-control" th:value="${softwarePlan.memoryAmt+ softwarePlan.diskAmt+softwarePlan.memoryAmt}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly>
                                                 <input type="hidden" th:id="'inUse_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].inUse'" th:value='${softwarePlan.inUse}'/>
@@ -1136,16 +1136,16 @@
             document.getElementById("pricePerMonth-tbody").insertRow(-1).innerHTML =
                 "<tr>"
                 +"	<td>"
-                +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"' name='softwarePlanList["+nameIndex+"].id'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' placeholder='Small'>"
+                +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"' name='softwarePlanList["+nameIndex+"].id'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name'>"
                 +"	</td>"
-                +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' placeholder='1CPU/256M/1G'></td>"
+                +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description'></td>"
                 +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' onkeyup='amt("+index +")'></td>"
                 +"	<td>"
-                +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' placeholder='256M' onkeyup='chk("+index+")'>"
+                +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' onkeyup='chk("+index+")'>"
                 +"		<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' onkeyup='amt("+index+")'>"
                 +"	</td>"
                 +"	<td>"
-                +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' placeholder='1G' onkeyup='chk("+index+")'>"
+                +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' onkeyup='chk("+index+")'>"
                 +"		<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' onkeyup='amt("+index+")'>"
                 +"	</td>"
                 +"	<td>"
@@ -1233,16 +1233,16 @@
                     $('#pricePerMonth-tbody').append(
                         "<tr>"
                         +"	<td>"
-                        +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"' name='softwarePlanList["+nameIndex+"].id' value='"+data[i].id+"'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' value='"+data[i].name+"' placeholder='Small'>"
+                        +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"' name='softwarePlanList["+nameIndex+"].id' value='"+data[i].id+"'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' value='"+data[i].name+"'>"
                         +"	</td>"
-                        +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' value='"+data[i].description+"' placeholder='1CPU/256M/1G'></td>"
+                        +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' value='"+data[i].description+"'></td>"
                         +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' value='"+data[i].cpuAmt+"' onkeyup='amt("+index +")'></td>"
                         +"	<td>"
-                        +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' value='"+data[i].memorySize+"' placeholder='256M' onkeyup='chk("+index+")'>"
+                        +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' value='"+data[i].memorySize+"' onkeyup='chk("+index+")'>"
                         +"		<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' value='"+data[i].memoryAmt+"' onkeyup='amt("+index+")'>"
                         +"	</td>"
                         +"	<td>"
-                        +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' value='"+data[i].diskSize+"' placeholder='1G' onkeyup='chk("+index+")'>"
+                        +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' value='"+data[i].diskSize+"' onkeyup='chk("+index+")'>"
                         +"		<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' value='"+data[i].diskAmt+"' onkeyup='amt("+index+")'>"
                         +"	</td>"
                         +"	<td>"
@@ -1279,7 +1279,7 @@
                 ch = str2.charAt(i);
                 if (!(ch >= '0' && ch <= '9') && !(ch == 'G' || ch == 'M')) {
                     alert("입력 형식은 숫자와 M 또는 G 입니다.");
-                    $("#memorySize_"+id).val("");
+                    $("#diskSize_"+id).val("");
                     return false;
                 }
             }
