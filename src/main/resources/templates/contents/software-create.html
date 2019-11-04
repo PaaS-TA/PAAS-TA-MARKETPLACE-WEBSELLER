@@ -204,16 +204,16 @@
                                             <tbody id="pricePerMonth-tbody">
                                             <tr th:each="softwarePlanList, stat : ${T(org.openpaas.paasta.marketplace.api.domain.SoftwarePlan)}">
                                                 <td>
-                                                    <input type="checkbox" th:name="checkRow"/>&nbsp;<input type=text th:field="*{softwarePlanList[__${stat.index}__].name}" th:id="'name_'+ ${stat.index}" name="name" placeholder="Small">
+                                                    <input type="checkbox" th:name="checkRow"/>&nbsp;<input type=text th:field="*{softwarePlanList[__${stat.index}__].name}" th:id="'name_'+ ${stat.index}" name="name">
                                                 </td>
-                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].description}" id="description" name="description" placeholder="1CPU/256M/1G"></td>
+                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].description}" id="description" name="description"></td>
 
                                                 <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].cpuAmt}" th:id="'cpuAmt_' +${stat.index}" name="cpuAmt" th:onkeyup="'amt('+${stat.index}+')'"></td>
                                                 <td>
-                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memorySize}" th:id="'memorySize_' +${stat.index}"  name="memorySize" placeholder="256M" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memoryAmt}" th:id="'memoryAmt_' +${stat.index}" name="memoryAmt" th:onkeyup="'amt('+${stat.index}+')'">
+                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memorySize}" th:id="'memorySize_' +${stat.index}"  name="memorySize" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memoryAmt}" th:id="'memoryAmt_' +${stat.index}" name="memoryAmt" th:onkeyup="'amt('+${stat.index}+')'">
                                                 </td>
                                                 <td>
-                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskSize}" th:id="'diskSize_' +${stat.index}" name="diskSize" placeholder="1G" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'">
+                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskSize}" th:id="'diskSize_' +${stat.index}" name="diskSize" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'">
                                                 </td>
                                                 <td>
                                                 	<input class="form-control" type="text" th:id="'sumAmt_'+${stat.index}" name="sumAmt" readonly />
@@ -388,16 +388,16 @@
             document.getElementById("pricePerMonth-tbody").insertRow(-1).innerHTML =
                 "<tr>"
                 +"	<td>"
-                +"		<input type='checkbox' id='checkRow' name='checkRow'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' placeholder='Small'>"
+                +"		<input type='checkbox' id='checkRow' name='checkRow'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name'>"
                 +"	</td>"
-                +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' placeholder='1CPU/256M/1G'></td>"
+                +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description'></td>"
                 +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' onkeyup='amt("+index +")'></td>"
                 +"	<td>"
-                +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' placeholder='256M' onkeyup='chk("+index+")'>"
+                +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' onkeyup='chk("+index+")'>"
                 +"		<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' onkeyup='amt("+index+")'>"
                 +"	</td>"
                 +"	<td>"
-                +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' placeholder='1G' onkeyup='chk("+index+")'>"
+                +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' onkeyup='chk("+index+")'>"
                 +"		<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' onkeyup='amt("+index+")'>"
                 +"	</td>"
                 +"	<td>"
@@ -445,7 +445,7 @@
                 ch = str2.charAt(i);
                 if (!(ch >= '0' && ch <= '9') && !(ch == 'G' || ch == 'M')) {
                     alert("입력 형식은 숫자와 M 또는 G 입니다.");
-                    $("#memorySize_"+id).val("");
+                    $("#diskSize_"+id).val("");
                     return false;
                 }
             }
