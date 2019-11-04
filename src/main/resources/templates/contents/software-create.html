@@ -258,7 +258,7 @@
             <!-- //cBox1 -->
             <div class="cont_btnBox">
                 <div class="pull-right">
-                    <button name="button" class="btn btn-color1 btn-md" type="button" data-toggle="modal" data-target="#myModal_ok">등록요청</button>
+                    <button name="button" class="btn btn-color1 btn-md" type="button" id="saveBtn">등록요청</button>
                     <!-- Modal -->
                     <div class="modal fade" id="myModal_ok" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -528,11 +528,6 @@
                 }
                 if(!manCheck && isEmpty($("#description_"+eleindex).val())) {
                     msg = "플랜 설명을 입력하십시오.";
-                    manCheck = true;
-                }
-                if(!manCheck && isEmpty($("#cpuAmt_"+eleindex).val()==0)) {
-                    msg = "CPU 가격을 입력하십시오.";
-                    alert(cpuAmt);
                     manCheck = true;
                 }
                 if(!manCheck && isEmpty($("#cpuAmt_"+eleindex).val())) {
