@@ -562,23 +562,14 @@
             console.log(software);
         };
 
-        //[저장] 버튼 다중 클릭 방지
-        var doubleSubmitFlag = false;
-        function doubleSubmitCheck(){
-            if(doubleSubmitFlag){
-                return doubleSubmitFlag;
-            }else{
-                doubleSubmitFlag = true;
-                return false;
-            }
-        }
 
         //[저장]버튼
         function isEmpty(val) {
             return (val == null || val == "");
         };
 
-		$('#saveBtn').click(function(){
+		$('#saveBtn').click(function() {
+
             // TR Rows
             var trRows = $("#pricePerMonth-tbody tr");
             var manCheck = false;
@@ -895,7 +886,8 @@
                 "filePath": FILE_INFO.screenshotsFilePath
             };
 
-            procCallAjax("/softwares/file/"+ id + "/screenShots", "PUT", JSON.stringify(param), null, callbackFileDb);
+            var url = encodeURI("/softwares/file/"+ id + "/screenShots");
+            procCallAjax(url, "PUT", JSON.stringify(param), null, callbackFileDb);
         }
 
 
@@ -963,11 +955,7 @@
         // [스크린 샷] 삭제
         function deleteScreenShot(imgPath) {
             console.log("image Path ::: " + imgPath);
-
             var id = $("#id").val();
-
-            FILE_INFO.screenshotListSRC  = jQuery('#image_form_url').attr("src");
-            console.log("FILE_INFO.screenshotListSRC: " + FILE_INFO.screenshotListSRC);
 
             procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath, "DELETE", null, null, deleteScreenShotDb);
         }

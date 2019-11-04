@@ -29,8 +29,8 @@
     <!-- content -->
     <div class="content">
         <!--  NOTE:  여기에서 th:object를 해주면 @Controller에서 넣어준 @ModelAttribute 객체를 submit할 때 채워준다-->
-        <!--  NOTE:  action은 form을 보낼 위치, action="#"은 이렇게 두는 것 이당.-->
-        <form th:action="@{/softwares}" th:object="${software}" action="#" name="createSoftwareForm" id="createSoftwareForm" method="post" enctype="multipart/form-data">
+        <!--  NOTE:  action은 form을 보낼 위치, action="#"은 이렇게 두는 것 이당-->
+        <form  name="frm" th:action="@{/softwares}" th:object="${software}" action="#" id="createSoftwareForm" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
             <!-- cBox1 -->
             <div class="cBox type1 appCnt-info">
                 <div class="cBox-hd">
@@ -258,7 +258,7 @@
             <!-- //cBox1 -->
             <div class="cont_btnBox">
                 <div class="pull-right">
-                    <button name="button" class="btn btn-color1 btn-md" type="button" id="saveBtn">등록요청</button>
+                    <button name="button" class="btn btn-color1 btn-md" type="button" data-toggle="modal" data-target="#myModal_ok">등록요청</button>
                     <!-- Modal -->
                     <div class="modal fade" id="myModal_ok" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -273,7 +273,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" name="button" class="btn btn-color1">확인</button>
+                                    <button type="button" name="button" class="btn btn-color1" onclick="confirmSoftware()">확인</button>
                                     <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
                                 </div>
                             </div>
@@ -450,6 +450,15 @@
                 }
             }
         };
+
+        function confirmSoftware() {
+            if(doubleSubmitCheck()) return;
+            submitForm();
+        }
+
+        function submitForm() {
+            document.frm.submit();
+        }
 
         function isEmpty(val) {
             return (val == null || val == "");
