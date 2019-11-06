@@ -124,6 +124,9 @@ public class StatsController {
         model.addAttribute("usedSwCountSum", usedSwCount);
         model.addAttribute("instanceUsingUserSum", statsService.getCountOfUsersUsing());
 
+        //총 사용 누적 금액
+        model.addAttribute("softwareUsagePriceTotal", statsService.getSoftwareUsagePriceTotal(id));
+
         return "contents/software-statusdetail";
     }
 

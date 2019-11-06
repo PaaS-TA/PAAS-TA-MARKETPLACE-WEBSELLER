@@ -177,18 +177,26 @@ public class StatsService {
         return paasApiRest.getForObject(url, long.class);
     }
 
-    
-    
+
+
     public Map<Long, Long> getSalesAmount (List<Long> idIn, String queryString) {
     	String ids = "";
         for (Long id : idIn) {
             ids += "&idIn=" + id;
         }
-        
+
         ResponseEntity<Map<Long, Long>> responseEntity = paasApiRest.exchange(
         		"/stats/softwares/sales-amount" + queryString + ids, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, Long>>() {});
         Map<Long, Long> customMap = responseEntity.getBody();
 
     	return customMap;
+    }
+
+    public long getSoftwareUsagePriceTotal(Long softwareId) {
+        String url = UriComponentsBuilder.newInstance().path("/stats//{softwareId}/softwareUsagePriceTotal")
+                .build()
+                .expand(softwareId)
+                .toString();
+        return paasApiRest.getForObject(url, long.class);
     }
 }
