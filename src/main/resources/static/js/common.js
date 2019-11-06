@@ -67,3 +67,15 @@ var getFormatDate = function (date) {
     day = day >= 10 ? day : '0' + day; //day 두자리로 저장
     return year + '-' + month + '-' + day;
 };
+
+
+// 버튼 다중 클릭 방지
+var doubleSubmitFlag = false;
+function doubleSubmitCheck(){
+    if(doubleSubmitFlag){
+        return doubleSubmitFlag;
+    }else{
+        doubleSubmitFlag = true;
+        return false;
+    }
+}

@@ -40,7 +40,7 @@ public class LoginController {
     @Autowired
     private ProfileService profileService;
 
-    @GetMapping(value = "/login")
+    @GetMapping(value = {"/", "/login"})
     public String getLoginPage(Model model) {
         Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
         Iterable<ClientRegistration> clientRegistrations = null;

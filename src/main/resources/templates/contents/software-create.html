@@ -30,7 +30,7 @@
     <div class="content">
         <!--  NOTE:  여기에서 th:object를 해주면 @Controller에서 넣어준 @ModelAttribute 객체를 submit할 때 채워준다-->
         <!--  NOTE:  action은 form을 보낼 위치, action="#"은 이렇게 두는 것 이당-->
-        <form th:action="@{/softwares}" th:object="${software}" action="#" id="createSoftwareForm" method="post" enctype="multipart/form-data">
+        <form  name="frm" th:action="@{/softwares}" th:object="${software}" action="#" id="createSoftwareForm" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
             <!-- cBox1 -->
             <div class="cBox type1 appCnt-info">
                 <div class="cBox-hd">
@@ -58,7 +58,7 @@
                                     <th scope="row">상품명<i class="i_star">필수입력</i></th>
                                     <!--  NOTE:  여기에서 field를 쓰면 th:object의 name (software.name)필드를 채워준다 validation도 해주는 것 같다 -->
                                     <td>
-                                        <input class="form-control" type="text" th:field="*{name}">
+                                        <input class="form-control" type="text" th:field="*{name}" th:id="swname">
                                         <!-- validation 체크는 아래와 같이 하도록 하세용 -->
                                         <p class="i_star" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
                                     </td>
@@ -66,7 +66,7 @@
                                 <tr>
                                     <th scope="row">카테고리<i class="i_star">필수입력</i></th>
                                     <td>
-                                        <select th:field="*{category.id}">
+                                        <select th:field="*{category.id}" th:id="category">
                                             <option value="">선택</option>
                                             <option th:each="category : ${categories}"
                                                     th:value="${category.id}"
@@ -77,7 +77,7 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">개요<i class="i_star">필수입력</i></th>
-                                    <td><textarea name="name" th:field="*{summary}" style="height:150px;"></textarea></td>
+                                    <td><textarea th:field="*{summary}" th:id="summary" style="height:150px;"></textarea></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">아이콘<i class="i_star">필수입력</i></th>
@@ -127,20 +127,20 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">상세설명<i class="i_star">필수입력</i></th>
-                                    <td><textarea name="name" th:field="*{description}" style="height:150px;"></textarea></td>
+                                    <td><textarea th:field="*{description}" th:id="swDescription" style="height:150px;"></textarea></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">파일유형<i class="i_star">필수입력</i></th>
                                     <td>
                                         <!--  NOTE:  th:value값은 꼭 있어야 에러가 나지 않는다 -->
                                         <div class="radio radio-inline" th:each="type : ${types}">
-                                            <input name="radio11" th:id="'radio1-' + ${type}" type="radio" th:field="*{type}" th:value="${type}" >
+                                            <input name="radio11" th:id="'radio1-' + ${type}" type="radio" th:field="*{type}" th:value="${type}">
                                             <label class="label" th:for="'radio1-' + ${type}" th:text="${type}"></label>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">상품파일</th>
+                                    <th scope="row">상품파일<i class="i_star">필수입력</i></th>
                                     <td>
                                         <!-- 첨부파일 -->
                                         <div class="fileUploadWrap" style="width:50%;">
@@ -159,7 +159,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">환경파일</th>
+                                    <th scope="row">환경파일<i class="i_star">필수입력</i></th>
                                     <td>
                                         <!-- 첨부파일 -->
                                         <div class="fileUploadWrap" style="width:50%;">
@@ -203,17 +203,17 @@
                                             </tr>
                                             <tbody id="pricePerMonth-tbody">
                                             <tr th:each="softwarePlanList, stat : ${T(org.openpaas.paasta.marketplace.api.domain.SoftwarePlan)}">
-                                                <td>
+                                                <td data-th-data-element-index="${stat.index}">
                                                     <input type="checkbox" th:name="checkRow"/>&nbsp;<input type=text th:field="*{softwarePlanList[__${stat.index}__].name}" th:id="'name_'+ ${stat.index}" name="name" placeholder="Small">
                                                 </td>
-                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].description}" id="description" name="description" placeholder="1CPU/256M/1G"></td>
+                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].description}" th:id="'description_' +${stat.index}" name="description" placeholder="표준성능"></td>
 
-                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].cpuAmt}" th:id="'cpuAmt_' +${stat.index}" name="cpuAmt" th:onkeyup="'amt('+${stat.index}+')'"></td>
+                                                <td><input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].cpuAmt}" th:id="'cpuAmt_' +${stat.index}" name="cpuAmt" th:onkeyup="'amt('+${stat.index}+')'" placeholder="₩ 1,000"></td>
                                                 <td>
-                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memorySize}" th:id="'memorySize_' +${stat.index}"  name="memorySize" placeholder="256M" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memoryAmt}" th:id="'memoryAmt_' +${stat.index}" name="memoryAmt" th:onkeyup="'amt('+${stat.index}+')'">
+                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memorySize}" th:id="'memorySize_' +${stat.index}"  name="memorySize" th:onkeyup="'chk('+${stat.index}+')'" placeholder="1234M"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].memoryAmt}" th:id="'memoryAmt_' +${stat.index}" name="memoryAmt" th:onkeyup="'amt('+${stat.index}+')'" placeholder="₩ 1,000">
                                                 </td>
                                                 <td>
-                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskSize}" th:id="'diskSize_' +${stat.index}" name="diskSize" placeholder="1G" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'">
+                                                    <input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskSize}" th:id="'diskSize_' +${stat.index}" name="diskSize" th:onkeyup="'chk('+${stat.index}+')'" placeholder="1G"> &nbsp;<input class="form-control" type="text" th:field="*{softwarePlanList[__${stat.index}__].diskAmt}" th:id="'diskAmt_' +${stat.index}" name="diskAmt" th:onkeyup="'amt('+${stat.index}+')'" placeholder="₩ 1,000">
                                                 </td>
                                                 <td>
                                                 	<input class="form-control" type="text" th:id="'sumAmt_'+${stat.index}" name="sumAmt" readonly />
@@ -233,16 +233,16 @@
                                     <th scope="row">전시여부<i class="i_star">필수입력</i></th>
                                     <td>
                                         <div class="radio radio-inline" th:each="yn : ${yns}">
-                                            <input name="radio19" th:id="'radio1-' + ${yn}" type="radio" th:field="*{inUse}" th:value="${yn}" >
+                                            <input name="radio19" th:id="'radio1-' + ${yn}" type="radio" th:field="*{inUse}" th:value="${yn}" th:name="inUse">
                                             <label class="label" th:for="'radio1-' + ${yn}" th:text="${yn}"></label>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">등록버전</th>
+                                    <th scope="row">등록버전<i class="i_star">필수입력</i></th>
                                     <td>
                                         <div class="form-group">
-                                            <input style="width:100px;" type="text" placeholder="1.0" th:field="*{version}">
+                                            <input style="width:100px;" type="text" placeholder="1.0" th:field="*{version}" th:id="version">
                                         </div>
                                     </td>
                                 </tr>
@@ -258,7 +258,7 @@
             <!-- //cBox1 -->
             <div class="cont_btnBox">
                 <div class="pull-right">
-                    <button name="button" class="btn btn-color1 btn-md" type="button" data-toggle="modal" data-target="#myModal_ok">등록요청</button>
+                    <button name="button" class="btn btn-color1 btn-md" type="button" id="saveBtn">등록요청</button>
                     <!-- Modal -->
                     <div class="modal fade" id="myModal_ok" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -273,7 +273,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" name="button" class="btn btn-color1">확인</button>
+                                    <button type="button" name="button" class="btn btn-color1" onclick="confirmSoftware()">확인</button>
                                     <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
                                 </div>
                             </div>
@@ -387,18 +387,16 @@
 
             document.getElementById("pricePerMonth-tbody").insertRow(-1).innerHTML =
                 "<tr>"
-                +"	<td>"
+                +"	<td data-element-index='"+index+"'>"
                 +"		<input type='checkbox' id='checkRow' name='checkRow'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' placeholder='Small'>"
                 +"	</td>"
-                +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' placeholder='1CPU/256M/1G'></td>"
-                +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' onkeyup='amt("+index +")'></td>"
+                +"	<td><input class='form-control' type='text' id='description_"+index+"' name='softwarePlanList["+nameIndex+"].description' placeholder='표준성능'></td>"
+                +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' onkeyup='amt("+index +")' placeholder='₩ 1,000'></td>"
                 +"	<td>"
-                +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' placeholder='256M' onkeyup='chk("+index+")'>"
-                +"		<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' onkeyup='amt("+index+")'>"
+                +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' onkeyup='chk("+index+")' placeholder='1234M'> &nbsp;<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' onkeyup='amt("+index+")' placeholder='₩ 1,000'>"
                 +"	</td>"
                 +"	<td>"
-                +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' placeholder='1G' onkeyup='chk("+index+")'>"
-                +"		<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' onkeyup='amt("+index+")'>"
+                +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' onkeyup='chk("+index+")' placeholder='1G'> &nbsp;<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' onkeyup='amt("+index+")' placeholder='₩ 1,000'>"
                 +"	</td>"
                 +"	<td>"
                 +"		<input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' readonly>"
@@ -445,11 +443,131 @@
                 ch = str2.charAt(i);
                 if (!(ch >= '0' && ch <= '9') && !(ch == 'G' || ch == 'M')) {
                     alert("입력 형식은 숫자와 M 또는 G 입니다.");
-                    $("#memorySize_"+id).val("");
+                    $("#diskSize_"+id).val("");
                     return false;
                 }
             }
         };
+
+        function confirmSoftware() {
+            if(doubleSubmitCheck()) return;
+            submitForm();
+        }
+
+        function submitForm() {
+            document.frm.submit();
+        }
+
+        function isEmpty(val) {
+            return (val == null || val == "");
+        };
+
+        $('#saveBtn').click(function(){
+            // TR Rows
+            var trRows = $("#pricePerMonth-tbody tr");
+            var manCheck = false;
+            var msg = "";
+
+            if(!manCheck && isEmpty($("#swname").val())) {
+                msg = "상품명을 입력하십시오.";
+                manCheck = true;
+            }
+
+            if(!manCheck && isEmpty($("#category option:selected").val())) {
+                msg = "상품 카테고리를 선택하십시오.";
+                manCheck = true;
+            }
+
+            if(!manCheck && isEmpty($("#summary").val())) {
+                msg = "상품 개요를 입력하십시오.";
+                manCheck = true;
+            }
+
+            var fileCheck = document.getElementById("iconFileInput").value;
+            if(!manCheck && isEmpty(fileCheck) &&!fileCheck){
+                msg = "상품 아이콘을 등록하십시오.";
+                manCheck = true;
+            }
+
+            var screenshotCheck = document.getElementById("screenshotFileInput0").value;
+            if(!manCheck && isEmpty(screenshotCheck) &&!screenshotCheck){
+                msg = "싱픔 스크린샷을 등록하십시오.";
+                manCheck = true;
+            }
+
+            if(!manCheck && isEmpty($("#swDescription").val())) {
+                msg = "상품 상세설명을 입력하십시오.";
+                manCheck = true;
+            }
+
+            var radio11 = $("input[name=type]:checked").val();
+            if(!manCheck && isEmpty(radio11) && typeof radio11 == "undefined") {
+                msg = "상품 파일유형을 선택하십시오.";
+                manCheck = true;
+            }
+
+            if(!manCheck && isEmpty($("#productFile").val())) {
+                msg = "상품 파일을 등록하십시오.";
+                manCheck = true;
+            }
+
+            if(!manCheck && isEmpty($("#environmentFile").val())) {
+                msg = "상품 환경파일을 등록하십시오.";
+                manCheck = true;
+            }
+
+            trRows.each(function(index, item){
+                var tdRows = $(this).children("td");
+                var eleindex = tdRows.eq(0).data("elementIndex");
+
+                if(!manCheck && isEmpty($("#name_"+eleindex).val())) {
+                    msg = "플랜명을 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#description_"+eleindex).val())) {
+                    msg = "플랜 설명을 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#cpuAmt_"+eleindex).val())) {
+                    msg = "CPU 가격을 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#memorySize_"+eleindex).val())) {
+                    msg = "메모리 크기를 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#memoryAmt_"+eleindex).val())) {
+                    msg = "메모리 가격을 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#diskSize_"+eleindex).val())) {
+                    msg = "디스크 크기를 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#diskAmt_"+eleindex).val())) {
+                    msg = "디스크 가격을 입력하십시오.";
+                    manCheck = true;
+                }
+            })
+
+            var inUse = $("input[name=inUse]:checked").val();
+            if(!manCheck && isEmpty(inUse) && typeof inUse == "undefined") {
+                msg = "상품 전시여부를 선택하십시오.";
+                manCheck = true;
+            }
+
+            if(!manCheck && isEmpty($("#version").val())) {
+                msg = "상품 버전을 입력하십시오.";
+                manCheck = true;
+            }
+
+            if(manCheck) {
+                alert(msg);
+                return;
+            }
+
+            $('#myModal_ok').modal("show");
+        });
 
         // ON LOAD
         $(document).ready(function() {

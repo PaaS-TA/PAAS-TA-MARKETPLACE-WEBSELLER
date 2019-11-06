@@ -285,17 +285,17 @@
                                         </tr>
                                         <tbody id="pricePerMonth-tbody">
                                         <tr th:each="softwarePlan, stat : ${softwarePlanList}">
-                                            <td>
-                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwarePlan.id}" th:id="'planid_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].id'">&nbsp;<input type=text th:value="${softwarePlan.name}" th:id="'name_'+ ${stat.index}" name="planName" placeholder="Small">
+                                            <td data-th-data-element-index="${stat.index}">
+                                                <input type="checkbox" th:name="checkRow"/><input type=hidden th:value="${softwarePlan.id}" th:id="'planid_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].id'">&nbsp;<input type=text th:value="${softwarePlan.name}" th:id="'name_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].name'">
                                             </td>
-                                            <td><input class="form-control" type="text" th:value="${softwarePlan.description}" th:id="'description_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].description'" placeholder="1CPU/256M/1G"></td>
+                                            <td><input class="form-control" type="text" th:value="${softwarePlan.description}" th:id="'description_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].description'"></td>
 
-                                            <td><input class="form-control" type="text" th:value="${softwarePlan.cpuAmt}" th:id="'cpuAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].cpu'" th:onkeyup="'amt('+${stat.index}+')'"></td>
+                                            <td><input class="form-control" type="text" th:value="${softwarePlan.cpuAmt}" th:id="'cpuAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].cpu'" th:onkeyup="'amt('+${stat.index}+')'" placeholder="₩ 1,000"></td>
                                             <td>
-                                                <input class="form-control" type="text" th:value="${softwarePlan.memorySize}" th:id="'memorySize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].memorySize'" placeholder="256M" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:value="${softwarePlan.memoryAmt}" th:id="'memoryAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].memoryAmt'" th:onkeyup="'amt('+${stat.index}+')'">
+                                                <input class="form-control" type="text" th:value="${softwarePlan.memorySize}" th:id="'memorySize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].memorySize'" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:value="${softwarePlan.memoryAmt}" th:id="'memoryAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].memoryAmt'" th:onkeyup="'amt('+${stat.index}+')'" placeholder="₩ 1,000">
                                             </td>
                                             <td>
-                                                <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" th:id="'diskSize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskSize'" placeholder="1G" th:onkeyup="'chk('+${stat.index}+')'">&nbsp;<input class="form-control" type="text" th:value="${softwarePlan.diskAmt}" th:id="'diskAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskAmt'" th:onkeyup="'amt('+${stat.index}+')'">
+                                                <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" th:id="'diskSize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskSize'" th:onkeyup="'chk('+${stat.index}+')'">&nbsp;<input class="form-control" type="text" th:value="${softwarePlan.diskAmt}" th:id="'diskAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskAmt'" th:onkeyup="'amt('+${stat.index}+')'" placeholder="₩ 1,000">
                                             </td>
                                             <td><input class="form-control" th:value="${softwarePlan.memoryAmt+ softwarePlan.diskAmt+softwarePlan.memoryAmt}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly>
                                                 <input type="hidden" th:id="'inUse_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].inUse'" th:value='${softwarePlan.inUse}'/>
@@ -562,20 +562,61 @@
             console.log(software);
         };
 
-        //[저장] 버튼 다중 클릭 방지
-        var doubleSubmitFlag = false;
-        function doubleSubmitCheck(){
-            if(doubleSubmitFlag){
-                return doubleSubmitFlag;
-            }else{
-                doubleSubmitFlag = true;
-                return false;
-            }
-        }
 
         //[저장]버튼
-		$('#saveBtn').click(function(){
+        function isEmpty(val) {
+            return (val == null || val == "");
+        };
+
+		$('#saveBtn').click(function() {
+
+            // TR Rows
+            var trRows = $("#pricePerMonth-tbody tr");
+            var manCheck = false;
+            var msg = "";
+
+            trRows.each(function(index, item){
+                var tdRows = $(this).children("td");
+                var eleindex = tdRows.eq(0).data("elementIndex");
+                var softwarePlanInfo = {};
+
+                if(!manCheck && isEmpty($("#name_"+eleindex).val())) {
+                    msg = "플랜명을 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#description_"+eleindex).val())) {
+                    msg = "플랜 설명을 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#cpuAmt_"+eleindex).val())) {
+                    msg = "CPU 가격을 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#memorySize_"+eleindex).val())) {
+                    msg = "메모리 크기를 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#memoryAmt_"+eleindex).val())) {
+                    msg = "메모리 가격을 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#diskSize_"+eleindex).val())) {
+                    msg = "디스크 크기를 입력하십시오.";
+                    manCheck = true;
+                }
+                if(!manCheck && isEmpty($("#diskAmt_"+eleindex).val())) {
+                    msg = "디스크 가격을 입력하십시오.";
+                    manCheck = true;
+                }
+            })
+
+            if(manCheck) {
+                alert(msg);
+                return;
+            }
+
      		if($('input:checkbox[name="historyDescriptionCheck"]').is(":checked")) {
+
     			var historyDescriptionNullCheck = $("#softwareHistoryDescription").val();
 
     			if(historyDescriptionNullCheck === null || historyDescriptionNullCheck === '') {
@@ -649,6 +690,7 @@
                         softwarePlanInfo.applyMonth = tdChildrenObj.eq(2).val();
                     }
                 })
+
                 // console.log("");
                 // console.log(">>>>>>> softwarePlanInfo: %o", softwarePlanInfo);
                 softwarePlanList[softwarePlanList.length] = softwarePlanInfo;
@@ -658,6 +700,8 @@
         	// console.log("]]]]]]]]]]]]]]] reqParam: %o", reqParam);
 
         	var softwarePlaneOriginalList = encodeURI($("#softwarePlaneOriginalList").val());
+
+
             var reqUrl = "/softwares/" + argSoftwareId +"?softwarePlaneOriginalList="+ softwarePlaneOriginalList;
             procCallAjax(reqUrl, "PUT", JSON.stringify(reqParam), null, callbackModifySoftware);
         };
@@ -715,7 +759,6 @@
 
             alert("반드시 아이콘을 추가해주시기 바랍니다.");
         };
-
 
         function clickModal(target) {
             var index = $(target).attr('id');
@@ -843,7 +886,8 @@
                 "filePath": FILE_INFO.screenshotsFilePath
             };
 
-            procCallAjax("/softwares/file/"+ id + "/screenShots", "PUT", JSON.stringify(param), null, callbackFileDb);
+            var url = encodeURI("/softwares/file/"+ id + "/screenShots");
+            procCallAjax(url, "PUT", JSON.stringify(param), null, callbackFileDb);
         }
 
 
@@ -911,11 +955,7 @@
         // [스크린 샷] 삭제
         function deleteScreenShot(imgPath) {
             console.log("image Path ::: " + imgPath);
-
             var id = $("#id").val();
-
-            FILE_INFO.screenshotListSRC  = jQuery('#image_form_url').attr("src");
-            console.log("FILE_INFO.screenshotListSRC: " + FILE_INFO.screenshotListSRC);
 
             procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath, "DELETE", null, null, deleteScreenShotDb);
         }
@@ -1125,7 +1165,6 @@
             }
         };
 
-
         //[테이블] 행 추가
         var index = 1000;
         var nameIndex = 0;
@@ -1138,18 +1177,16 @@
 
             document.getElementById("pricePerMonth-tbody").insertRow(-1).innerHTML =
                 "<tr>"
-                +"	<td>"
+                +"	<td data-element-index='"+index+"'>"
                 +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"' name='softwarePlanList["+nameIndex+"].id'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' placeholder='Small'>"
                 +"	</td>"
-                +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' placeholder='1CPU/256M/1G'></td>"
-                +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' onkeyup='amt("+index +")'></td>"
+                +"	<td><input class='form-control' type='text' id='description_"+index+"' name='softwarePlanList["+nameIndex+"].description' placeholder='표준성능'></td>"
+                +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' onkeyup='amt("+index +")' placeholder='₩ 1,000'></td>"
                 +"	<td>"
-                +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' placeholder='256M' onkeyup='chk("+index+")'>"
-                +"		<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' onkeyup='amt("+index+")'>"
+                +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' onkeyup='chk("+index+")' placeholder='1234M'>  &nbsp;<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' onkeyup='amt("+index+")' placeholder='₩ 1,000'>"
                 +"	</td>"
                 +"	<td>"
-                +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' placeholder='1G' onkeyup='chk("+index+")'>"
-                +"		<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' onkeyup='amt("+index+")'>"
+                +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' onkeyup='chk("+index+")' placeholder='1G'>  &nbsp;<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' onkeyup='amt("+index+")' placeholder='₩ 1,000'>"
                 +"	</td>"
                 +"	<td>"
                 +"		<input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' readonly>"
@@ -1158,8 +1195,6 @@
                 +"	</td>"
                 +"</tr>";
         };
-
-
 
         //[공통] 년,월(select box)
         function selectCal(monthfield, yearfield) {
@@ -1192,7 +1227,6 @@
             monthValue = selectedMonthValue;
             console.log("Month ::: " + selectedMonthValue);
         };
-
 
         //eventBtn
         $("#searchBtn").on("click", function () {
@@ -1235,18 +1269,16 @@
 
                     $('#pricePerMonth-tbody').append(
                         "<tr>"
-                        +"	<td>"
+                        +"	<td data-element-index='"+index+"'>"
                         +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"' name='softwarePlanList["+nameIndex+"].id' value='"+data[i].id+"'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' value='"+data[i].name+"' placeholder='Small'>"
                         +"	</td>"
-                        +"	<td><input class='form-control' type='text' name='softwarePlanList["+nameIndex+"].description' value='"+data[i].description+"' placeholder='1CPU/256M/1G'></td>"
-                        +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"' name='softwarePlanList["+nameIndex+"].cpuAmt' value='"+data[i].cpuAmt+"' onkeyup='amt("+index +")'></td>"
+                        +"	<td><input class='form-control' type='text' id='description_"+index+"' name='softwarePlanList["+nameIndex+"].description' value='"+data[i].description+"' placeholder='표준성능'></td>"
+                        +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"'  name='softwarePlanList["+nameIndex+"].cpuAmt' value='"+data[i].cpuAmt+"' onkeyup='amt("+index +")' placeholder='₩ 1,000'></td>"
                         +"	<td>"
-                        +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' value='"+data[i].memorySize+"' placeholder='256M' onkeyup='chk("+index+")'>"
-                        +"		<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' value='"+data[i].memoryAmt+"' onkeyup='amt("+index+")'>"
+                        +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' value='"+data[i].memorySize+"' onkeyup='chk("+index+")' placeholder='1234M'>  &nbsp;<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' value='"+data[i].memoryAmt+"' onkeyup='amt("+index+")' placeholder='₩ 1,000'>"
                         +"	</td>"
                         +"	<td>"
-                        +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' value='"+data[i].diskSize+"' placeholder='1G' onkeyup='chk("+index+")'>"
-                        +"		<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' value='"+data[i].diskAmt+"' onkeyup='amt("+index+")'>"
+                        +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' value='"+data[i].diskSize+"' onkeyup='chk("+index+")' placeholder='1G'>  &nbsp;<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' value='"+data[i].diskAmt+"' onkeyup='amt("+index+")' placeholder='₩ 1,000'>"
                         +"	</td>"
                         +"	<td>"
                         +"		<input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' value='"+totalAmt+"' readonly>"
@@ -1282,7 +1314,7 @@
                 ch = str2.charAt(i);
                 if (!(ch >= '0' && ch <= '9') && !(ch == 'G' || ch == 'M')) {
                     alert("입력 형식은 숫자와 M 또는 G 입니다.");
-                    $("#memorySize_"+id).val("");
+                    $("#diskSize_"+id).val("");
                     return false;
                 }
             }

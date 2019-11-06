@@ -208,10 +208,15 @@ public class SoftwareController {
      */
     @PutMapping(value = "/file/{id}/{fileType}")
     @ResponseBody
-    public Software updateFile(@PathVariable Long id, @PathVariable String  fileType, @RequestBody Map<String, String> params) {
+    public Software updateFile(@PathVariable Long id, @PathVariable String  fileType, @RequestBody Map<String, String> params) throws IOException {
         Software software = softwareService.getSoftware(id);
-        String finalUrl = params.get("filePath");
-        String fileName = params.get("fileName");
+        String finalUrl = URLDecoder.decode(params.get("filePath"), "UTF-8");
+        String fileName = null;
+        
+        if(params.get("fileName") != null) {
+            fileName = params.get("fileName");
+        }
+                
 
         // 스크린샷 DB 업데이트
         if(fileType.equals("screenShots")) {
