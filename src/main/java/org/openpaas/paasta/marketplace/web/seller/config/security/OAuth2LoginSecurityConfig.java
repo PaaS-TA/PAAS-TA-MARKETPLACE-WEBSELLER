@@ -7,6 +7,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
@@ -45,8 +47,11 @@ public class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/login/**", "/error/**", "/static/**")
                 .permitAll()
                 .anyRequest().authenticated().and()
-                .oauth2Login().loginPage("/login").defaultSuccessUrl("/index", true).permitAll()
-                .and().logout().logoutSuccessUrl("/login");
+                //.oauth2Login().loginPage("/login").defaultSuccessUrl("/index", true).permitAll()
+                .oauth2Login().clientRegistrationRepository(clientRegistrationRepository())
+                .authorizedClientService(authorizedClientService())
+                .defaultSuccessUrl("/index", true).permitAll()
+                .and().logout().logoutSuccessUrl(env.getProperty("marketplace.logout-uri"));
     }
 
 
@@ -84,6 +89,12 @@ public class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
                 .jwkSetUri(env.getProperty("marketplace.jwk-set-uri"))
                 .clientName(env.getProperty("marketplace.registration"))
                 .build();
+    }
+
+    @Bean
+    public OAuth2AuthorizedClientService authorizedClientService() {
+        return new InMemoryOAuth2AuthorizedClientService(
+                clientRegistrationRepository());
     }
 
     // SSL Skip을 위한 함수 configure() 의 34번째 라인에서 호출한다.
