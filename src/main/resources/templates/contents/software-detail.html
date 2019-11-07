@@ -324,13 +324,13 @@
 
             var reqUrl = "/softwares/plan/" + softwareId + "/histories" + "?sort=applyMonth,asc";
             procCallAjax(reqUrl, "GET", null, null, callbackGetSoftwarePlanHistoryList);
+
+            alert()
         });
 
         var callbackGetSoftwarePlanHistoryList = function (data) {
             var amtArea = $("#amtArea");
             var htmlString = [];
-
-            console.log(data);
 
             if(data.length > 0){
                 for(var i = 0; i < data.length; i++){
