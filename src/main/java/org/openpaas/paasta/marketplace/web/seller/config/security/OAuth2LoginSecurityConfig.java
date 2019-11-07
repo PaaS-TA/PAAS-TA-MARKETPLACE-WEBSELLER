@@ -40,18 +40,31 @@ public class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+    	String logoutSuccessUrl = String.format("%s?redirect=%s&client_id=%s"
+												, env.getProperty("marketplace.uaa-logout-url")
+												, env.getProperty("marketplace.uaa-logout-rediredct-url")
+												, env.getProperty("marketplace.client-id"));
         turnOffSslChecking();
-        http.antMatcher("/**")
-                .cors().and().csrf().disable()
+        http.antMatcher("/**").cors()
+                .and()
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login/**", "/error/**", "/static/**")
-                .permitAll()
-                .anyRequest().authenticated().and()
+                	.antMatchers("/", "/login/**", "/error/**", "/static/**").permitAll()
+                	.anyRequest()
+                	.authenticated()
+                .and()
                 //.oauth2Login().loginPage("/login").defaultSuccessUrl("/index", true).permitAll()
-                .oauth2Login().clientRegistrationRepository(clientRegistrationRepository())
-                .authorizedClientService(authorizedClientService())
-                .defaultSuccessUrl("/index", true).permitAll()
-                .and().logout().logoutSuccessUrl(env.getProperty("marketplace.logout-uri"));
+                .oauth2Login()
+                	.clientRegistrationRepository(clientRegistrationRepository())
+                	.authorizedClientService(authorizedClientService())
+                	.defaultSuccessUrl("/index", true).permitAll()
+                .and()
+                .logout()
+	                .logoutUrl("/logout")
+	            	.logoutSuccessUrl(logoutSuccessUrl)
+	            	.invalidateHttpSession(true)
+	    			.deleteCookies("SESSION")
+	    			.permitAll();
     }
 
 
