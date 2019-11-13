@@ -149,7 +149,7 @@ public class ProfileServiceTest extends AbstractMockTest {
     public void updateProfile() {
         Profile profile1 = profile("user-01");
 
-        doNothing().when(paasApiRest).put(eq("/profiles/" + userId), eq(Profile.class));
+        doNothing().when(paasApiRest).put(eq("/profiles/" + userId), any(Profile.class));
         when(paasApiRest.getForObject(eq("/profiles/" + userId), eq(Profile.class))).thenReturn(profile1);
 
         Profile result = profileService.updateProfiles(userId, profile1);
