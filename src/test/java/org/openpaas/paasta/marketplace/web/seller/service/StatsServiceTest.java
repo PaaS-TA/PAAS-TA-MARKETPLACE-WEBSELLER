@@ -31,10 +31,13 @@ public class StatsServiceTest extends AbstractMockTest {
     SoftwareService softwareService;
 
     @Mock
-    ResponseEntity<CustomPage<Software>> softwearPageResponse;
+    ResponseEntity<CustomPage<Software>> softwarePageResponse;
 
     @Mock
     ResponseEntity<CustomPage<Instance>> instancePageResponse;
+
+    @Mock
+    ResponseEntity<Map<Long, Long>> longLongMapResponse;
 
     @Mock
     CustomPage<Software> softwareCustomPage;
@@ -151,8 +154,8 @@ public class StatsServiceTest extends AbstractMockTest {
 
         // FIXME: url
         when(paasApiRest.exchange(startsWith(" /stats/softwares/my"), eq(HttpMethod.GET), eq(null),
-                any(ParameterizedTypeReference.class))).thenReturn(softwearPageResponse);
-        when(softwearPageResponse.getBody()).thenReturn(softwareCustomPage);
+                any(ParameterizedTypeReference.class))).thenReturn(softwarePageResponse);
+        when(softwarePageResponse.getBody()).thenReturn(softwareCustomPage);
         when(softwareCustomPage.getContent()).thenReturn(softwareList);
 
         CustomPage<Software> result = statsService.getSoftwareList("?nameLike=software");
@@ -224,6 +227,40 @@ public class StatsServiceTest extends AbstractMockTest {
         instanceListEmpty = true;
 
         countOfSoldSw();
+    }
+
+    @Test
+    public void soldInstanceCountOfSw() {
+        when(paasApiRest.getForObject(eq("/stats/software/1/sold/counts/sum"), eq(long.class))).thenReturn(7L);
+
+        long result = statsService.soldInstanceCountOfSw(1L);
+        assertEquals(7L, result);
+    }
+
+    @Test
+    public void getSalesAmount() {
+        Map<Long, Long> map = new TreeMap<>();
+        map.put(1L, 7L);
+        map.put(2L, 13L);
+        List<Long> ids = new ArrayList<>();
+        ids.add(1L);
+        ids.add(2L);
+
+        when(paasApiRest.exchange(startsWith("/stats/softwares/sales-amount"), eq(HttpMethod.GET), eq(null),
+                any(ParameterizedTypeReference.class))).thenReturn(longLongMapResponse);
+        when(longLongMapResponse.getBody()).thenReturn(map);
+
+        Map<Long, Long> result = statsService.getSalesAmount(ids, "?sort=id,asc");
+        assertEquals(map, result);
+    }
+
+    @Test
+    public void getSoftwareUsagePriceTotal() {
+        // FIXME: url
+        when(paasApiRest.getForObject(eq("/stats/1/softwareUsagePriceTotal"), eq(long.class))).thenReturn(7L);
+
+        long result = statsService.getSoftwareUsagePriceTotal(1L);
+        assertEquals(7L, result);
     }
 
 }
