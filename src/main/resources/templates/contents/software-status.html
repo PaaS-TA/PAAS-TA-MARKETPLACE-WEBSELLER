@@ -369,10 +369,16 @@
                 getSoftwareStatsChart(data);
                 for (var i = 0; i < listLength; i++) {
                 	var index = i + pageNumSave * data.size;
-                    var soldInstanceMap= soldInstanceCount[index].replace(/(\s*)/g, "");
-                    var value = soldInstanceMap.split("=");
-                    soldCount = value[1];
 
+                	soldCount = 0;
+					for (var idx=0; idx<soldInstanceCount.length ;idx++) {
+						var value = soldInstanceCount[idx].split("=");
+						if (content[i].id == value[0]) {
+	                    	soldCount = value[1];
+	                    	break;
+	                    }
+					}
+                    
                     var statusModifiedDate = '';
                     if(content[i].statusModifiedDate == null){
                         statusModifiedDate = '';

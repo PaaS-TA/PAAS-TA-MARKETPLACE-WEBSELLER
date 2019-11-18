@@ -144,23 +144,7 @@ public class StatsService {
      * @return
      */
     public int countOfSoldSw(String id) {
-        // 본인이 등록한 승인된 상품 목록
-        CustomPage<Software> softwares = softwareService.getSoftwareList("?createdBy=" + id + "&status=" + Software.Status.Approval);
-
-        // 구매된 상품 전체 목록
-        CustomPage<Instance> instances = getInstanceListBySwId("");
-
-        int count = 0;
-
-        for(int i = 0; i < softwares.getContent().size(); i++) {
-            for(int j = 0; j < instances.getContent().size(); j++) {
-                if(softwares.getContent().get(i).getId().equals(instances.getContent().get(j).getSoftware().getId())) {
-                    count++;
-                    break;
-                }
-            }
-        }
-        return count;
+    	return softwareService.getSoldSoftwareCount("?userId=" + id + "&status=" + Software.Status.Approval);
     }
 
 

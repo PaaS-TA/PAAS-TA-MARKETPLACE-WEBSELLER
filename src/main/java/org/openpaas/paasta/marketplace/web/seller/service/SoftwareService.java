@@ -107,4 +107,9 @@ public class SoftwareService {
         paasApiRest.delete("/softwares/plan/" + id);
     }
 
+    public Integer getSoldSoftwareCount(String queryParamString) {
+    	ResponseEntity<Integer> result = paasApiRest.exchange("/softwares/soldSoftwareCount" + queryParamString, HttpMethod.GET, null, Integer.class);
+        return (result.getBody() == null ? 0 : result.getBody());
+    }
+
 }
