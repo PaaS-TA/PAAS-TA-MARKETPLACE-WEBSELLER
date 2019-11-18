@@ -1,8 +1,19 @@
 package org.openpaas.paasta.marketplace.web.seller.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.openpaas.paasta.marketplace.api.domain.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.openpaas.paasta.marketplace.api.domain.CustomPage;
+import org.openpaas.paasta.marketplace.api.domain.Instance;
+import org.openpaas.paasta.marketplace.api.domain.Software;
+import org.openpaas.paasta.marketplace.api.domain.SoftwareSpecification;
+import org.openpaas.paasta.marketplace.api.domain.Yn;
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.service.SoftwareService;
 import org.openpaas.paasta.marketplace.web.seller.service.StatsService;
@@ -15,11 +26,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
@@ -168,19 +179,17 @@ public class StatsController {
      */
     @GetMapping(value = "/softwares/my")
     public String getStatsSoftwaresMy(Model model, @AuthenticationPrincipal OAuth2User oauth2User, HttpSession httpSession, SoftwareSpecification spec, Authentication authentication) {
-        CustomPage<Software> software = softwareService.getSoftwareList("");
-
-        if(software.getTotalElements() > 0) {
-            List<Long> idIn = new ArrayList<>();
-            for (Software s:software.getContent()) {
-                idIn.add(s.getId());
-            }
-
-            model.addAttribute("soldInstanceCount", statsService.soldInstanceByProvider(idIn));
-        } else {
-            model.addAttribute("soldInstanceCount", null);
-        }
-
+//        CustomPage<Software> software = softwareService.getSoftwareList("");
+//        if(software.getTotalElements() > 0) {
+//            List<Long> idIn = new ArrayList<>();
+//            for (Software s:software.getContent()) {
+//                idIn.add(s.getId());
+//            }
+//
+//            model.addAttribute("soldInstanceCount", statsService.soldInstanceByProvider(idIn));
+//        } else {
+//            model.addAttribute("soldInstanceCount", null);
+//        }
 
         model.addAttribute("categories", statsService.getCategories());
         model.addAttribute("status", Software.Status.values());
@@ -189,6 +198,26 @@ public class StatsController {
         model.addAttribute("yns", Yn.values());
 
         return "contents/software-charge";
+    }
+    
+    /**
+     * Seller 요금통계 정보조회
+     * @param httpServletRequest
+     * @return
+     */
+    @GetMapping(value = "/statsSoftwareSellPrice")
+    @ResponseBody
+    public Map<String,Object> getStatsSoftwareSellPriceList(HttpServletRequest httpServletRequest, @RequestParam(name="size") Integer size) {
+    	Map<String,Object> resultMap = new HashMap<String,Object>();
+    	
+    	// 요금통계 리스트 조회
+    	resultMap.put("statsSoftwareSellPriceList", statsService.getStatsSoftwareSellPricList(commonService.setParameters(httpServletRequest)));
+    	
+    	// 요금통계 TotalCount 조회
+    	resultMap.put("totalElements", statsService.getStatsSoftwareSellPriceTotalCount(commonService.setParameters(httpServletRequest)));
+    	resultMap.put("size", size);
+    	
+    	return resultMap;
     }
 
 }

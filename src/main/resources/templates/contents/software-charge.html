@@ -82,7 +82,7 @@
 
         <div class="cont-titWrap mt30">
 <!--            <h3 class="h-tit3">총 건수 <span class="point4">(10)</span><span class="point_txt"> / 총 금액(501,000원)</span></h3>-->
-            <h3 class="h-tit3">총 건수 <span class="point4" id="totalElements"></span><span class="point_txt" id="totalPriceElements'"></span></h3>
+            <h3 class="h-tit3">총 건수 <span class="point4" id="totalElements"></span><span class="point_txt" id="totalPriceElements"></span></h3>
         </div>
 
 
@@ -123,122 +123,73 @@
         <!-- //page -->
     </div>
     <!-- //content -->
+    
+    <!-- InstanceCartList Template -->
+    <SCRIPT id="statsSoftwareSellPriceTemplate" type="text/html">
+		<tr>
+    		<td>${rowNum}</td>
+    		<td><span class="pn_cate type${categoryId}">${categoryName}</span></td>
+    		<td>${softawareName}</td>
+    		<td>${version}</td>
+    		<td>${createdDate}</td>
+    		<td>${sellCount} 개</td>
+    		<td>${softwarePlanAmtMonth} 원</td>
+		</tr>
+	</SCRIPT>
+    <!-- //InstanceCartList Template -->
+
     <script type="text/javascript">
         /*<![CDATA[*/
         var PAGING_SIZE = 10;
         var pageNumSave = 0;
-        var SORT = "id,asc";
         var yearValue = $("#selectDateYear1 option:selected").val();
         var monthValue = $("#selectDateMonth1 option:selected").val();
 
-
-
         var getStatsSoftwareList = function (pageNum) {
+            if (commonUtils.isBlank(pageNum)) {
+            	pageNum = 0;
+            }
+
             var categoryId = $("#categoryId option:selected").val();        //카테고리
-
-            console.log(":: categoryId :: " + categoryId +
-                ":: page :: " + pageNum
-            );
-
             if (categoryId === 'ALL' || categoryId === '') {
                 categoryId = '';
             }
-
-            console.log("기본 이어2 ::: " + yearValue + "& 기본 몬쓰2 ::: " + monthValue);
-
-            var yy = yearValue; // 이번 해
-            var yy2 = yearValue; // 다음 해
-
-            var mm = monthValue; // 이번 달
-            var mm2 = monthValue; // 다음 달
-
-            if (monthValue < 10) {
-                mm = '0' + monthValue;
-                if((parseInt(monthValue) + 1) >= 10) {
-                    mm2 = (parseInt(monthValue) + 1);
-                } else {
-                    mm2 = '0' + (parseInt(monthValue) + 1);
-                }
-            }else if(monthValue >= 10 && monthValue < 12) {
-                mm = monthValue;
-                mm2 = parseInt(monthValue) + 1;
-            }
-
-
-            if(monthValue > 11) {
-                console.log("현재 12월 ::: " + yearValue + "-" + monthValue);
-                console.log(parseInt(yearValue) + 1);
-                yy = yearValue;
-                yy2 = parseInt(yearValue) + 1;
-                mm = monthValue;
-                mm2 = "01";
-            }
-
-            var currentYearMonth = yy + "-" + mm + "-01";
-            var nextYearMonth = yy2 + "-" + mm2 + "-01";
-
-            var reqUrl = "/softwares" + "?categoryId=" + categoryId + "&page=" + pageNum + "&size=" + PAGING_SIZE + "&sort=" + SORT;
+            
+            var srchDate = yearValue +"-"+ commonUtils.dateValueDigit(monthValue) +"-01";
+            var reqUrl = "/stats/statsSoftwareSellPrice" + "?categoryId=" + categoryId + "&page=" + pageNum + "&size=" + PAGING_SIZE +"&srchDate="+ srchDate;
+            
             console.log(reqUrl);
 
-            // TODO : /admin/stats/instances/counts/months?epoch=2019-10-01&size=1&idIn=1&idIn=2&idIn=3&idIn=4 이거 참고하면 될 듯.
-            		
             if (pageNum != null)
             	pageNumSave = pageNum;
-            
+           
+         	// Loading Start
+            loading.start();
+           
             procCallAjax(reqUrl, "GET", null, null, callbackStatsSoftwareList);
         };
 
         var callbackStatsSoftwareList = function(data) {
-            console.log("callbackStatsSoftwareList");
-            console.log(data);
-            var lastDay = ( new Date(yearValue, monthValue, 0) ).getDate();
-
-            //::totalElements::
-            $("#totalElements").text("(" + data.totalElements + ")");
-
-            var statsSoftwareList = $("#statsSoftwareArea");
-            var htmlString = [];
-            var content = data.content;
-            var listLength = content.length;
-
-         	// 판매량
-            var soldInstanceCountList = "[[${soldInstanceCount}]]";
-            var soldInstanceCount = soldInstanceCountList.replace("{", "").replace("}", "").split(",");
-            var soldCount;
-
-            if(listLength > 0){
-                for(var i = 0; i < listLength; i++){
-                	var index = i + pageNumSave * data.size;
-                	// Format Date
-                	var createdDateValue = new Date(content[i].createdDate);
-                	var createdDate = getFormatDate(createdDateValue);
-                	
-                    //var soldInstanceMap= soldInstanceCount[i].replace(/(\s*)/g, "");
-                    var soldInstanceMap= soldInstanceCount[index].replace(/(\s*)/g, "");
-                    console.log("index= "+(i+pageNumSave*PAGING_SIZE));
-                    var value = soldInstanceMap.split("=");
-                    
-                    soldCount = value[1];
-
-                    // TODO ::: 판매액 -> 판매량 안에서도 상품별 각각 사용한 일 수 구해서 다시 곱해줘야 함!!
-                    htmlString.push(
-                        "<tr>"
-                        + "<td>" + (index + 1)  + "</td>"
-                        + "<td><span class=\"pn_cate type"+ content[i].category.id +"\">" + content[i].category.name + "</span></td>"
-                        + "<td>" + content[i].name+ "</td>"
-                        + "<td>" + content[i].version + "</td>"
-                        + "<td>" + createdDate + "</td>"
-                        + "<td>" + soldCount + " 개</td>"
-                        + "<td>" + soldCount * content[i].pricePerMonth + " 원</td>"
-                        + "</tr>"
-                    );
-                }
-            }else{
-                htmlString = "<tr>"
-                    + "<td colspan='7'><p class='user_p'>상품이 존재하지 않습니다.</p></td>" + "</tr>"
+            console.log(">>>>>>> data: %o", data);
+            
+            // 리스트 초기화
+            $("#statsSoftwareArea").html("");
+            
+            var statsSoftwareSellPriceList = data.statsSoftwareSellPriceList;
+            var listTemplate = $("#statsSoftwareSellPriceTemplate").text();
+            
+            if (!commonUtils.isEmpty(statsSoftwareSellPriceList) && statsSoftwareSellPriceList.length > 0) {
+            	var rowNum = statsSoftwareSellPriceList.length;
+            	statsSoftwareSellPriceList.forEach(function(info){
+            		info.rowNum = rowNum;
+            		$.tmpl(listTemplate, info).appendTo("#statsSoftwareArea");
+            		rowNum--;
+				});
+            	$("#totalElements").text("("+ statsSoftwareSellPriceList.length +")");
+            } else {
+            	$("#statsSoftwareArea").append($.parseHTML("<tr><td colspan='7'><p class='user_p'>상품이 존재하지 않습니다.</p></td><tr>"));
+            	$("#totalElements").text("(0)");
             }
-
-            statsSoftwareList.html(htmlString);
             
           	//::page::
             var pageTotalNumber = data.totalElements;   // 총 데이터 수
@@ -307,6 +258,9 @@
                                 
                 $("#pageNumberList").html(htmlStringPage);                      // 페이지 목록 생성                                     
             }
+        	
+        	// Loading End
+        	loading.stop();
         };
 
 		//페이지 이동

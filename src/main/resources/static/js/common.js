@@ -80,6 +80,33 @@ function doubleSubmitCheck(){
     }
 }
 
+var commonUtils = {
+	addComma: function(num) {
+		return num;
+		// var regexp = /\B(?=(\d{3})+(?!\d))/g;
+		// return num.toString().replace(regexp, ',');
+	},
+	dateValueDigit: function(value) {
+    	var result = value;
+        if (value < 10) {
+            result = '0' + value;
+        }
+		return result;
+    }, 
+    isEmpty(object) {
+    	if (object == undefined || object == null) {
+    		return true;
+    	}
+    	return false;
+    }, 
+    isBlank(value) {
+    	if (value == undefined || value == null || value == "") {
+    		return true;
+    	}
+    	return false;
+    }
+}
+
 /*
  * Loding View
  * http://carlosbonetti.github.io/jquery-loading/

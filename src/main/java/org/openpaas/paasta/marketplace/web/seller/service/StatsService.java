@@ -1,13 +1,12 @@
 package org.openpaas.paasta.marketplace.web.seller.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Map;
+
 import org.openpaas.paasta.marketplace.api.domain.Category;
 import org.openpaas.paasta.marketplace.api.domain.CustomPage;
 import org.openpaas.paasta.marketplace.api.domain.Instance;
 import org.openpaas.paasta.marketplace.api.domain.Software;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -183,4 +182,25 @@ public class StatsService {
                 .toString();
         return paasApiRest.getForObject(url, long.class);
     }
+    
+    /**
+     * Seller 요금통계 정보조회 총카운터
+     * @param queryString
+     * @return
+     */
+    public Integer getStatsSoftwareSellPriceTotalCount(String queryString) {
+    	ResponseEntity<Integer> responseEntity = paasApiRest.exchange("/stats/softwareSellPriceTotalCount"+ queryString, HttpMethod.GET, null, Integer.class);
+    	return responseEntity.getBody();
+    }
+    
+    /**
+     * Seller 요금통계 정보조회 리스트
+     * @param queryString
+     * @return
+     */
+    public List<Map<String,Object>> getStatsSoftwareSellPricList(String queryString) {
+        ResponseEntity<List<Map<String,Object>>> responseEntity = paasApiRest.exchange("/stats/softwareSellPriceList"+ queryString, HttpMethod.GET, null, new ParameterizedTypeReference<List<Map<String,Object>>>() {});
+        return responseEntity.getBody();
+    }
+
 }
