@@ -740,7 +740,8 @@
             var id = $("#id").val();
             var param = {
                 "filePath": null,
-                "fileName": null
+                "fileName": null,
+                "historyDescription": "아이콘 삭제"
             };
 
             var url = encodeURI("/softwares/file/"+ id + "/icon");
@@ -760,7 +761,7 @@
 
         //[스크린 샷] 화면 리스트
         var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
-        	console.log(">>>>>>> getThumbnailPreviewScreenshot: %s", countNum);
+        	//console.log(">>>>>>> getThumbnailPreviewScreenshot: %s", countNum);
         	
             var reader = new FileReader();
             reader.onload = function (e) {
@@ -802,7 +803,7 @@
 
         //[스크린 샷, 아이콘] 파일 첨부 확인 및 업로드
         function registerFile(data, fileType) {
-        	console.log(">>>>>>> registerFile: %s", data);
+        	//console.log(">>>>>>> registerFile: %s", data);
         	
             var formData = new FormData();
             formData.append("file", data);
@@ -840,7 +841,8 @@
 
             var param = {
                 "filePath": FILE_INFO.iconFilePath,
-                "fileName": data.filename
+                "fileName": data.filename,
+                "historyDescription": "아이콘 신규 등록"
             };
 
             var url = encodeURI("/softwares/file/"+ id + "/icon");
@@ -850,7 +852,7 @@
 
         //[스크린 샷] 신규 이미지 추가
         function createRegisterFileInfo(data){
-        	console.log(">>>>>>> createRegisterFileInfo: %o", data);
+        	//console.log(">>>>>>> createRegisterFileInfo: %o", data);
         	
             var id = $("#id").val();
 
@@ -861,7 +863,8 @@
             }
 
             var param = {
-                "filePath": FILE_INFO.screenshotsFilePath
+                "filePath": FILE_INFO.screenshotsFilePath,
+                "historyDescription": "스크린샷 추가"
             };
 
             var url = encodeURI("/softwares/file/"+ id + "/screenShots");
@@ -938,7 +941,7 @@
 
         // reqType 따른 파일 업로드/삭제 처리
         var uploadFile = function(formData, reqType, reqUploadUrl, reqProcFunction) {
-        	console.log(">>>>>>> uploadFile: %s", reqUploadUrl);
+        	//console.log(">>>>>>> uploadFile: %s", reqUploadUrl);
         	
             $.ajax({
                 url : reqUploadUrl

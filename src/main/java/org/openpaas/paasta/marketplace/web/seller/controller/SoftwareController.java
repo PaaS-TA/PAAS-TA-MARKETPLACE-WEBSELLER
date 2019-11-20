@@ -257,6 +257,11 @@ public class SoftwareController {
             software.setManifest(fileName);
             software.setManifestPath(finalUrl);
         }
+        
+        // 업데이트 History Description
+        if (params.get("historyDescription") != null) {
+        	software.setHistoryDescription(params.get("historyDescription"));
+        }
 
         return softwareService.updateSoftware(id, software);
     }
@@ -287,6 +292,7 @@ public class SoftwareController {
         }
 
         software.setScreenshotList(screenshotPackList);
+        software.setHistoryDescription("스크린샷 삭제");
 
         return softwareService.updateSoftware(id, software);
     }
