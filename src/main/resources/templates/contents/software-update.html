@@ -132,6 +132,7 @@
                                 </td>
                             </tr>
                             <!--/*################################# END ICON VIEW #################################*/-->
+                            <!--/*################################# START SCREENSHOT #################################*/-->
                             <tr>
                                 <th scope="row">스크린샷<i class="i_star">필수입력</i></th>
                                 <td>
@@ -142,11 +143,8 @@
                                                     <div class="sshot_in" th:id="${index.index}">
                                                         <img th:src="${screenshot}" alt="" th:id="'image_form_url' + ${index.index}"/>
                                                         <a href="#" onclick="clickModal(this)" th:id="${index.index}" /><span class="ico ico_delete" name="ico_delete" th:id="${index.index}">X</span></a>
-                                                        <!--<a href="" data-toggle="modal" data-target="#myModal_del"><span class="ico ico_delete" name="ico_delete" th:id="${index.index}">X</span></a>-->
-                                                        <!--<button id="clickModal"><span class="ico ico_delete" name="ico_delete" th:id="${index.index}">X</span></button>-->
                                                     </div>
                                                 </li>
-                                                <!-- //첨부파일 -->
                                                 <li id="li_0">
                                                     <div class="fileUploadWrap selected_sshot">
                                                         <input tabindex="-1" class="form-control" id="screenshotFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots"
@@ -161,12 +159,12 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <!-- //첨부파일 -->
                                             </ul>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
+                            <!--/*################################# END SCREENSHOT #################################*/-->
                             <tr>
                                 <th scope="row">상세설명</th>
                                 <td>
@@ -762,6 +760,8 @@
 
         //[스크린 샷] 화면 리스트
         var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
+        	console.log(">>>>>>> getThumbnailPreviewScreenshot: %s", countNum);
+        	
             var reader = new FileReader();
             reader.onload = function (e) {
                 $target.css('display', '');
@@ -782,7 +782,6 @@
             obj.attr('id', 'li_' + (countNum + 1));
             obj.find("label").attr('id', 'screenshot_image_list' + (countNum + 1));
             obj.find("label").attr('for', 'screenshotFileInput' + (countNum + 1));
-
             obj.find("input").attr('id', 'screenshotFileInput' + (countNum + 1));
 
             // 초기화
@@ -791,13 +790,10 @@
 
             $(currentTag).after(obj);
 
-
             //[스크린 샷] 수정
             if(html.files[0] == null){
-                //console.log("html.files[0] == null ::DATA_NO::");
                 return null;
             }else{
-                //console.log("html.files[0] != null ::DATA_YES::");
                 var fileInfo = html.files[0];
                 registerFile(fileInfo, "screenShots");
             }
@@ -806,10 +802,9 @@
 
         //[스크린 샷, 아이콘] 파일 첨부 확인 및 업로드
         function registerFile(data, fileType) {
+        	console.log(">>>>>>> registerFile: %s", data);
+        	
             var formData = new FormData();
-            //console.log(" :: Register file :: ");
-            //console.log(data);
-
             formData.append("file", data);
 
             if(fileType === "screenShots") {
@@ -855,16 +850,14 @@
 
         //[스크린 샷] 신규 이미지 추가
         function createRegisterFileInfo(data){
+        	console.log(">>>>>>> createRegisterFileInfo: %o", data);
+        	
             var id = $("#id").val();
-
-            //console.log(" :: createRegisterFileInfo :: ");
-            //console.log(data);
 
             if(data != null){
                 FILE_INFO.screenshots  = data.filename;
                 FILE_INFO.screenshotsFilePath  = data.fileURL;
                 FILE_INFO.screenshotsFileSize  = data.length;
-                //console.log("[FILE_INFO.screenshots]: " + FILE_INFO.screenshots + " "+ "[FILE_INFO.screenshotsFilePath]: "+FILE_INFO.screenshotsFilePath+ " " + "[FILE_INFO.screenshotsFileSize]: "+FILE_INFO.screenshotsFileSize);
             }
 
             var param = {
@@ -872,14 +865,8 @@
             };
 
             var url = encodeURI("/softwares/file/"+ id + "/screenShots");
-            procCallAjax(url, "PUT", JSON.stringify(param), null, null);
+            procCallAjax(url, "PUT", JSON.stringify(param), null, totalScreenShotList);
         }
-
-        var callbackFileDb = function (data) {
-            //console.log("변경된 상품의 파일들 확인 ::: " + JSON.stringify(data));
-            totalScreenShotList(data);
-        };
-
 
         // 스크린샷 리스트 재정렬
         var totalScreenShotList = function (data) {
@@ -890,11 +877,11 @@
                     var screenShot = data.screenshotList[i];
 
                     htmlString +='<li name="li_in" id="li_in'+ i + '">\n' +
-                        '<div class="sshot_in">\n' +
-                        '<img src="' + screenShot + '" alt="" id="image_form_url'+ i + '">\n' +
-                        '<a href="#" onclick="clickModal(this)" id="' + i +'"><span class="ico ico_delete" name="ico_delete">X</span></a>\n' +
-                        '</div>\n' +
-                        '</li>';
+		                        '	<div class="sshot_in">\n' +
+		                        '		<img src="' + screenShot + '" alt="" id="image_form_url'+ i + '">\n' +
+		                        '		<a href="#" onclick="clickModal(this)" id="' + i +'"><span class="ico ico_delete" name="ico_delete">X</span></a>\n' +
+		                        '	</div>\n' +
+		                        '</li>';
                 }
             }
 
@@ -951,7 +938,8 @@
 
         // reqType 따른 파일 업로드/삭제 처리
         var uploadFile = function(formData, reqType, reqUploadUrl, reqProcFunction) {
-
+        	console.log(">>>>>>> uploadFile: %s", reqUploadUrl);
+        	
             $.ajax({
                 url : reqUploadUrl
                 , method : reqType
