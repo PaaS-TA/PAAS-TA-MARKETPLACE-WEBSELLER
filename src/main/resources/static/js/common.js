@@ -29,7 +29,9 @@ var procCallAjax = function(reqUrl, reqMethod, param, preFunc, callback) {
             // }
         },
         success: function(data) {
-            callback(data);
+        	if (!commonUtils.isEmpty(callback)) {
+                callback(data);        		
+        	}
         },
         error: function(jqXHR, exception) {
             console.log("jqXHR.status::::"+jqXHR.status+" exception:::"+exception);
