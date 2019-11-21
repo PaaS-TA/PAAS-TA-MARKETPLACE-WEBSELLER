@@ -53,7 +53,7 @@
                             <tbody>
                             <tr>
                                 <th scope="row">상품명<i class="i_star">필수입력</i></th>
-                                <td><input class="form-control" type="text" th:value="${software.name}" id="softwareName"></td>
+                                <td><input class="form-control" type="text" th:value="${software.name}" id="softwareName" maxlength="250"></td>
                             </tr>
                             <tr>
                                 <th scope="row">카테고리<i class="i_star">필수입력</i></th>
@@ -69,7 +69,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">개요<i class="i_star">필수입력</i></th>
-                                <td><input class="form-control" style="height:50px;" type="text" th:value="${software.summary}" id="softwareSummary"></td>
+                                <td><input class="form-control" style="height:50px;" type="text" th:value="${software.summary}" id="softwareSummary" maxlength="500"></td>
                             </tr>
                             <!--/*################################# START ICON CREATE #################################*/-->
                             <tr th:if="${software.iconPath == null}"><!-- CREATE -->
@@ -100,7 +100,6 @@
                                         <div class="bootstrap-filestyle input-group" id="bootstrap-filestyle input-group">
                                             <span tabindex="0" class="group-span-filestyle input-group-btn">
                                                  <label class="btn btn-default " for="iconFileInput" id="icon_image">
-                                                    <!--<img class="logo" alt="" />-->
                                                     <span class="ico ico_fileupload">파일찾기</span>
                                                 </label>
                                             </span>
@@ -117,7 +116,6 @@
                                                  </label>
                                             </span>
                                             <div class="input-form-group">&nbsp;
-                                                <!--<input name="userfile" disabled="" class="form-control" id="userfile" type="text" placeholder="아이콘으로 등록할 이미지를 선택하세요.">-->
                                                 <a href="" data-toggle="modal" data-target="#myModal_icon_del"><img src="../../static/images/ico_delete.png" alt="" /></a>&nbsp;
                                                 <span th:text="${software.icon}"></span>
                                             </div>
@@ -169,7 +167,7 @@
                                 <th scope="row">상세설명</th>
                                 <td>
                                     <div class="tbw_inner_txt">
-                                        <input class="form-control" style="height:150px;" type="text" th:value="${software.description}" id="softwareDescription">
+                                        <input class="form-control" style="height:150px;" type="text" th:value="${software.description}" id="softwareDescription" maxlength="3000">
                                     </div>
                                 </td>
                             </tr>
@@ -343,7 +341,7 @@
                                 <th scope="row">변경사항 메모<i class="i_star">필수입력</i></th>
                                 <td>
                                     <div class="tbw_inner_txt">
-                                        <pre><input class="form-control" type="text" id="softwareHistoryDescription"></pre>
+                                        <pre><input class="form-control" type="text" id="softwareHistoryDescription" maxlength="200"></pre>
                                     </div>
                                 </td>
                             </tr>
@@ -499,6 +497,25 @@
     </div>
     <!-- amtModal -->
     
+    <!-- 알림 팝업 Modal -->
+    <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content modal-sm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><span style="color: #FF3366">알림!</span></h4>
+                </div>
+                <div class="modal-body">
+                    <p class="popTxt" id="alertModal-text">구매할 상품의 가격 정보가 없습니다.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- //알림 팝업 Modal -->
+	
     <input type="hidden" id="software" name="software" th:value="${software}" />
     <input type="hidden" id="id" name="id" th:value="${software.id}" />
     <input type="hidden" id="appPath" name="appPath" th:value="${software.appPath}" />
@@ -508,11 +525,47 @@
     <input type="hidden" id="indexForScreenShot" name="index" value="" />
     <input type="hidden" name="pricePerMonth" th:value="${software.pricePerMonth}"/>
 
+    <!-- InstanceCartList Template -->
+    <SCRIPT id="iconViewTemplate" type="text/html">
+        <div class="fileUploadWrap selected_ico" style="width:50%;" name="reSelectPreview">
+            <input tabindex="-1" class="form-control" id="iconFileInput" name="iconFile" multiple style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreview(this, $('#icon_image'))">
+            <div class="bootstrap-filestyle input-group" id="bootstrap-filestyle input-group">
+                <span tabindex="0" class="group-span-filestyle input-group-btn">
+                     <label class="btn btn-default " for="iconFileInput" id="icon_image">
+                        <span class="ico ico_fileupload">파일찾기</span>
+                    </label>
+                </span>
+                <div class="input-form-group">
+                    <input name="userfile" disabled="" class="form-control" id="userfile" type="text" placeholder="아이콘으로 등록할 이미지를 선택하세요.">
+                </div>
+            </div>
+        </div>
+        <div class="fileUploadWrap selected_ico" style="width:50%;" name="divPreview">
+            <div class="bootstrap-filestyle input-group" id="bootstrap-filestyle input-group2">
+                <span tabindex="0" class="group-span-filestyle input-group-btn">
+                     <label class="btn btn-default ">
+                        <img class="logo" alt="" src="${iconPath}" id="iconFilePath" />
+                     </label>
+                </span>
+                <div class="input-form-group">&nbsp;
+                    <a href="" data-toggle="modal" data-target="#myModal_icon_del"><img src="../../static/images/ico_delete.png" alt="" /></a>&nbsp;
+                    <span>${icon}</span>
+                </div>
+                <div>
+                    <label id="serviceLabelThumbName2" name="labelThumbName"></label>
+                    <div id="serviceThumRemove2" name="thumRemove" class="pull-right file-remove-button">
+                        <i class="fa fa-times"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</SCRIPT>
+
     <!-- //content -->
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
-
-        FILE_INFO = {}; // 파일 초기화;
+        var FILE_INFO = {}; // 파일 초기화;
+        var LOADING_TIME = 20;	//secend
 
         //년/월
         var yearValue = $("#selectDateYear option:selected").val();
@@ -543,19 +596,13 @@
                 }
             }
             $("#softwarePlaneOriginalList").val(softwarePlaneOriginalList);
-
-            // alert($("#softwarePlaneOriginalList").val());
         });
-
 
         // [상품] 리스트
         var getSoftwareList = function () {
             var software = $("#software").val();
             var id = $("#id").val();
-
-            //console.log(software);
         };
-
 
         //[저장]버튼
         function isEmpty(val) {
@@ -563,68 +610,98 @@
         };
 
 		$('#saveBtn').click(function() {
-
             // TR Rows
             var trRows = $("#pricePerMonth-tbody tr");
             var manCheck = false;
             var msg = "";
 
+         	// 상품명
+            if (!manCheck && commonUtils.isBlank($("#softwareName").val())) {
+            	msg = "상품명을 입력하십시오.";
+                manCheck = true;
+            }
+            // 카테고리
+            if (!manCheck && commonUtils.isBlank($("#softwareCategory").val())) {
+            	msg = "카테고리를 선택해주세요.";
+                manCheck = true;
+            }
+            // 개요
+            if (!manCheck && commonUtils.isBlank($("#softwareSummary").val())) {
+            	msg = "상품 개요를 입력하십시오.";
+                manCheck = true;
+            }
+            // 아이콘
+            if (!manCheck && commonUtils.isBlank($("#iconFilePath").attr("src"))) {
+            	msg = "아이콘을 등록해주세요.";
+                manCheck = true;
+            }
+            // 스크린샷
+            var screenshotObjList = $('[name="li_in"]');
+            if (!manCheck && commonUtils.isEmpty(screenshotObjList) || $('[name="li_in"]').length <= 0) {
+            	msg = "스크린샷을 등록해주세요.";
+                manCheck = true;
+            }
+            //판매금액
             trRows.each(function(index, item){
                 var tdRows = $(this).children("td");
                 var eleindex = tdRows.eq(0).data("elementIndex");
                 var softwarePlanInfo = {};
 
-                if(!manCheck && isEmpty($("#name_"+eleindex).val())) {
+                if(!manCheck && !manCheck && isEmpty($("#name_"+eleindex).val())) {
                     msg = "플랜명을 입력하십시오.";
                     manCheck = true;
                 }
-                if(!manCheck && isEmpty($("#description_"+eleindex).val())) {
+                if(!manCheck && !manCheck && isEmpty($("#description_"+eleindex).val())) {
                     msg = "플랜 설명을 입력하십시오.";
                     manCheck = true;
                 }
-                if(!manCheck && isEmpty($("#cpuAmt_"+eleindex).val())) {
+                if(!manCheck && !manCheck && isEmpty($("#cpuAmt_"+eleindex).val())) {
                     msg = "CPU 가격을 입력하십시오.";
                     manCheck = true;
                 }
-                if(!manCheck && isEmpty($("#memorySize_"+eleindex).val())) {
+                if(!manCheck && !manCheck && isEmpty($("#memorySize_"+eleindex).val())) {
                     msg = "메모리 크기를 입력하십시오.";
                     manCheck = true;
                 }
-                if(!manCheck && isEmpty($("#memoryAmt_"+eleindex).val())) {
+                if(!manCheck && !manCheck && isEmpty($("#memoryAmt_"+eleindex).val())) {
                     msg = "메모리 가격을 입력하십시오.";
                     manCheck = true;
                 }
-                if(!manCheck && isEmpty($("#diskSize_"+eleindex).val())) {
+                if(!manCheck && !manCheck && isEmpty($("#diskSize_"+eleindex).val())) {
                     msg = "디스크 크기를 입력하십시오.";
                     manCheck = true;
                 }
-                if(!manCheck && isEmpty($("#diskAmt_"+eleindex).val())) {
+                if(!manCheck && !manCheck && isEmpty($("#diskAmt_"+eleindex).val())) {
                     msg = "디스크 가격을 입력하십시오.";
                     manCheck = true;
                 }
             })
-
-            if(manCheck) {
-                alert(msg);
-                return;
+            //변경사항 메모
+            if (!manCheck && commonUtils.isBlank($("#softwareHistoryDescription").val())) {
+            	msg = "변경사항 메모를 입력하지 않았습니다.";
+                manCheck = true;
             }
 
-            // History Description
-            var historyDescriptionNullCheck = $("#softwareHistoryDescription").val();
-     		if(isEmpty(historyDescriptionNullCheck)) {
-     			msg = "변경사항 메모를 입력하지 않았습니다.";
-     			alert(msg);
-     			return;
-    		} else {
-    			$('div #myModal_ok').modal();
-     		}
+            // 알림 노출
+            if(manCheck) {
+                $("#alertModal-text").text(msg);
+                $("#alertModal").modal("show");
+                return;
+            }
+            
+			// 저장 Confirm 노출
+   			$('div #myModal_ok').modal();
 		});
 
         // 상품 수정(텍스트)
         var modifySoftware = function (argSoftwareId) {
+            if (doubleSubmitCheck()) {
+            	return;
+            }
 
-            if(doubleSubmitCheck()) return;
-
+            $('#myModal_ok').modal("hide");
+            loading.start("SOFTWARE MODIFING...");
+            
             var reqParam = {
                 "inUse" : $('input:radio[name="softwareInUse"]:checked').val(),
                 "name" :  $("#softwareName").val(),
@@ -642,7 +719,6 @@
 
         	var softwarePlanList = [];
         	var trRows = $("#pricePerMonth-tbody tr");
-            //console.log(">>>>>>>>>>> trRows: %o", trRows);
 
             // TR Rows
         	trRows.each(function(index, item){
@@ -652,10 +728,6 @@
         	    // TD Rows
         	    tdRows.each(function(index, item){
                     var tdChildrenObj = $(this).children();
-                    // //console.log("");
-                    // //console.log(">>>>>>>>>>> tdChildrenObj: %o", tdChildrenObj);
-                    // //console.log(">>>>>>>>>>> tdChildrenObj.eq(n).val(): %o", tdChildrenObj.eq(0).val());
-
                     if (index == 0) {
                         softwarePlanInfo.softwareId = argSoftwareId;
                         softwarePlanInfo.id = tdChildrenObj.eq(1).val();
@@ -677,27 +749,18 @@
                     }
                 })
 
-                // //console.log("");
-                // //console.log(">>>>>>> softwarePlanInfo: %o", softwarePlanInfo);
                 softwarePlanList[softwarePlanList.length] = softwarePlanInfo;
             });
             reqParam.softwarePlanList = softwarePlanList;
 
-        	// //console.log("]]]]]]]]]]]]]]] reqParam: %o", reqParam);
-
         	var softwarePlaneOriginalList = encodeURI($("#softwarePlaneOriginalList").val());
-
-
             var reqUrl = "/softwares/" + argSoftwareId +"?softwarePlaneOriginalList="+ softwarePlaneOriginalList;
             procCallAjax(reqUrl, "PUT", JSON.stringify(reqParam), null, callbackModifySoftware);
         };
 
-
         var callbackModifySoftware = function (data) {
-            //console.log("바뀐 상품 정보 ::: " + JSON.stringify(data));
             procMovePage("/softwares/{id}".replace("{id}", data.id));
         };
-
 
         //[아이콘] 화면 리스트
         var getThumbnailPreview = function (html, $target) {
@@ -712,12 +775,9 @@
 
             //[아이콘] 수정
             if(html.files[0] == null){
-                //console.log("html.files[0] == null ::DATA_NO::");
                 return null;
             }else{
-                //console.log("html.files[0] != null ::DATA_YES::");
                 var fileInfo = html.files[0];
-
                 // Swift - create
                 registerFile(fileInfo, "icon");
             }
@@ -725,6 +785,9 @@
 
         // [아이콘] Swift 삭제
         function deleteIconBtn() {
+        	loading.interval(LOADING_TIME, "ICON IMAGE DELETING...");
+        	$("#myModal_icon_del").modal("hide");
+        	
             // Swift - delete
             var iconImagePath = jQuery('#iconFilePath').attr("src");
             var imgPath = iconImagePath.substring(iconImagePath.lastIndexOf("/") + 1);
@@ -733,6 +796,7 @@
             procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteIconSwift);
         }
 
+        // [아이콘] 삭제정보 DB UPDATE
         var callbackDeleteIconSwift = function (data) {
             $('div[name=divPreview]').hide();
             $('div[name=reSelectPreview]').show();
@@ -748,21 +812,22 @@
             procCallAjax(url, "PUT", JSON.stringify(param), null, callbackDeleteIconFileDb);
         };
         
+        // [아이콘] 등록 필수사항 Alert
         var callbackDeleteIconFileDb = function() {
-        	alert("반드시 아이콘을 추가해주시기 바랍니다.");
+        	loading.stop();
+        	$("#alertModal-text").text("반드시 아이콘을 추가해주시기 바랍니다.");
+        	$("#alertModal").modal("show");
         }
 
+        //[스크린 샷] Confirm Modal 호출 및 현재 선택한 스크린샷 id정보 저장
         function clickModal(target) {
             var index = $(target).attr('id');
-            //console.log("index :: " + index);
             $("#indexForScreenShot").val(index);
             $('div #myModal_del').modal();
         }
 
         //[스크린 샷] 화면 리스트
         var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
-        	//console.log(">>>>>>> getThumbnailPreviewScreenshot: %s", countNum);
-        	
             var reader = new FileReader();
             reader.onload = function (e) {
                 $target.css('display', '');
@@ -803,28 +868,24 @@
 
         //[스크린 샷, 아이콘] 파일 첨부 확인 및 업로드
         function registerFile(data, fileType) {
-        	//console.log(">>>>>>> registerFile: %s", data);
-        	
             var formData = new FormData();
             formData.append("file", data);
 
             if(fileType === "screenShots") {
-                //console.log("여기는 스크린샷 업로드 !!!");
+            	loading.interval(LOADING_TIME, "SCREENSHOT IMAGE UPLOADING...");
                 uploadFile(formData,"POST","/v2/swift", createRegisterFileInfo);
             }
 
             if(fileType === "icon") {
-                //console.log("여기는 아이콘 업로드 !!!");
+            	loading.interval(LOADING_TIME, "ICON IMAGE UPLOADING...");
                 uploadFile(formData,"POST","/v2/swift", createIconFile);
             }
 
             if(fileType === "prodFile") {
-                //console.log("여기는 상품 파일 업로드 !!!");
                 uploadFile(formData,"POST","/v2/swift", createProdFile);
             }
 
             if(fileType === "envFile") {
-                //console.log("여기는 환경 파일 업로드 !!!");
                 uploadFile(formData,"POST","/v2/swift", createEnvFile);
             }
         }
@@ -836,7 +897,6 @@
             if(data != null){
                 FILE_INFO.iconFileName  = data.filename;
                 FILE_INFO.iconFilePath  = data.fileURL;
-                //console.log("[FILE_INFO.iconFileName]: " + FILE_INFO.iconFileName + " "+ "[FILE_INFO.iconFilePath]: "+FILE_INFO.iconFilePath);
             }
 
             var param = {
@@ -846,14 +906,26 @@
             };
 
             var url = encodeURI("/softwares/file/"+ id + "/icon");
-            procCallAjax(url, "PUT", JSON.stringify(param), null, null);
+            procCallAjax(url, "PUT", JSON.stringify(param), null, callbackIconFileDb);
         }
-
+        
+        //[아이콘] DB UPDATE 후에 화면 처리 작업
+        function callbackIconFileDb(data) {
+			var iconViewTemplateHtml = $("#iconViewTemplate").text();
+			
+			// 아이콘 화면 초기화
+			$("#ICON_REGISTRY_AREA").html("");
+			
+			// 아이콘 화면 VIEW로 UPDATE
+			$.tmpl(iconViewTemplateHtml, data).appendTo("#ICON_REGISTRY_AREA");
+			
+			// 아이콘 화면 FILE_UPLOAD 화면 감추기
+			$('#ICON_REGISTRY_AREA div[name=reSelectPreview]').hide();
+			loading.stop();
+        }
 
         //[스크린 샷] 신규 이미지 추가
         function createRegisterFileInfo(data){
-        	//console.log(">>>>>>> createRegisterFileInfo: %o", data);
-        	
             var id = $("#id").val();
 
             if(data != null){
@@ -905,17 +977,18 @@
                 '</li>';
 
             $("#screenShotTotal").html(htmlString);
+            loading.stop();
         };
 
+        //[스크린 샷] Swift 파일삭제
         function deleteScreenShotBtn() {
+        	loading.interval(LOADING_TIME, "SCREENSHOT IMAGE DELETING...");
             var index = $("#indexForScreenShot").val();
             var selectId = "#image_form_url" + index;
-            //console.log("index : " + index + " & id : " + selectId);
 
             var selectedScreenshot = $(selectId).attr("src");
             var imgPath = selectedScreenshot.substring(selectedScreenshot.lastIndexOf("/") + 1);
 
-            //console.log("selectedScreenshot : " + selectedScreenshot);
             var reqUrl = "/v2/swift/{name}".replace("{name}", imgPath);
             procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteScreenShotSwift);
         }
@@ -926,23 +999,14 @@
             }
         };
 
-        // [스크린 샷] 삭제
+        // [스크린 샷] 삭제정보 DB UPDATE
         function deleteScreenShot(imgPath) {
-            //console.log("image Path ::: " + imgPath);
             var id = $("#id").val();
-
-            procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath, "DELETE", null, null, deleteScreenShotDb);
+            procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath, "DELETE", null, null, totalScreenShotList);
         }
-
-
-        var deleteScreenShotDb  = function (data) {
-            totalScreenShotList(data);
-        };
 
         // reqType 따른 파일 업로드/삭제 처리
         var uploadFile = function(formData, reqType, reqUploadUrl, reqProcFunction) {
-        	//console.log(">>>>>>> uploadFile: %s", reqUploadUrl);
-        	
             $.ajax({
                 url : reqUploadUrl
                 , method : reqType
@@ -997,21 +1061,16 @@
                 if(type === "envFile") {
                     registerFile(fileInfo, "envFile");
                 }
-
             }
         };
-
 
         // 상품 파일 swift 생성
         var createProdFile = function(data) {
             var id = $("#id").val();
 
-            //console.log(" :: createProdFile :: ");
-
             if(data != null){
                 FILE_INFO.prodFileName  = data.filename;
                 FILE_INFO.prodFilePath  = data.fileURL;
-                //console.log("[FILE_INFO.prodFileName]: " + FILE_INFO.prodFileName + " " + "[FILE_INFO.prodFilePath]: "+FILE_INFO.prodFilePath);
             }
 
             var param = {
@@ -1020,21 +1079,16 @@
             };
 
             var url = encodeURI("/softwares/file/"+ id + "/prodFile");
-
             procCallAjax(url, "PUT", JSON.stringify(param), null, callbackFileDb);
         };
-
 
         // 환경 파일 swift 생성
         var createEnvFile = function(data) {
             var id = $("#id").val();
 
-            //console.log(" :: createEnvFile :: ");
-
             if(data != null){
                 FILE_INFO.envFileName  = data.filename;
                 FILE_INFO.envFilePath  = data.fileURL;
-                //console.log("[FILE_INFO.envFileName]: " + FILE_INFO.envFileName + " " + "[FILE_INFO.envFilePath]: "+FILE_INFO.envFilePath);
             }
 
             var param = {
@@ -1043,7 +1097,6 @@
             };
 
             var url = encodeURI("/softwares/file/"+ id + "/envFile");
-
             procCallAjax(url, "PUT", JSON.stringify(param), null, callbackFileDb);
         };
 
@@ -1089,8 +1142,6 @@
             var amtArea = $("#amtArea");
             var htmlString = [];
 
-            //console.log(data);
-
             if(data.length > 0){
                 for(var i = 0; i < data.length; i++){
                     var totalAmt = data[i].cpuAmt+data[i].memoryAmt+data[i].diskAmt;
@@ -1128,8 +1179,6 @@
             var checkCount = checkbox.size();
             var swpId =  $("#planid").val();
 
-            //console.log(swpId);
-
             for (var i=0; i<checkCount; i++) {
                 if (checkbox.eq(i).is(":checked")) {
                     checkbox.eq(i).parent().parent().remove();
@@ -1143,8 +1192,6 @@
         function addRow() {
             index++;
             nameIndex++;
-            //console.log("[index]: "+index);
-
             var toDayValue = $('#applyMonth').val();
 
             document.getElementById("pricePerMonth-tbody").insertRow(-1).innerHTML =
@@ -1170,7 +1217,6 @@
 
         //[공통] 년,월(select box)
         function selectCal(monthfield, yearfield) {
-
             var today = new Date();
             yearValue = today.getFullYear();
             monthValue = (today.getMonth() + 1);
@@ -1191,24 +1237,21 @@
         var selectYear = function() {
             var selectedYearValue = $("#selectDateYear option:selected").val();
             yearValue = selectedYearValue;
-            //console.log("Year ::: " + selectedYearValue);
         };
 
         var selectMonth = function() {
             var selectedMonthValue = $("#selectDateMonth option:selected").val();
             monthValue = selectedMonthValue;
-            //console.log("Month ::: " + selectedMonthValue);
         };
 
         //eventBtn
         $("#searchBtn").on("click", function () {
-            //console.log("searchBtn Event");
             var id = $("#id").val();
             var selectDateYear = $("#selectDateYear").val();
             var selectDateMonth = $("#selectDateMonth").val();
             var applyMonth = selectDateYear +  fncDateValueDigit(selectDateMonth);
             $('#applyMonth').val(applyMonth);
-            //console.log("날짜: "+ $('#applyMonth').val());
+
             var url = encodeURI("/softwares/plan/" + id + "/applyMonth");
             procCallAjax(url+"?applyMonth="+ applyMonth, "GET", "", null, callbackRow);
         });
@@ -1224,9 +1267,6 @@
 
         //리로드시, 값 초기화 셋팅(data)
         var callbackRow  = function (data) {
-            //console.log("[yearValue]: " + yearValue + "[monthValue]: " + monthValue);
-            //console.log(">>>>>>> data: %o", data);
-
             $('#pricePerMonth-tbody').html("");
             $("#softwarePlaneOriginalList").val("");
 
@@ -1263,13 +1303,11 @@
                     nameIndex++;
                 }
                 $("#softwarePlaneOriginalList").val(orginPlanIdList);
-
             }
         };
 
         //Pattern Matching
         var chk = function(id) {
-            //console.log(id);
             var str1 = $("#memorySize_"+id).val();
             var str2 = $("#diskSize_"+id).val();
 
@@ -1291,7 +1329,6 @@
                 }
             }
         };
-
         /*]]>*/
     </script>
 </div>
