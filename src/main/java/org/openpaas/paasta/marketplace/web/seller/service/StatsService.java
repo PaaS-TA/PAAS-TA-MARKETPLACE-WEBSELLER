@@ -81,9 +81,6 @@ public class StatsService {
     public CustomPage<Instance> getInstanceListBySwId(String queryString) {
         ResponseEntity<CustomPage<Instance>> responseEntity = paasApiRest.exchange("/instances/page" + queryString, HttpMethod.GET, null, new ParameterizedTypeReference<CustomPage<Instance>>() {});
         CustomPage<Instance> customPage = responseEntity.getBody();
-
-        System.out.println("getContent ::: " + customPage.getContent());
-        System.out.println("getTotalElements ::: " + customPage.getTotalElements());
         return customPage;
     }
 
@@ -99,9 +96,6 @@ public class StatsService {
     public CustomPage<Software> getSoftwareList(String queryParamString) {
         ResponseEntity<CustomPage<Software>> responseEntity = paasApiRest.exchange(" /stats/softwares/my" + queryParamString, HttpMethod.GET, null, new ParameterizedTypeReference<CustomPage<Software>>() {});
         CustomPage<Software> customPage = responseEntity.getBody();
-
-        System.out.println("getContent ::: " + customPage.getContent());
-        System.out.println("getTotalElements ::: " + customPage.getTotalElements());
         return customPage;
     }
 

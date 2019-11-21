@@ -108,11 +108,12 @@
         <div class="tbl type1 pt20">
             <table class="table">
                 <colgroup>
-                    <col style="width:10%;">
+                    <col style="width:5%;">
                     <col style="width:20%;">
                     <col style="width:auto;">
-                    <col style="width:18%;">
-                    <col style="width:18%;">
+                    <col style="width:15%;">
+                    <col style="width:15%;">
+                    <col style="width:15%;">
                 </colgroup>
                 <thead>
                 <tr>
@@ -122,6 +123,7 @@
                     <th scope="col">사용자 ID</th>
                     <th scope="col">구매일</th>
                     <th scope="col">종료일</th>
+                    <th scope="col">판매금액</th>
                 </tr>
                 </thead>
                 <tbody id="instanceListArea">
@@ -159,8 +161,6 @@
         });
 
         var getSoftwareLineChart = function(contentData){
-            console.log(">>lineChartData");
-
             var lineChartData = contentData.content;
 
             if (lineChartData.length == 0) {
@@ -226,7 +226,6 @@
         };
 
         var callbackGetInstanceList = function(data) {
-
             getSoftwareLineChart(data);
 
             $("#totalCount").text("(" + data.totalElements + ")");
@@ -249,17 +248,21 @@
                  	// Format Date
                  	var usageStartDateValue = new Date(content[i].usageStartDate);
                 	var usageStartDate = getFormatDate(usageStartDateValue);
-
                 	var index = (i+1) + pageNumSave * data.size;
+                	
+                	if (commonUtils.isBlank(usageEndDate)) {
+                		usageEndDate = "-";
+                	}
 
                     htmlString.push(
                         "<tr>"
                         + "<td>" + index + "</td>"
-                        + "<td>" + content[i].appName + "</td>"
+                        + "<td>" + content[i].id + "</td>"
                         + "<td>" + content[i].createdBy + "</td>"
                         + "<td>" + content[i].createdBy + "</td>"
                         + "<td>" + usageStartDate + "</td>"
                         + "<td>" + usageEndDate + "</td>"
+                        + "<td>" + content[i].softwarePlanAmtMonth + "</td>"
                         + "</tr>"
                     );
                 }
@@ -276,15 +279,12 @@
         	paging(pageTotalNumber, pageSize, PAGING_SIZE, pageNumSave);
 
         	function paging(pageTotalNumber, pageSize, PAGING_SIZE, currentPage){
-            	console.log("currentPage : " + currentPage);
             	currentPage = parseInt(currentPage);
 
             	var totalPage = Math.ceil(pageTotalNumber/pageSize);           // 총 페이지 수
             	if (currentPage)
             		var pageGroup = Math.ceil((currentPage+1)/PAGING_SIZE);    // 페이지 그룹
             	else var pageGroup = 1;
-
-                console.log("pageGroup : " + pageGroup);
 
                 var last = pageGroup * PAGING_SIZE;        // 화면에 보여질 마지막 페이지 번호 (실제 페이지와 -1 차이)
                 if(last > totalPage)
@@ -294,12 +294,6 @@
                     first = 0;
                 var next = currentPage + 1;                // 다음 페이지
                 var prev = currentPage - 1;                // 이전 페이지
-
-                console.log("last : " + last);
-                console.log("first : " + first);
-                console.log("next : " + next);
-                console.log("prev : " + prev);
-
                 var htmlStringPage = "";
 
                 if(currentPage==0) {
