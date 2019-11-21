@@ -100,31 +100,35 @@
                                         <!-- //첨부파일 -->
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">스크린샷<i class="i_star">필수입력</i></th>
-                                    <td>
-                                        <div class="screenShotBox">
-                                            <div class="sshotWrap">
-                                                <ul>
-                                                    <li id="li_0">
-                                                        <!-- 첨부파일 -->
-                                                        <div class="fileUploadWrap selected_sshot">
-                                                            <input tabindex="-1" class="form-control" id="screenshotFileInput0" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreviewScreenshot(this, $('#screenshot_image_list'), 0)">
-                                                            <div class="bootstrap-filestyle input-group">
-                                                            <span tabindex="0" class="group-span-filestyle input-group-btn">
-                                                                <label class="btn btn-default " for="screenshotFileInput0" id="screenshot_image_list">
-                                                                    <span class="ico ico_fileupload">파일찾기</span>
-                                                                </label>
-                                                            </span>
-                                                            </div>
-                                                        </div>
-                                                        <!-- //첨부파일 -->
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+								<tr>
+								    <th scope="row">스크린샷<i class="i_star">필수입력</i></th>
+								    <td>
+								        <div class="screenShotBox">
+								            <div class="sshotWrap">
+								                <ul id="screenshot_ul">
+								                    <li id="li_0" name="screenshot_upload_list">
+								                        <div class="fileUploadWrap selected_sshot">
+								                        	<div class="sshot_in" id="dumy_div_0" style="display:none;">
+								                        		<img src="" alt="" id="dumy_image_0"/>
+								                        		<a href="#" onclick="screenshotDelete(0)" data-index="0">
+								                        			<span class="ico ico_delete" name="ico_delete" id="0">X</span>
+								                        		</a>
+								                    		</div>
+								                            <input tabindex="-1" class="form-control" id="screenshotFileInput_0" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="screenshotChange(this, 0)">
+								                            <div class="bootstrap-filestyle input-group" id="screenshotFileLabel_0">
+								                                <span tabindex="0" class="group-span-filestyle input-group-btn">
+								                                    <label class="btn btn-default " for="screenshotFileInput_0" id="screenshot_image_list">
+								                                        <span class="ico ico_fileupload">파일찾기</span>
+								                                    </label>
+								                                </span>
+								                            </div>
+								                        </div>
+								                    </li>
+								                </ul>
+								            </div>
+								        </div>
+								    </td>
+								</tr>
                                 <tr>
                                     <th scope="row">상세설명<i class="i_star">필수입력</i></th>
                                     <td><textarea th:field="*{description}" th:id="swDescription" style="height:150px;"></textarea></td>
@@ -289,6 +293,29 @@
     </div>
     <!-- //content -->
     
+    <!-- screenshotTemplate Template -->
+    <SCRIPT id="screenshotTemplate" type="text/html">
+		<li id="li_${index}" name="screenshot_upload_list">
+            <div class="fileUploadWrap selected_sshot">
+            	<div class="sshot_in" id="dumy_div_${index}" style="display:none;">
+            		<img src="" alt="" id="dumy_image_${index}"/>
+            		<a href="#" onclick="screenshotDelete(${index})" data-index="${index}">
+            			<span class="ico ico_delete" name="ico_delete" id="0">X</span>
+            		</a>
+        		</div>
+                <input tabindex="-1" class="form-control" id="screenshotFileInput_${index}" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="screenshots" multiple="multiple" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="screenshotChange(this, ${index})">
+                <div class="bootstrap-filestyle input-group" id="screenshotFileLabel_${index}">
+                    <span tabindex="0" class="group-span-filestyle input-group-btn">
+                        <label class="btn btn-default " for="screenshotFileInput_${index}" id="screenshot_image_list">
+                            <span class="ico ico_fileupload">파일찾기</span>
+                        </label>
+                    </span>
+                </div>
+            </div>
+        </li>
+	</SCRIPT>
+    <!-- //screenshotTemplate Template -->
+
     <script type="text/javascript" th:inline="javascript">
         // 아이콘
         var getThumbnailPreview = function (html, $target) {
@@ -304,17 +331,24 @@
         };
 
         // 스크린샷
-        var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
+        /* var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
             var currentTag = "#li_" + countNum;
             $(currentTag).find("input").attr('name', 'screenshots');
 
-            console.log("target ::: " + $target + " & countNum ::: " + countNum);
+            // 추가버튼으로 파일추가하는게 아니면 SKIP
+            var newCreateIndex = $("li[name=screenshot_upload_list]").length - 1;
+            if (countNum != newCreateIndex) {
+            	return;
+            }
 
             if (html.files && html.files[0]) {
+            	$("#dumy_image_div_0").attr("display", "black");
                 var reader = new FileReader();
                 reader.onload = function (e) {
-                    $target.css('display', '');
-                    $target.html('<img class="btn btn-default" src="' + e.target.result + '" border="0" alt="" />');
+                    //$target.css('display', '');
+                    //$target.html('<img class="btn btn-default" src="' + e.target.result + '" border="0" alt="" />');
+                    $("#image_form_url_0").attr("display", "");
+                    $("#image_form_url_0").attr("src", e.target.result);
                 };
                 reader.readAsDataURL(html.files[0]);
 
@@ -324,11 +358,11 @@
                 var tag = '"' + '#screenshot_image_list'+ (countNum +1) + '"';
                 console.log("tag :: " + tag);
 
-
                 // 이미지 파일 첨부 버튼 추가 하기
                 // 새로운 div 생성
                 var obj = $(currentTag).clone();
                 obj.attr('id', 'li_' + (countNum + 1));
+                obj.attr('name', 'screenshot_upload_list');
                 obj.find("label").attr('id', 'screenshot_image_list' + (countNum + 1));
                 obj.find("label").attr('for', 'screenshotFileInput' + (countNum + 1));
 
@@ -341,11 +375,34 @@
                 $(currentTag).after(obj);
 
                 var lastFileInput = $("#screenshotFileInput" + (countNum + 1));
-
                 lastFileInput.attr('onchange', 'getThumbnailPreviewScreenshot(this,' + ' $(' + tag + '), ' + (countNum +1) + ')');
-
             }
-        };
+        }; */
+        
+        // 스크린샷 이미지 추가
+        var screenshotChange = function(currFileObj, currIndex) {
+        	// 이미지 화면처리
+        	$("#screenshotFileInput_"+ currIndex).css("display", "none");
+        	$("#screenshotFileLabel_"+ currIndex).css("display", "none");
+        	$("#dumy_div_"+ currIndex).css("display", "block");
+        	$("#dumy_image_"+ currIndex).css("display", "block");
+        	
+			var reader = new FileReader();
+			reader.onload = function (event) {
+				$("#dumy_image_"+ currIndex).attr("src", event.target.result);
+			};
+			reader.readAsDataURL(currFileObj.files[0]);
+			
+			// 신규이미지 첨부 엘리먼트 생성
+			var screenshotTemplateHtml = $("#screenshotTemplate").text();
+			var data = {"index": (currIndex + 1)};
+			$.tmpl(screenshotTemplateHtml, data).appendTo("#screenshot_ul");
+        }
+        
+        // 스크린샷 추가 이미지 삭제
+        var screenshotDelete = function(targetIndex) {
+        	$("#li_"+ targetIndex).detach();
+        }
 
         // [공통] 파일 첨부 시 이름 추출
         var extractFileName = function(html, $target) {
@@ -450,7 +507,16 @@
         };
 
         function confirmSoftware() {
-            if(doubleSubmitCheck()) return;
+            if(doubleSubmitCheck()) {
+            	return;
+            }
+            
+            // Loading
+            $("#myModal_ok").modal("hide");
+            loading.start("상품 등록중...");
+            
+            // 마지막 스크린샷 Empty File 삭제
+            $("#screenshot_ul").children().last().detach();
             submitForm();
         }
 
@@ -489,8 +555,7 @@
                 manCheck = true;
             }
 
-            var screenshotCheck = document.getElementById("screenshotFileInput0").value;
-            if(!manCheck && isEmpty(screenshotCheck) &&!screenshotCheck){
+            if(!manCheck && $("screenshot_ul").length > 1){
                 msg = "싱픔 스크린샷을 등록하십시오.";
                 manCheck = true;
             }
