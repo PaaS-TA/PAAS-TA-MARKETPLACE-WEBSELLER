@@ -69,7 +69,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">개요<i class="i_star">필수입력</i></th>
-                                <td><input class="form-control" style="height:50px;" type="text" th:value="${software.summary}" id="softwareSummary" maxlength="500"></td>
+                                <td><textarea th:text="${software.summary}" id="softwareSummary" style="height:150px;" maxlength="500"></textarea></td>
                             </tr>
                             <!--/*################################# START ICON CREATE #################################*/-->
                             <tr th:if="${software.iconPath == null}"><!-- CREATE -->
@@ -167,7 +167,7 @@
                                 <th scope="row">상세설명</th>
                                 <td>
                                     <div class="tbw_inner_txt">
-                                        <input class="form-control" style="height:150px;" type="text" th:value="${software.description}" id="softwareDescription" maxlength="3000">
+                                        <textarea th:text="${software.description}" id="softwareDescription" style="height:150px;" maxlength="3000"></textarea>
                                     </div>
                                 </td>
                             </tr>
