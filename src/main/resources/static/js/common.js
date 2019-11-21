@@ -95,13 +95,13 @@ var commonUtils = {
         }
 		return result;
     }, 
-    isEmpty(object) {
+    isEmpty: function(object) {
     	if (object == undefined || object == null) {
     		return true;
     	}
     	return false;
     }, 
-    isBlank(value) {
+    isBlank: function(value) {
     	if (value == undefined || value == null || value == "") {
     		return true;
     	}
