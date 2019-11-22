@@ -40,7 +40,6 @@ public class ProfileService {
     public List user() {
         log.info("profileService.users :: " + User.class.toString());
         Map map  = paasApiRest.getForObject("/users", Map.class);
-        System.out.println(map.toString());
         return null;
     }
 

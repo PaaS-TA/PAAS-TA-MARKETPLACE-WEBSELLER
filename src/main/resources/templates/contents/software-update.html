@@ -1006,7 +1006,6 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    //console.log("ERROR :: error :: ", error);
                     notifyAlert('danger','',JSON.parse(xhr.responseText).message);
                 },
                 complete : function(data) {
@@ -1027,10 +1026,8 @@
             reader.readAsDataURL(html.files[0]);
 
             if(html.files[0] == null){
-                //console.log("html.files[0] == null ::DATA_NO::");
                 return null;
             }else{
-                //console.log("html.files[0] != null ::DATA_YES::");
                 var fileInfo = html.files[0];
 
                 if(type === "prodFile") {

@@ -67,21 +67,13 @@ public class LoginController {
         }
         
         OAuth2AccessToken accessToken = client.getAccessToken();
-
         OAuth2User user = authentication.getPrincipal();
-
-        System.out.println("authentication access Token value ::: " + accessToken.getTokenValue());
-        System.out.println("authentication getName ::: " + user.getAttributes().get("user_name"));
 
         httpSession.setAttribute("yourName", user.getAttributes().get("user_name"));
         httpSession.setAttribute("token", accessToken.getTokenValue());
 
         int count = 0;
-
         CustomPage<Profile> profileList = profileService.getProfileList("?page=0&size=10&sort=id");
-
-        log.info(">> user :: " + user.getAttributes().get("user_name"));
-
         String userId = user.getAttributes().get("user_name").toString();
 
         for(Profile profiles : profileList) {

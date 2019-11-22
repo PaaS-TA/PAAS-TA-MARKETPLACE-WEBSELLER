@@ -330,55 +330,6 @@
 
         };
 
-        // 스크린샷
-        /* var getThumbnailPreviewScreenshot = function (html, $target, countNum) {
-            var currentTag = "#li_" + countNum;
-            $(currentTag).find("input").attr('name', 'screenshots');
-
-            // 추가버튼으로 파일추가하는게 아니면 SKIP
-            var newCreateIndex = $("li[name=screenshot_upload_list]").length - 1;
-            if (countNum != newCreateIndex) {
-            	return;
-            }
-
-            if (html.files && html.files[0]) {
-            	$("#dumy_image_div_0").attr("display", "black");
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    //$target.css('display', '');
-                    //$target.html('<img class="btn btn-default" src="' + e.target.result + '" border="0" alt="" />');
-                    $("#image_form_url_0").attr("display", "");
-                    $("#image_form_url_0").attr("src", e.target.result);
-                };
-                reader.readAsDataURL(html.files[0]);
-
-                console.log("들어온 카운트 ::: " + countNum);
-                console.log("플러스된 카운트 ::: " + (countNum + 1));
-
-                var tag = '"' + '#screenshot_image_list'+ (countNum +1) + '"';
-                console.log("tag :: " + tag);
-
-                // 이미지 파일 첨부 버튼 추가 하기
-                // 새로운 div 생성
-                var obj = $(currentTag).clone();
-                obj.attr('id', 'li_' + (countNum + 1));
-                obj.attr('name', 'screenshot_upload_list');
-                obj.find("label").attr('id', 'screenshot_image_list' + (countNum + 1));
-                obj.find("label").attr('for', 'screenshotFileInput' + (countNum + 1));
-
-                obj.find("input").attr('id', 'screenshotFileInput' + (countNum + 1));
-
-                // 초기화
-                obj.find("input").attr('onchange', '');
-                obj.find("input").attr('name', '');
-
-                $(currentTag).after(obj);
-
-                var lastFileInput = $("#screenshotFileInput" + (countNum + 1));
-                lastFileInput.attr('onchange', 'getThumbnailPreviewScreenshot(this,' + ' $(' + tag + '), ' + (countNum +1) + ')');
-            }
-        }; */
-        
         // 스크린샷 이미지 추가
         var screenshotChange = function(currFileObj, currIndex) {
         	// 이미지 화면처리
@@ -438,8 +389,6 @@
         function addRow() {
             index++;
             nameIndex++;
-            console.log("[index]: "+index);
-
             var toDayValue = $('#applyMonth').val();
 
             document.getElementById("pricePerMonth-tbody").insertRow(-1).innerHTML =

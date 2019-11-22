@@ -172,12 +172,9 @@
         };
 
         var pieChart = function (contentData){
-            console.log(">> pieChart init");
-
             var pieChartData = contentData.content;
 
             if(pieChartData.length == 0){
-                console.log(pieChartData.length);
                 return;
             }else{
                 var seriesData = [];
@@ -202,7 +199,6 @@
                     item = {name: map.name , data: userCount};
                     seriesData.push(item);
                 }
-                console.log(seriesData);
             }
 
             var container = document.getElementById('pieChartArea');
@@ -249,11 +245,8 @@
         };
 
         var lineChart = function(contentData) {
-            console.log(">> lineChart init");
-
             var countsData = countofInstsProvider;
             var lineChartData = contentData.content;
-
             var container = document.getElementById('lineChartArea');
 
             if (lineChartData.length == 0) {
@@ -277,8 +270,6 @@
                     lineSeriesData.push(lineItem);
                 }
             }
-
-            console.log(lineSeriesData);
 
             var data = {
                 categories: countofInstsProvider.terms,
@@ -336,13 +327,7 @@
                 dateParameter = "&createdDateAfter=" + createdDateAfter + "T00:00:00" + "&createdDateBefore=" + createdDateBefore + "T23:59:59";
             }
 
-
-            console.log("createdDateAfter ::: "  + createdDateAfter);
-            console.log("createdDateBefore ::: "  + createdDateBefore);
-
             var reqUrl = "/softwares" + "?categoryId=" + categoryId + "&page=" + pageNum + "&size=" + PAGING_SIZE + "&sort=" + SORT + dateParameter;
-
-            console.log("dateParameter ::: "  + dateParameter);
 
             if (pageNum != null)
             	pageNumSave = pageNum;
@@ -412,19 +397,15 @@
             //::page::
             var pageTotalNumber = data.totalElements;   // 총 데이터 수
         	var pageSize = data.size;                   // 한 페이지에 나타낼 데이터 수
-        	console.log("data.size= " + data.size);
         	paging(pageTotalNumber, pageSize, PAGING_SIZE, pageNumSave);
 
         	function paging(pageTotalNumber, pageSize, PAGING_SIZE, currentPage){
-            	console.log("currentPage : " + currentPage);
             	currentPage = parseInt(currentPage);
 
             	var totalPage = Math.ceil(pageTotalNumber/pageSize);           // 총 페이지 수
             	if (currentPage)
             		var pageGroup = Math.ceil((currentPage+1)/PAGING_SIZE);    // 페이지 그룹
             	else var pageGroup = 1;
-
-                console.log("pageGroup : " + pageGroup);
 
                 var last = pageGroup * PAGING_SIZE;        // 화면에 보여질 마지막 페이지 번호 (실제 페이지와 -1 차이)
                 if(last > totalPage)
@@ -434,12 +415,6 @@
                     first = 0;
                 var next = currentPage + 1;                // 다음 페이지
                 var prev = currentPage - 1;                // 이전 페이지
-
-                console.log("last : " + last);
-                console.log("first : " + first);
-                console.log("next : " + next);
-                console.log("prev : " + prev);
-
                 var htmlStringPage = "";
 
                 if(currentPage==0) {
@@ -482,7 +457,6 @@
 
         // moveSoftwareStatsDetail
         var moveSoftwareStatsDetail = function(id) {
-            console.log(id);
             procMovePage("/stats/softwares/{id}".replace("{id}", id));
         };
 
