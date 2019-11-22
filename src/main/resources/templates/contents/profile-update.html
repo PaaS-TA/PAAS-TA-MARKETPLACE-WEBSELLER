@@ -120,7 +120,6 @@
 
         $("#profilesTypes").change(function() {
             // Add action of select option
-            console.log($("#profilesTypes option:selected").val());
         });
 
         $("#saveBtn").on("click", function () {
@@ -173,12 +172,10 @@
                 "status" : prifileStatus
             }
 
-            console.log(JSON.stringify(reqParam));
             procCallAjax(reqUrl, "PUT", JSON.stringify(reqParam), null, callbackModifyProfiles);
         }
 
         var callbackModifyProfiles = function(data) {
-            console.log("::callbackModifyProfiles DATA:: " + data);
             procMovePage("/profiles/{id}".replace("{id}", profileId));
         };
 

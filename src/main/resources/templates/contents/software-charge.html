@@ -158,8 +158,6 @@
             var srchDate = yearValue +"-"+ commonUtils.dateValueDigit(monthValue) +"-01";
             var reqUrl = "/stats/statsSoftwareSellPrice" + "?categoryId=" + categoryId + "&page=" + pageNum + "&size=" + PAGING_SIZE +"&srchDate="+ srchDate;
             
-            console.log(reqUrl);
-
             if (pageNum != null)
             	pageNumSave = pageNum;
            
@@ -170,8 +168,6 @@
         };
 
         var callbackStatsSoftwareList = function(data) {
-            console.log(">>>>>>> data: %o", data);
-            
             // 리스트 초기화
             $("#statsSoftwareArea").html("");
             
@@ -197,15 +193,12 @@
         	paging(pageTotalNumber, pageSize, PAGING_SIZE, pageNumSave);
         	
         	function paging(pageTotalNumber, pageSize, PAGING_SIZE, currentPage){
-            	console.log("currentPage : " + currentPage);
             	currentPage = parseInt(currentPage);
                 
             	var totalPage = Math.ceil(pageTotalNumber/pageSize);           // 총 페이지 수
             	if (currentPage)
             		var pageGroup = Math.ceil((currentPage+1)/PAGING_SIZE);    // 페이지 그룹
             	else var pageGroup = 1;
-                
-                console.log("pageGroup : " + pageGroup);
                 
                 var last = pageGroup * PAGING_SIZE;        // 화면에 보여질 마지막 페이지 번호 (실제 페이지와 -1 차이)
                 if(last > totalPage)
@@ -215,12 +208,6 @@
                     first = 0;                               
                 var next = currentPage + 1;                // 다음 페이지
                 var prev = currentPage - 1;                // 이전 페이지
-                
-                console.log("last : " + last);
-                console.log("first : " + first);
-                console.log("next : " + next);
-                console.log("prev : " + prev);
-                 
                 var htmlStringPage = "";
                 
                 if(currentPage==0) {
@@ -283,11 +270,8 @@
         function selectCal(monthfield, yearfield) {
             var today = new Date();
 
-            console.log("오늘?? " + (today.getMonth() + 1));
             yearValue = today.getFullYear();
             monthValue = (today.getMonth() + 1);
-
-            console.log("기본 이어1 ::: " + yearValue + "& 기본 몬쓰1 ::: " + monthValue);
 
             for (var i = 1; i < 13; i++) {
 
@@ -306,13 +290,11 @@
 
         var selectYear = function() {
             var selectedYearValue = $("#selectDateYear1 option:selected").val();
-            console.log("Year ::: " + selectedYearValue);
             yearValue = selectedYearValue;
         };
 
         var selectMonth = function() {
             var selectedMonthValue = $("#selectDateMonth1 option:selected").val();
-            console.log("Month ::: " + selectedMonthValue);
             monthValue = selectedMonthValue;
         };
 

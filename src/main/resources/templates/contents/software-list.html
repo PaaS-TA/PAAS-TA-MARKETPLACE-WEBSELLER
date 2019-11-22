@@ -209,10 +209,7 @@
 
             // datepicker 기간 내 날짜 조회
             var startDate = $("#startDatePicker").datepicker('option', 'dateFormat', 'yy-mm-dd').val();
-            console.log("시작 날짜 ::: "  + startDate);
-
             var endDate = $("#endDatePicker").datepicker('option', 'dateFormat', 'yy-mm-dd').val();
-            console.log("종료 날짜 ::: "  + endDate);
 
           	//조회일자 범위 검사
             if (!commonUtils.isBlank(startDate) || !commonUtils.isBlank(endDate)) {
@@ -249,7 +246,6 @@
 
             // 전체 상품 목록 조회 url
             var reqUrl = "/softwares" + "?categoryId=" + selectedCategory + "&nameLike=" + searchKeyword + "&status=" + selectedStatus + "&inUse=" + selectedUseYn + "&page=" + pageNum + "&size=" + PAGING_SIZE + "&sort=" + SORT + dateParameter;
-            console.log("전체 경로 ::: "  + reqUrl);
 
             if (pageNum != null)
             	pageNumSave = pageNum;
@@ -314,15 +310,12 @@
         	paging(pageTotalNumber, pageSize, PAGING_SIZE, pageNumSave);
 
         	function paging(pageTotalNumber, pageSize, PAGING_SIZE, currentPage){
-            	console.log("currentPage : " + currentPage);
             	currentPage = parseInt(currentPage);
 
             	var totalPage = Math.ceil(pageTotalNumber/pageSize);           // 총 페이지 수
             	if (currentPage)
             		var pageGroup = Math.ceil((currentPage+1)/PAGING_SIZE);    // 페이지 그룹
             	else var pageGroup = 1;
-
-                console.log("pageGroup : " + pageGroup);
 
                 var last = pageGroup * PAGING_SIZE;        // 화면에 보여질 마지막 페이지 번호 (실제 페이지와 -1 차이)
                 if(last > totalPage)
@@ -332,12 +325,6 @@
                     first = 0;
                 var next = currentPage + 1;                // 다음 페이지
                 var prev = currentPage - 1;                // 이전 페이지
-
-                console.log("last : " + last);
-                console.log("first : " + first);
-                console.log("next : " + next);
-                console.log("prev : " + prev);
-
                 var htmlStringPage = "";
 
                 if(currentPage==0) {
@@ -378,14 +365,6 @@
 
         };
 
-
-        // // multi select
-        // $(".selectField").change(function() {
-        //     // Add action of select option
-        //     console.log("여기 타야된다잉!!! 잉??! 잉?!!! 하고 롱드가 말했다...");
-        //     getMySoftwareList();
-        // });
-
         // search button
         $("#searchProductBtn").on("click", function () {
             getMySoftwareList();
@@ -400,9 +379,7 @@
         // SORT(date range classification)
         var selectBox = function () {
             var selectedValue = $("#datePeriod option:selected").val();
-            console.log("등록일 or 승인일 ::: " + selectedValue);
             DATE_DIVISION = selectedValue;
-
         };
 
      	// 페이지 이동
