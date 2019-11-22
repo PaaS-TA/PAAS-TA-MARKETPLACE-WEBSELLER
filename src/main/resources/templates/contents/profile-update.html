@@ -124,6 +124,32 @@
         });
 
         $("#saveBtn").on("click", function () {
+        	
+            var manCheck = false;
+            var msg = "";
+
+         	// 판매자명
+            if (!manCheck && commonUtils.isBlank($("#profilesName").val())) {
+            	msg = "판매자명을 입력하세요.";
+                manCheck = true;
+            }
+            // 유형
+            if (!manCheck && commonUtils.isBlank($("#profilesTypes").val())) {
+            	msg = "유형을 선택하세요.";
+                manCheck = true;
+            }
+            // 메일주소
+            if (!manCheck && commonUtils.isBlank($("#profilesEmail").val())) {
+            	msg = "메일주소를 입력하세요.";
+                manCheck = true;
+            }
+            
+            // 알림 노출
+            if(manCheck) {
+                commonAlert.show(msg);
+                return;
+            }
+            
             modifyProfiles();
         });
 
