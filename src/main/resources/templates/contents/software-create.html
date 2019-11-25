@@ -83,21 +83,39 @@
                                     <th scope="row">아이콘<i class="i_star">필수입력</i></th>
                                     <td>
                                         <!-- 첨부파일 -->
-                                        <div class="fileUploadWrap selected_ico" style="width:50%;">
-                                            <input tabindex="-1" class="form-control" id="iconFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="iconFile" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getThumbnailPreview(this, $('#icon_image'))">
+                                        <div class="fileUploadWrap selected_ico" style="width:50%;" id="iconFileSelect">
+                                            <input tabindex="-1" class="form-control" id="iconFileInput" style="position: absolute; clip: rect(0px 0px 0px 0px);" type="file" name="iconFile" data-icon-name="fa fa-upload" data-button-text="" data-class-input="form-control" data-class-button="btn btn-default" filestyle="" onchange="getIconImagePreview(this, $('#icon_image'))">
                                             <div class="bootstrap-filestyle input-group">
-                                                    <span tabindex="0" class="group-span-filestyle input-group-btn">
-                                                        <label class="btn btn-default " for="iconFileInput" id="icon_image">
-                                                             <!--<img src="../../static/images/bg_ico_01.png" alt="" />-->  <!--파일업로드 후 첨부한 이미지 넣는 영역-->
-                                                            <span class="ico ico_fileupload">파일찾기</span>
-                                                        </label>
-                                                    </span>
+                                                <span tabindex="0" class="group-span-filestyle input-group-btn">
+                                                    <label class="btn btn-default " for="iconFileInput" id="icon_image">
+                                                        <span class="ico ico_fileupload">파일찾기</span>
+                                                    </label>
+                                                </span>
                                                 <div class="input-form-group">
                                                     <input name="userfile" disabled="" class="form-control" id="iconFile" type="text" placeholder="아이콘으로 등록할 이미지를 선택하세요.">
                                                 </div>
                                             </div>
                                         </div>
                                         <!-- //첨부파일 -->
+                                        <div class="fileUploadWrap selected_ico" style="width:50%; display:none;" name="divPreview" id="iconFileSelectPreview">
+	                                        <div class="bootstrap-filestyle input-group" id="bootstrap-filestyle input-group2">
+	                                            <span tabindex="0" class="group-span-filestyle input-group-btn">
+	                                                 <label class="btn btn-default ">
+	                                                    <img class="logo" alt="" src="" id="iconFilePath" />
+	                                                 </label>
+	                                            </span>
+	                                            <div class="input-form-group">&nbsp;
+	                                                <a href="#" onclick="deleteSelectedIconImage();"><img src="../../static/images/ico_delete.png"/></a>&nbsp;
+	                                                <span id="iconFileNamePreview"></span>
+	                                            </div>
+	                                            <div>
+	                                                <label id="serviceLabelThumbName2" name="labelThumbName"></label>
+	                                                <div id="serviceThumRemove2" name="thumRemove" class="pull-right file-remove-button">
+	                                                    <i class="fa fa-times"></i>
+	                                                </div>
+	                                            </div>
+	                                        </div>
+	                                    </div>
                                     </td>
                                 </tr>
 								<tr>
@@ -317,17 +335,29 @@
     <!-- //screenshotTemplate Template -->
 
     <script type="text/javascript" th:inline="javascript">
-        // 아이콘
-        var getThumbnailPreview = function (html, $target) {
+        // 아이콘 선택
+        var getIconImagePreview = function (html, $target) {
+        	var iconPreviewImage = $("#iconFilePath");
+        	
             if (html.files && html.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
-                    $target.css('display', '');
-                    $target.html('<img src="' + e.target.result + '" border="0" alt="" />');
+                    iconPreviewImage.attr("src", e.target.result);
                 };
                 reader.readAsDataURL(html.files[0]);
+                
+                $("#iconFileNamePreview").text(html.files[0].name);
+                $("#iconFileSelect").hide();
+                $("#iconFileSelectPreview").show();
             }
-
+        };
+        
+        // 아이콘 삭제
+        var deleteSelectedIconImage = function (html, $target) {
+        	$("#iconFileInput").val("");
+        	$("#iconFileNamePreview").text("");
+			$("#iconFileSelect").show();
+			$("#iconFileSelectPreview").hide();
         };
 
         // 스크린샷 이미지 추가
@@ -379,9 +409,7 @@
                     checkbox.eq(i).parent().parent().remove();
                 }
             }
-
         };
-
 
         //[테이블] 행 추가
         var index = 1000;
@@ -498,7 +526,7 @@
                 manCheck = true;
             }
 
-            var fileCheck = document.getElementById("iconFileInput").value;
+            var fileCheck = $("#iconFileInput").val();
             if(!manCheck && isEmpty(fileCheck) &&!fileCheck){
                 msg = "상품 아이콘을 등록하십시오.";
                 manCheck = true;

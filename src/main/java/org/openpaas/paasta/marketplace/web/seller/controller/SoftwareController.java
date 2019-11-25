@@ -1,15 +1,28 @@
 package org.openpaas.paasta.marketplace.web.seller.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.StringUtils;
-import org.openpaas.paasta.marketplace.api.domain.*;
+import org.openpaas.paasta.marketplace.api.domain.CustomPage;
+import org.openpaas.paasta.marketplace.api.domain.Profile;
+import org.openpaas.paasta.marketplace.api.domain.Software;
+import org.openpaas.paasta.marketplace.api.domain.SoftwareHistory;
+import org.openpaas.paasta.marketplace.api.domain.SoftwarePlan;
+import org.openpaas.paasta.marketplace.api.domain.SoftwareSpecification;
+import org.openpaas.paasta.marketplace.api.domain.Yn;
 import org.openpaas.paasta.marketplace.web.seller.common.CommonService;
 import org.openpaas.paasta.marketplace.web.seller.service.ProfileService;
 import org.openpaas.paasta.marketplace.web.seller.service.SoftwareService;
 import org.openpaas.paasta.marketplace.web.seller.storageApi.store.swift.SwiftOSService;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,18 +30,20 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping(value = "/softwares")
@@ -272,7 +287,7 @@ public class SoftwareController {
      */
     @DeleteMapping(value = "/file/{id}/screenShots/{imgPath}")
     @ResponseBody
-    public Software deleteScreenshotList(@PathVariable Long id, @PathVariable String imgPath) {
+    public Software deleteScreenshotList(@PathVariable Long id, @PathVariable String imgPath, @RequestBody Map<String, String> params) {
 
         Software software = softwareService.getSoftware(id);
 
@@ -290,9 +305,10 @@ public class SoftwareController {
                 }
             }
         }
-
+        
+        String historyDescription = params.get("historyDescription") != null ? params.get("historyDescription") : "스크린샷 삭제";
         software.setScreenshotList(screenshotPackList);
-        software.setHistoryDescription("스크린샷 삭제");
+        software.setHistoryDescription(historyDescription);
 
         return softwareService.updateSoftware(id, software);
     }

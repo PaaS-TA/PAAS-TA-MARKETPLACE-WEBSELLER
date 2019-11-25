@@ -117,7 +117,7 @@
                                             </span>
                                             <div class="input-form-group">&nbsp;
                                                 <a href="" data-toggle="modal" data-target="#myModal_icon_del"><img src="../../static/images/ico_delete.png" alt="" /></a>&nbsp;
-                                                <span th:text="${software.icon}"></span>
+                                                <span th:text="${software.icon}" id="iconFileNamePreview"></span>
                                             </div>
                                             <div>
                                                 <label id="serviceLabelThumbName2" name="labelThumbName"></label>
@@ -424,7 +424,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" name="button" id="deleteScreenShotBtn" class="btn btn-color1" onclick="deleteScreenShotBtn()" data-dismiss="modal">확인</button>
-<!--                    <button type="button" name="button" class="btn btn-color1"  th:onclick="'javascript:delFileBtn(\''+ ${software.id} +'\');'">확인</button>-->
                     <button type="button" name="button" class="btn btn-color2" data-dismiss="modal">닫기</button>
                 </div>
             </div>
@@ -530,7 +529,7 @@
                 </span>
                 <div class="input-form-group">&nbsp;
                     <a href="" data-toggle="modal" data-target="#myModal_icon_del"><img src="../../static/images/ico_delete.png" alt="" /></a>&nbsp;
-                    <span>${icon}</span>
+                    <span id="iconFileNamePreview">${icon}</span>
                 </div>
                 <div>
                     <label id="serviceLabelThumbName2" name="labelThumbName"></label>
@@ -680,7 +679,7 @@
             }
 
             $('#myModal_ok').modal("hide");
-            loading.start("SOFTWARE MODIFING...");
+            loading.start("상품 정보 수정중...");
             
             var reqParam = {
                 "inUse" : $('input:radio[name="softwareInUse"]:checked').val(),
@@ -765,8 +764,8 @@
 
         // [아이콘] Swift 삭제
         function deleteIconBtn() {
-        	loading.interval(LOADING_TIME, "ICON IMAGE DELETING...");
         	$("#myModal_icon_del").modal("hide");
+        	loading.interval(LOADING_TIME, "아이콘 이미지 삭제중...");
         	
             // Swift - delete
             var iconImagePath = jQuery('#iconFilePath').attr("src");
@@ -782,10 +781,11 @@
             $('div[name=reSelectPreview]').show();
 			            
             var id = $("#id").val();
+            var iconFileName = $("#iconFileNamePreview").text();
             var param = {
                 "filePath": null,
                 "fileName": null,
-                "historyDescription": "아이콘 삭제"
+                "historyDescription": "아이콘 삭제 ["+ iconFileName +"]"
             };
 
             var url = encodeURI("/softwares/file/"+ id + "/icon");
@@ -851,12 +851,12 @@
             formData.append("file", data);
 
             if(fileType === "screenShots") {
-            	loading.interval(LOADING_TIME, "SCREENSHOT IMAGE UPLOADING...");
+            	loading.interval(LOADING_TIME, "스크린샷 이미지 등록중...");
                 uploadFile(formData,"POST","/v2/swift", createRegisterFileInfo);
             }
 
             if(fileType === "icon") {
-            	loading.interval(LOADING_TIME, "ICON IMAGE UPLOADING...");
+            	loading.interval(LOADING_TIME, "아이콘 이미지 등록중...");
                 uploadFile(formData,"POST","/v2/swift", createIconFile);
             }
 
@@ -880,8 +880,8 @@
 
             var param = {
                 "filePath": FILE_INFO.iconFilePath,
-                "fileName": data.filename,
-                "historyDescription": "아이콘 신규 등록"
+                "fileName": FILE_INFO.iconFileName,
+                "historyDescription": "아이콘 등록 ["+ FILE_INFO.iconFileName +"]"
             };
 
             var url = encodeURI("/softwares/file/"+ id + "/icon");
@@ -915,7 +915,7 @@
 
             var param = {
                 "filePath": FILE_INFO.screenshotsFilePath,
-                "historyDescription": "스크린샷 추가"
+                "historyDescription": "스크린샷 등록 ["+ decodeURIComponent(FILE_INFO.screenshotsFilePath) +"]"
             };
 
             var url = encodeURI("/softwares/file/"+ id + "/screenShots");
@@ -961,13 +961,17 @@
 
         //[스크린 샷] Swift 파일삭제
         function deleteScreenShotBtn() {
-        	loading.interval(LOADING_TIME, "SCREENSHOT IMAGE DELETING...");
+        	$("#myModal_del").modal("hide");
+        	loading.interval(LOADING_TIME, "스크린샷 이미지 삭제중...");
+        	
             var index = $("#indexForScreenShot").val();
             var selectId = "#image_form_url" + index;
-
             var selectedScreenshot = $(selectId).attr("src");
             var imgPath = selectedScreenshot.substring(selectedScreenshot.lastIndexOf("/") + 1);
-
+            
+            // 삭제된 스크린샷 히스토리 정보 설정
+            FILE_INFO.deleteImagePath = selectedScreenshot;
+           
             var reqUrl = "/v2/swift/{name}".replace("{name}", imgPath);
             procCallAjax(reqUrl ,"DELETE", null, null, callbackDeleteScreenShotSwift);
         }
@@ -975,13 +979,19 @@
         var callbackDeleteScreenShotSwift = function (data) {
             if ("SUCCESS" == data.result) {
                 deleteScreenShot(data.deletedImgPath);
+            } else {
+            	loading.stop();
             }
         };
 
         // [스크린 샷] 삭제정보 DB UPDATE
         function deleteScreenShot(imgPath) {
             var id = $("#id").val();
-            procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath, "DELETE", null, null, totalScreenShotList);
+            var param = {
+                "historyDescription": "스크린샷 삭제 ["+ FILE_INFO.deleteImagePath +"]"
+            };
+
+            procCallAjax("/softwares/file/"+ id + "/screenShots/" + imgPath, "DELETE", JSON.stringify(param), null, totalScreenShotList);
         }
 
         // reqType 따른 파일 업로드/삭제 처리
