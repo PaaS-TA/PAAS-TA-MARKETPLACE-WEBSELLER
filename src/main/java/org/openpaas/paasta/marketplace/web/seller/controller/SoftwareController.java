@@ -3,6 +3,7 @@ package org.openpaas.paasta.marketplace.web.seller.controller;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -387,5 +389,36 @@ public class SoftwareController {
         return softwareService.getApplyMonth(id, applyMonth);
     }
 
+    /**
+     * 판매자의 상품 목록 조회
+     *
+     * @param httpServletRequest the httpServletRequest
+     * @return CustomPage<Software>
+     */
+    @GetMapping("/with/instanceCount")
+    @ResponseBody
+    public Map<String,Object> getSoftwareWithInstanceCountList(HttpServletRequest httpServletRequest){
+    	Map<String,Object> resultMap = new HashMap<String,Object>();
+    	
+    	// 소프트웨어 리스트 조회
+    	CustomPage<Software> softwarePage = softwareService.getSoftwareList(commonService.setParameters(httpServletRequest));
+    	List<Software> softwareList = softwarePage.getContent();
+    	resultMap.put("softwarePage", softwarePage);
+    	
+    	if (CollectionUtils.isEmpty(softwareList)) {
+    		return resultMap;
+    	}
+    	
+    	List<Long> softwareIdList = new ArrayList<Long>();
+    	for (Software info : softwareList) {
+    		softwareIdList.add(info.getId());
+    	}
+    	
+    	// 판매된 소프트웨어의 카운트정보 조회
+    	Map<String,Object> instanceCountMap = softwareService.getSoftwareInstanceCountMap(softwareIdList);
+    	resultMap.put("instanceCountMap", instanceCountMap);
+    	
+        return resultMap;
+    }
 
 }

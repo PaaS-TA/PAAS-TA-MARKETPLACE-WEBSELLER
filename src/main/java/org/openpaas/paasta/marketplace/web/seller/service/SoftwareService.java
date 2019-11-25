@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -112,4 +113,19 @@ public class SoftwareService {
         return (result.getBody() == null ? 0 : result.getBody());
     }
 
+    /**
+     * 판매된 소프트웨어의 카운트정보 조회
+     * @param queryParamString
+     * @return
+     */
+    public Map<String,Object> getSoftwareInstanceCountMap(List<Long> softwareIdList) {
+        UriComponentsBuilder builder = UriComponentsBuilder.newInstance().path("/softwares/instanceCount");
+        for (Long id : softwareIdList) {
+            builder.queryParam("softwareIdList", id);
+        }
+        String url = builder.buildAndExpand().toUriString();
+
+        return paasApiRest.getForObject(url, Map.class);
+    }
+ 
 }

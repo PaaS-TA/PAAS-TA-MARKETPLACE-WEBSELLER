@@ -192,7 +192,9 @@ public class CommonService {
          */
         PARAMETERS_USAGE_END_DATE("usageEndDate"),
 
-        PARAMETERS_SEARCH_DATE("srchDate");
+        PARAMETERS_SEARCH_DATE("srchDate"),
+    	PARAMETERS_SEARCH_START_DATE("srchStartDate"),
+    	PARAMETERS_SEARCH_END_DATE("srchEndDate");
         
         private String actualValue;
 

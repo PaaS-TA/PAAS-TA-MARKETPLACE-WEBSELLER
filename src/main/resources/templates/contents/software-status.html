@@ -98,7 +98,7 @@
         <!-- //검색 Form -->
         </form>
         <div class="cont-titWrap mt30">
-            <h3 class="h-tit3">전체 상품 / 판매 상품 / 판매량<span class="point4" id="totalCount"></span></h3>
+            <h3 class="h-tit3">전체 상품 / 판매 상품 / 사용자<span class="point4" id="totalCount"></span></h3>
         </div>
 
         <!-- 테이블 -->
@@ -143,6 +143,8 @@
         var PAGING_SIZE = 10;
         var pageNumSave = 0;
         var SORT = "id,asc";
+        var CURR_TOTAL_ELEMENTS = 0;
+        var NEXT_STEP_PROC_URL;
 
         // 상품 사용자 수
         var userCountPerSoftware = "[[${instanceUserCount}]]";
@@ -310,6 +312,7 @@
         }
 
         var getSoftwareStatsList = function (pageNum) {
+        	var srchDateParameter = "";
             var dateParameter;                                              //날짜
             var categoryId = $("#categoryId option:selected").val();        //카테고리
 
@@ -320,48 +323,70 @@
             var createdDateAfter = $("#createdDateAfter").datepicker('option', 'dateFormat', 'yy-mm-dd').val();
             var createdDateBefore = $("#createdDateBefore").datepicker('option', 'dateFormat', 'yy-mm-dd').val();
 
+          	//조회일자 범위 검사
+            if (!commonUtils.isBlank(createdDateAfter) || !commonUtils.isBlank(createdDateBefore)) {
+            	if (commonUtils.isBlank(createdDateAfter)) {
+            		commonAlert.show("검색 시작일자를 선택해주세요");
+            		return;
+            	} else if (commonUtils.isBlank(createdDateBefore)) {
+            		commonAlert.show("검색 종료일자를 선택해주세요");
+            		return;
+            	}
+            	var startDateTemp = createdDateAfter.replace(/\-/g, "");
+            	var endDateTemp = createdDateBefore.replace(/\-/g, "");
+            	if (startDateTemp > endDateTemp) {
+            		commonAlert.show("검색 시작일이 종료일보다 클수없습니다.");
+            		return;
+            	}
+            }
 
             if((createdDateAfter === "" || createdDateAfter === undefined) && (createdDateBefore === "" || createdDateBefore === undefined)) {
                 dateParameter = "&createdDateAfter=" + '' + "&createdDateBefore=" + '';
             }else{
                 dateParameter = "&createdDateAfter=" + createdDateAfter + "T00:00:00" + "&createdDateBefore=" + createdDateBefore + "T23:59:59";
+                srchDateParameter = "&srchStartDate=" + createdDateAfter + "T00:00:00" + "&srchEndDate=" + createdDateBefore + "T23:59:59";
             }
 
-            var reqUrl = "/softwares" + "?categoryId=" + categoryId + "&page=" + pageNum + "&size=" + PAGING_SIZE + "&sort=" + SORT + dateParameter;
-
+         	// 리스트 조회
+            //var reqUrl = "/softwares" + "?categoryId=" + categoryId + "&page=" + pageNum + "&size=" + PAGING_SIZE + "&sort=" + SORT + dateParameter;
+            var reqUrl = "/softwares/with/instanceCount" + "?categoryId=" + categoryId + "&page=" + pageNum + "&size=" + PAGING_SIZE + "&sort=" + SORT + dateParameter;
             if (pageNum != null)
             	pageNumSave = pageNum;
-
             procCallAjax(reqUrl, "GET", null, null, callbackSoftwareStatsList);
+            
+            // 상태 요약정보 조회 URL 생성
+            NEXT_STEP_PROC_URL = "/stats/softwares/statsInfo" + "?categoryId=" + categoryId + srchDateParameter;
+            procCallAjax(NEXT_STEP_PROC_URL, "GET", null, null, callbackSoftwareStatsInfo);
         };
 
+        // 상태 요약 정보 화면설정
+        var callbackSoftwareStatsInfo = function(data) {
+        	$("#totalCount").text(" ("+ CURR_TOTAL_ELEMENTS +" / "+ data.countOfInstsUsing +" / "+ data.countOfUsersUsing +")");
+        }
 
-        var callbackSoftwareStatsList = function(data) {
-            $("#totalCount").text(" (" + data.totalElements + " / " + soldSwCount + " / " + instanceCountSum + ")");
+        var callbackSoftwareStatsList = function(resultMap) {
+        	var data = resultMap.softwarePage;
+        	var instanceCountMap = resultMap.instanceCountMap;
+        	
+        	// 조회된 상품 전체 카운터
+        	CURR_TOTAL_ELEMENTS = data.totalElements;
 
             var softwareStatusList = $("#softwareStatusArea");
             var htmlString = [];
             var content = data.content;
-
             var listLength = content.length;
 
             // 판매량
-            var soldInstanceCountList = "[[${soldInstanceCount}]]";
-            var soldInstanceCount = soldInstanceCountList.replace("{", "").replace("}", "").split(",");
             var soldCount;
 
             if (listLength > 0) {
                 getSoftwareStatsChart(data);
                 for (var i = 0; i < listLength; i++) {
                 	var index = i + pageNumSave * data.size;
-
-                	soldCount = 0;
-					for (var idx=0; idx<soldInstanceCount.length ;idx++) {
-						var value = soldInstanceCount[idx].split("=");
-						if (content[i].id == value[0]) {
-	                    	soldCount = value[1];
-	                    	break;
-	                    }
+                	
+					soldCount = instanceCountMap[content[i].id];
+					if (commonUtils.isEmpty(soldCount)) {
+						soldCount = 0;
 					}
                     
                     var statusModifiedDate = '';

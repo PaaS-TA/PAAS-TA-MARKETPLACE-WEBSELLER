@@ -220,4 +220,17 @@ public class StatsController {
     	return resultMap;
     }
 
+    @GetMapping(value = "/softwares/statsInfo")
+    @ResponseBody
+    public Map<String,Object> softwareStatsInfo(HttpServletRequest httpServletRequest) {
+    	Map<String,Object> resultMap = new HashMap<String,Object>();
+
+    	// 현재 사용중인 상품 카운트
+    	resultMap.put("countOfInstsUsing", statsService.getCountOfInstsUsing(commonService.setParameters(httpServletRequest)));
+    	
+    	// 현재 상품을 사용중인 User 카운트
+    	resultMap.put("countOfUsersUsing", statsService.getCountOfUsersUsing(commonService.setParameters(httpServletRequest)));
+
+        return resultMap;
+    }
 }
