@@ -13,7 +13,9 @@ import java.util.TreeMap;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.openpaas.paasta.marketplace.api.domain.Category;
 import org.openpaas.paasta.marketplace.api.domain.CustomPage;
 import org.openpaas.paasta.marketplace.api.domain.Instance;
@@ -22,6 +24,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+@RunWith(MockitoJUnitRunner.Silent.class)
 @SuppressWarnings("unchecked")
 public class StatsServiceTest extends AbstractMockTest {
 
@@ -213,6 +216,8 @@ public class StatsServiceTest extends AbstractMockTest {
                 any(ParameterizedTypeReference.class))).thenReturn(instancePageResponse);
         when(instancePageResponse.getBody()).thenReturn(instanceCustomPage);
         when(instanceCustomPage.getContent()).thenReturn(instanceList);
+       
+        when(statsService.countOfSoldSw(any(String.class))).thenReturn(instanceList.size());
 
         long result = statsService.countOfSoldSw(userId);
         if (!instanceListEmpty) {
