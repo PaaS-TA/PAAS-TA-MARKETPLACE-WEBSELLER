@@ -29,6 +29,11 @@
             </div>
         </div>
     </div>
+    <script th:inline="javascript" type="text/javascript" layout:fragment="custom-script">
+    	$('#commonAlertModal').on('hide.bs.modal', function (e) {
+			commonAlert.excCallBackFunc();
+		})
+    </script>
     <!--/* //공통알림 팝업 Modal */-->
 </body>
 

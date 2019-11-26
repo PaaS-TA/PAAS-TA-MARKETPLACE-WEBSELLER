@@ -157,6 +157,7 @@ var loading = {
 
 //공통 알림 Modal
 var commonAlert = {
+	callBackArguments: null,
 	show: function(message) {
 		$("#commonAlertModal-Message").html(message);
 		$("#commonAlertModal").modal("show");
@@ -164,5 +165,44 @@ var commonAlert = {
 	hide: function() {
 		$("#commonAlertModal-Message").html("");
 		$("#commonAlertModal").modal("hide");
+	},
+	setCallBackFunc: function() {
+		this.callBackArguments = arguments;
+	},
+	excCallBackFunc: function() {
+		var execFunction = "";
+		if (commonUtils.isEmpty(this.callBackArguments)) {
+			return;
+		}
+
+		if (typeof this.callBackArguments[0] !== "function") {
+			this.callBackArguments = null;
+			return;
+		}
+
+		if (commonUtils.isEmpty(this.callBackArguments) || this.callBackArguments.length > 1) {
+			execFunction = "this.callBackArguments[0](";
+			var argCount = this.callBackArguments.length;
+			
+			for (var idx=1; idx<argCount ;idx++) {
+				if (idx == 1) {
+					execFunction += "this.callBackArguments["+ idx +"]";
+				} else {
+					execFunction += ",this.callBackArguments["+ idx +"]";
+				}
+			}
+			
+			execFunction += ")";
+		} else {
+			execFunction = "this.callBackArguments[0]()";
+		}
+		
+		try {
+			eval(execFunction);
+		} catch(error) {
+			console.log(error.message);
+		}
+		
+		this.callBackArguments = null;
 	}
 }
