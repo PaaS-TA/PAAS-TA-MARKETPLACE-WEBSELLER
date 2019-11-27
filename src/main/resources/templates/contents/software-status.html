@@ -377,12 +377,13 @@
             var htmlString = [];
             var content = data.content;
             var listLength = content.length;
+            var soldCount;	// 판매량
 
-            // 판매량
-            var soldCount;
-
+            // 차트 그리기
+            getSoftwareStatsChart(data);
+            
+            // 리스트 그리기
             if (listLength > 0) {
-                getSoftwareStatsChart(data);
                 for (var i = 0; i < listLength; i++) {
                 	var index = i + pageNumSave * data.size;
                 	
@@ -415,10 +416,9 @@
                     );
                 }
             } else {
-                htmlString = "<tr>"
-                    + "<td colspan='7'><p class='user_p'>상품이 존재하지 않습니다.</p></td>" + "</tr>"
-
+                htmlString = "<tr><td colspan='7'><p class='user_p'>상품이 존재하지 않습니다.</p></td></tr>";
             }
+            
             softwareStatusList.html(htmlString);
 
             //::page::
