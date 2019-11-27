@@ -98,7 +98,7 @@
         <!-- //검색 Form -->
         </form>
         <div class="cont-titWrap mt30">
-            <h3 class="h-tit3">전체 상품 / 판매 상품 / 사용자<span class="point4" id="totalCount"></span></h3>
+            <h3 class="h-tit3">전체 상품<span class="point4" id="view-totalElements"></span> / 판매 상품<span class="point4" id="view-countOfInstsUsing"></span> / 사용자<span class="point4" id="view-countOfUsersUsing"></span></h3>
         </div>
 
         <!-- 테이블 -->
@@ -361,7 +361,9 @@
 
         // 상태 요약 정보 화면설정
         var callbackSoftwareStatsInfo = function(data) {
-        	$("#totalCount").text(" ("+ CURR_TOTAL_ELEMENTS +" / "+ data.countOfInstsUsing +" / "+ data.countOfUsersUsing +")");
+        	$("#view-totalElements").text(" ("+ CURR_TOTAL_ELEMENTS +")");
+        	$("#view-countOfInstsUsing").text(" ("+ data.countOfInstsUsing +")");
+        	$("#view-countOfUsersUsing").text(" ("+ data.countOfUsersUsing +")");
         }
 
         var callbackSoftwareStatsList = function(resultMap) {
