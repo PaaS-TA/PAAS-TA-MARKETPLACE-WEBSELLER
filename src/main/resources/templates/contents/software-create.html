@@ -531,8 +531,8 @@
                 msg = "상품 아이콘을 등록하십시오.";
                 manCheck = true;
             }
-
-            if(!manCheck && $("#screenshot_ul").length > 1){
+            
+            if(!manCheck && $('[name="screenshot_upload_list"]').children().length == 1){            	
                 msg = "싱픔 스크린샷을 등록하십시오.";
                 manCheck = true;
             }
