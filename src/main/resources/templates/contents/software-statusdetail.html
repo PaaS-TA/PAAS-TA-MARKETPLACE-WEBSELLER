@@ -152,7 +152,7 @@
 
         //사용량 추이(terms,counts)
         var totalCountInstsProviderInfo = "[[${totalCountInstsProviderInfo}]]";
-        var countofInstsProvider = JSON.parse(totalCountInstsProviderInfo.replace(/&quot;/g,'"'));
+        var countofInstsProvider = commonUtils.isBlank(totalCountInstsProviderInfo) ? [] : JSON.parse(totalCountInstsProviderInfo.replace(/&quot;/g,'"'));
 
         // ON LOAD
         $(document).ready(function () {

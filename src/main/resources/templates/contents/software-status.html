@@ -40,7 +40,7 @@
             <ul>
                 <li>
                     <!-- pieChart -->
-                    <div class="inWrap bg01">
+                    <div class="inWrap bg01" style="background-image: url('../../static/images/icon_backgroud_white.png');">
                         <span class="tit">사용 앱</span>
                         <div class="in_txtBox" id='pieChartArea'>
                         </div>
@@ -49,7 +49,7 @@
                 </li>
                 <li>
                     <!-- lineChart -->
-                    <div class="inWrap bg01">
+                    <div class="inWrap bg01" style="background-image: url('../../static/images/icon_backgroud_white.png');">
                         <span class="tit">사용 추이</span>
                         <div class="in_txtBox" id='lineChartArea'></div>
                     </div>
@@ -148,7 +148,7 @@
 
         // 상품 사용자 수
         var userCountPerSoftware = "[[${instanceUserCount}]]";
-        var resultCountList = JSON.parse(userCountPerSoftware.replace(/&quot;/g,'"'));
+        var resultCountList = commonUtils.isBlank(userCountPerSoftware) ? [] : JSON.parse(userCountPerSoftware.replace(/&quot;/g,'"'));
 
 
         // 판매 상품
@@ -159,7 +159,7 @@
 
         //사용량 추이(terms,counts)
         var totalCountInstsProviderInfo = "[[${totalCountInstsProviderInfo}]]";
-        var countofInstsProvider = JSON.parse(totalCountInstsProviderInfo.replace(/&quot;/g,'"'));
+        var countofInstsProvider = commonUtils.isBlank(totalCountInstsProviderInfo) ? [] : JSON.parse(totalCountInstsProviderInfo.replace(/&quot;/g,'"'));
 
         // ON LOAD
         $(document).ready(function() {
