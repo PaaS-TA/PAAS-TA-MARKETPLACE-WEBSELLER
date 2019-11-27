@@ -150,13 +150,6 @@
         var userCountPerSoftware = "[[${instanceUserCount}]]";
         var resultCountList = commonUtils.isBlank(userCountPerSoftware) ? [] : JSON.parse(userCountPerSoftware.replace(/&quot;/g,'"'));
 
-
-        // 판매 상품
-        var soldSwCount = "[[${soldSwCount}]]";
-
-        // 판매량
-        var instanceCountSum = "[[${instanceCountSum}]]";
-
         //사용량 추이(terms,counts)
         var totalCountInstsProviderInfo = "[[${totalCountInstsProviderInfo}]]";
         var countofInstsProvider = commonUtils.isBlank(totalCountInstsProviderInfo) ? [] : JSON.parse(totalCountInstsProviderInfo.replace(/&quot;/g,'"'));
