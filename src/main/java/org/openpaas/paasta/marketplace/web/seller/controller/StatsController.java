@@ -49,49 +49,49 @@ public class StatsController {
      */
     @GetMapping(value = "/softwares")
     public String getSoftwareStatsMain(Model model, HttpServletRequest httpServletRequest) {
-        CustomPage<Software> software = softwareService.getSoftwareList(commonService.setParameters(httpServletRequest));
+//        CustomPage<Software> software = softwareService.getSoftwareList(commonService.setParameters(httpServletRequest));
 
-        if(software.getTotalElements() > 0) {
-            List<Long> idIn = new ArrayList<>();
-
-            for (Software s:software.getContent()) {
-                idIn.add(s.getId());
-            }
-
-            Map<Long, Long> result = statsService.getCountsOfInsts(idIn);
-            Map newResult = new HashMap();
-
-            for (Long id:idIn) {
-                String mapId = "" + id;
-                if(result.get(mapId) != null){
-                    newResult.put(mapId, result.get(mapId));
-                }else{
-                    newResult.put(mapId, 0);
-                }
-            }
-
-            // 판매량
-            model.addAttribute("soldInstanceCount", statsService.soldInstanceByProvider(idIn));
-
-            //사용량 추이
-            Map  countsOfInstsProvider =  statsService.countsOfInstsProviderMonthly(idIn);
-            model.addAttribute("totalCountInstsProviderInfo", commonService.getJsonStringFromMap(countsOfInstsProvider));
-
-            model.addAttribute("instanceUserCount", commonService.getJsonStringFromMap(newResult));
-        } else {
-            model.addAttribute("soldInstanceCount", null);
-            model.addAttribute("totalCountInstsProviderInfo", null);
-            model.addAttribute("instanceUserCount", null);
-        }
-
+//        if(software.getTotalElements() > 0) {
+//            List<Long> idIn = new ArrayList<>();
+//
+//            for (Software s:software.getContent()) {
+//                idIn.add(s.getId());
+//            }
+//
+//            Map<Long, Long> result = statsService.getCountsOfInsts(idIn);
+//            Map newResult = new HashMap();
+//
+//            for (Long id:idIn) {
+//                String mapId = "" + id;
+//                if(result.get(mapId) != null){
+//                    newResult.put(mapId, result.get(mapId));
+//                }else{
+//                    newResult.put(mapId, 0);
+//                }
+//            }
+//
+//            // 판매량
+//            model.addAttribute("soldInstanceCount", statsService.soldInstanceByProvider(idIn));
+//
+//            //사용량 추이
+//            Map  countsOfInstsProvider =  statsService.countsOfInstsProviderMonthly(idIn);
+//            model.addAttribute("totalCountInstsProviderInfo", commonService.getJsonStringFromMap(countsOfInstsProvider));
+//
+//            model.addAttribute("instanceUserCount", commonService.getJsonStringFromMap(newResult));
+//        } else {
+//            model.addAttribute("soldInstanceCount", null);
+//            model.addAttribute("totalCountInstsProviderInfo", null);
+//            model.addAttribute("instanceUserCount", null);
+//        }
+        
         model.addAttribute("categories", softwareService.getCategories());
         model.addAttribute("spec", new SoftwareSpecification());
 
         // 판매 상품
-        model.addAttribute("soldSwCount", statsService.countOfSoldSw(SecurityUtils.getUser().getAttributes().get("user_name").toString()));
+//        model.addAttribute("soldSwCount", statsService.countOfSoldSw(SecurityUtils.getUser().getAttributes().get("user_name").toString()));
 
         // 판매량
-        model.addAttribute("instanceCountSum", statsService.getCountOfInstsUsing());
+//        model.addAttribute("instanceCountSum", statsService.getCountOfInstsUsing());
 
         return "contents/software-status";
     }
@@ -179,18 +179,6 @@ public class StatsController {
      */
     @GetMapping(value = "/softwares/my")
     public String getStatsSoftwaresMy(Model model, @AuthenticationPrincipal OAuth2User oauth2User, HttpSession httpSession, SoftwareSpecification spec, Authentication authentication) {
-//        CustomPage<Software> software = softwareService.getSoftwareList("");
-//        if(software.getTotalElements() > 0) {
-//            List<Long> idIn = new ArrayList<>();
-//            for (Software s:software.getContent()) {
-//                idIn.add(s.getId());
-//            }
-//
-//            model.addAttribute("soldInstanceCount", statsService.soldInstanceByProvider(idIn));
-//        } else {
-//            model.addAttribute("soldInstanceCount", null);
-//        }
-
         model.addAttribute("categories", statsService.getCategories());
         model.addAttribute("status", Software.Status.values());
         model.addAttribute("spec", new SoftwareSpecification());
@@ -220,6 +208,11 @@ public class StatsController {
     	return resultMap;
     }
 
+    /**
+     * 상품현황의 Total 카운트 조회 (판매상품/사용자)
+     * @param httpServletRequest
+     * @return
+     */
     @GetMapping(value = "/softwares/statsInfo")
     @ResponseBody
     public Map<String,Object> softwareStatsInfo(HttpServletRequest httpServletRequest) {
@@ -232,5 +225,21 @@ public class StatsController {
     	resultMap.put("countOfUsersUsing", statsService.getCountOfUsersUsing(commonService.setParameters(httpServletRequest)));
 
         return resultMap;
+    }
+    
+    /**
+     * 상품별현황 > 사용앱, 사용추이 차트 데이터 조회
+     * @param httpServletRequest
+     * @return
+     */
+    @GetMapping(value = "/softwares/chart/useAppTransitionInfo")
+    @ResponseBody
+    public Map<String,Object> useAppTransitionInfo(HttpServletRequest httpServletRequest) {
+    	Map<String,Object> resultMap = new HashMap<String,Object>();
+    	// 사용앱 차트 데이터 조회
+    	resultMap.put("statsUseAppList", statsService.getStatsUseApp(commonService.setParameters(httpServletRequest)));
+    	// 사용추이 차트 데이터 조회
+    	resultMap.put("statsUseTransitionList", statsService.getStatsUseTransition(commonService.setParameters(httpServletRequest)));
+    	return resultMap;
     }
 }

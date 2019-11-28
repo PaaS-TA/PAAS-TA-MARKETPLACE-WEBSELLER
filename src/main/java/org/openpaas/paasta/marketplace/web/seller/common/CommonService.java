@@ -194,7 +194,8 @@ public class CommonService {
 
         PARAMETERS_SEARCH_DATE("srchDate"),
     	PARAMETERS_SEARCH_START_DATE("srchStartDate"),
-    	PARAMETERS_SEARCH_END_DATE("srchEndDate");
+    	PARAMETERS_SEARCH_END_DATE("srchEndDate"),
+    	PARAMETERS_USER_ID("userId");
         
         private String actualValue;
 
