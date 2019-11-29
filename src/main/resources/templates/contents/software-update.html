@@ -237,23 +237,6 @@
                                     <!-- //첨부파일 -->
                                 </td>
                             </tr>
-<!--                            <tr>-->
-<!--                                <th scope="row">판매금액 적용월</th>-->
-<!--                                <td>-->
-<!--                                    <div class="input-group">-->
-<!--                                        <input class="bootstrap-filestyle input-group" type="text"-->
-<!--                                               th:each="softwarePlan,index : ${softwarePlanList}"-->
-<!--                                               th:value="${softwarePlan.applyMonth}"-->
-<!--                                               th:if="${index.index} == 0"-->
-<!--                                               id="applyMonth" name="applyMonth" readonly>-->
-<!--                                        <span tabindex="0" class="group-span-filestyle input-group-btn">-->
-<!--                                            <label class="btn btn-dfefault">-->
-<!--                                                <button name="button" class="btn btn-color2 btn-md" type="button" data-toggle="modal" data-target="#myAmtModal" id="amtBtn">이력보기</button>-->
-<!--                                            </label>-->
-<!--                                        </span>-->
-<!--                                    </div>-->
-<!--                                </td>-->
-<!--                            </tr>-->
                             <tr>
                                 <th scope="row">판매금액 적용월</th>
                                 <td>
@@ -546,10 +529,13 @@
         /*<![CDATA[*/
         var FILE_INFO = {}; // 파일 초기화;
         var LOADING_TIME = 20;	//secend
+    	var CURR_YEAR_MONTH = [[${currYearMonth}]];
+    	var SELECT_YEAR_MONTH = [[${currYearMonth}]];
 
         //년/월
         var yearValue = $("#selectDateYear option:selected").val();
         var monthValue = $("#selectDateMonth option:selected").val();
+        
 
         $(document).ready(function() {
             currentMenu('1_1');
@@ -576,8 +562,10 @@
                 }
             }
             $("#softwarePlaneOriginalList").val(softwarePlaneOriginalList);
+            
+            disablePricePerMonth();
         });
-
+        
         // [상품] 리스트
         var getSoftwareList = function () {
             var software = $("#software").val();
@@ -1159,6 +1147,11 @@
 
         //[테이블] 행 삭제
         function delRow(){
+        	if (selectDateIsPastCurrent()) {
+        		commonAlert.show("판매금액 적용월이 현재일 이후로만 판매금액을 삭제 하실수 있습니다.");
+        		return;
+        	}
+
             var checkbox = $("input[name='checkRow']");
             var checkCount = checkbox.size();
             var swpId =  $("#planid").val();
@@ -1174,6 +1167,11 @@
         var index = 1000;
         var nameIndex = 0;
         function addRow() {
+        	if (selectDateIsPastCurrent()) {
+        		commonAlert.show("판매금액 적용월이 현재일 이후로만 판매금액을 추가 하실수 있습니다.");
+        		return;
+        	}
+
             index++;
             nameIndex++;
             var toDayValue = $('#applyMonth').val();
@@ -1230,6 +1228,8 @@
 
         //eventBtn
         $("#searchBtn").on("click", function () {
+        	SELECT_YEAR_MONTH = $("#selectDateYear").val() + commonUtils.dateValueDigit($("#selectDateMonth").val());
+        	
             var id = $("#id").val();
             var selectDateYear = $("#selectDateYear").val();
             var selectDateMonth = $("#selectDateMonth").val();
@@ -1288,6 +1288,8 @@
                 }
                 $("#softwarePlaneOriginalList").val(orginPlanIdList);
             }
+            
+            disablePricePerMonth();
         };
 
         //Pattern Matching
@@ -1313,6 +1315,27 @@
                 }
             }
         };
+        
+        var disablePricePerMonth = function() {
+        	if (!selectDateIsPastCurrent()) {
+        		return;
+        	}
+        	
+        	var obj;
+        	$("#pricePerMonth-tbody :text").each(function(){
+        		obj = $(this);
+        		if (obj.prop("type") == "text") {
+        			obj.prop("readOnly", true)
+        		}
+        	});
+        }
+        
+        var selectDateIsPastCurrent = function() {
+        	if (SELECT_YEAR_MONTH <= CURR_YEAR_MONTH) {
+        		return true;
+        	}
+			return false;
+        }
         /*]]>*/
     </script>
 </div>

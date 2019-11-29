@@ -2,7 +2,9 @@ package org.openpaas.paasta.marketplace.web.seller.controller;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -211,6 +213,10 @@ public class SoftwareController {
         model.addAttribute("status", Software.Status.values());
         model.addAttribute("categories", softwareService.getCategories());
         model.addAttribute("softwarePlanList", softwareService.getSoftwarePlanList(id));
+        
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMM");
+        model.addAttribute("currYearMonth", format.format(new Date()));
+        
         return "contents/software-update";
     }
 
