@@ -1255,7 +1255,6 @@
             $("#softwarePlaneOriginalList").val("");
 
             var orginPlanIdList = "";
-            index = 1000;
             nameIndex = 0;
 
             if(data.length > 0){
@@ -1285,6 +1284,7 @@
                     );
 
                     nameIndex++;
+                    index++;
                 }
                 $("#softwarePlaneOriginalList").val(orginPlanIdList);
             }
