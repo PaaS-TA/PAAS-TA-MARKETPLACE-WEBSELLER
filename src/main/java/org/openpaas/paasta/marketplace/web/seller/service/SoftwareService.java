@@ -1,9 +1,13 @@
 package org.openpaas.paasta.marketplace.web.seller.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import org.openpaas.paasta.marketplace.api.domain.*;
+import java.util.List;
+import java.util.Map;
+
+import org.openpaas.paasta.marketplace.api.domain.Category;
+import org.openpaas.paasta.marketplace.api.domain.CustomPage;
+import org.openpaas.paasta.marketplace.api.domain.Software;
+import org.openpaas.paasta.marketplace.api.domain.SoftwareHistory;
+import org.openpaas.paasta.marketplace.api.domain.SoftwarePlan;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
-import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class SoftwareService {
 
     private final RestTemplate paasApiRest;
@@ -54,8 +57,6 @@ public class SoftwareService {
                 .expand(id)
                 .toString();
 
-        log.info("updateSoftware url :: " + url + " Software " + software.toString());
-
         paasApiRest.put(url, software);
         return software;
     }
@@ -66,15 +67,12 @@ public class SoftwareService {
                 .expand(id)
                 .toString();
 
-        log.info("updateSoftware url :: " + url + " Software " + software.toString());
-
         paasApiRest.put(url, software);
         return software;
     }
 
 
     public SoftwarePlan getSoftwarePlan(Long id) {
-        log.info("getSoftwarePlan :: " + id );
         String url = UriComponentsBuilder.newInstance().path("/softwares/plan/{id}")
                 .build()
                 .expand(id)

@@ -114,8 +114,6 @@ public class SoftwareController {
         OAuth2User principal = (OAuth2User) finalAuth.getPrincipal();
         String user = (String) principal.getAttributes().get("user_name");
 
-        log.info(">> user :: " + user);
-
         for(Profile profiles : profileList) {
             if(user.equals(profiles.getId())) {
                 count++;
@@ -153,8 +151,6 @@ public class SoftwareController {
             return "contents/software-create";
         }
 
-        log.info(">> createSoftware" + software.toString());
-
         software.setIcon(iconFile.getOriginalFilename());
         software.setApp(productFile.getOriginalFilename());
         software.setManifest(environmentFile.getOriginalFilename());
@@ -180,7 +176,6 @@ public class SoftwareController {
         software.setSoftwarePlanList(softwarePlanList);
 
         Software newSoftware = softwareService.createSoftware(software);
-        log.info("===================" + newSoftware + "==========================");
         return "redirect:/softwares/list";
     }
 
@@ -353,11 +348,6 @@ public class SoftwareController {
         newSoftware.setPricePerMonth(software.getPricePerMonth());
         newSoftware.setVersion(software.getVersion());
         newSoftware.setHistoryDescription(software.getHistoryDescription());
-
-        for (SoftwarePlan softwarePlan:software.getSoftwarePlanList()) {
-            log.info(">> updateSoftware softwarePlan.toString: " + softwarePlan.toString());
-        }
-
         newSoftware.setSoftwarePlanList(software.getSoftwarePlanList());
 
         return softwareService.updateSoftware(id,softwarePlaneOriginalList,newSoftware);

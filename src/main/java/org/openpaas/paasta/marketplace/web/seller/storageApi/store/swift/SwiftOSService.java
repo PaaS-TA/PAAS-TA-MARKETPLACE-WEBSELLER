@@ -1,5 +1,12 @@
 package org.openpaas.paasta.marketplace.web.seller.storageApi.store.swift;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.javaswift.joss.model.Container;
 import org.javaswift.joss.model.StoredObject;
 import org.openpaas.paasta.marketplace.web.seller.storageApi.config.SwiftOSConstants.SwiftOSCommonParameter;
@@ -11,13 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @Service
 public class SwiftOSService extends ObjectStorageService<SwiftOSFileInfo> {

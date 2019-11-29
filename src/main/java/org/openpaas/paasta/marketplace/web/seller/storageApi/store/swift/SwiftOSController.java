@@ -1,21 +1,7 @@
 package org.openpaas.paasta.marketplace.web.seller.storageApi.store.swift;
 
-import org.javaswift.joss.model.StoredObject;
-import org.openpaas.paasta.marketplace.web.seller.storageApi.config.SwiftOSConstants;
-import org.openpaas.paasta.marketplace.web.seller.storageApi.util.ObjectMapperUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
+import static org.junit.Assert.assertNotNull;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +13,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static org.junit.Assert.assertNotNull;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
+
+import org.javaswift.joss.model.StoredObject;
+import org.openpaas.paasta.marketplace.web.seller.storageApi.config.SwiftOSConstants;
+import org.openpaas.paasta.marketplace.web.seller.storageApi.util.ObjectMapperUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class SwiftOSController {
@@ -112,7 +120,6 @@ public class SwiftOSController {
         final StoredObject object = swiftOSService.getRawObject( name );
         if (null == object) {
             LOGGER.warn("Cannot find stored object in swift object storage.");
-            //return createResponseEntity( new byte[0], null, HttpStatus.NOT_FOUND );
         }
 
         final SwiftOSFileInfo fileInfo = SwiftOSFileInfo.newInstanceFromStoredObject( object );

@@ -53,7 +53,6 @@ public class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
                 	.anyRequest()
                 	.authenticated()
                 .and()
-                //.oauth2Login().loginPage("/login").defaultSuccessUrl("/index", true).permitAll()
                 .oauth2Login()
                 	.clientRegistrationRepository(clientRegistrationRepository())
                 	.authorizedClientService(authorizedClientService())

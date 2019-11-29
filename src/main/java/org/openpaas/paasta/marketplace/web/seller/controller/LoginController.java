@@ -1,6 +1,10 @@
 package org.openpaas.paasta.marketplace.web.seller.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.openpaas.paasta.marketplace.api.domain.CustomPage;
 import org.openpaas.paasta.marketplace.api.domain.Profile;
 import org.openpaas.paasta.marketplace.web.seller.service.ProfileService;
@@ -18,15 +22,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
-
 
 /**
  * Login 버튼이 있는 페이지 클래스
  */
-@Slf4j
 @Controller
 @RequestMapping
 public class LoginController {
@@ -82,8 +81,8 @@ public class LoginController {
             }
         }
         if(count > 0){
-            return "redirect:/softwares/list";       // (1) 상품 목록 페이지
+            return "redirect:/softwares/list";	// (1) 상품 목록 페이지
         }
-        return "redirect:/profiles/create";                         // (2) 프로필 등록 페이지
+        return "redirect:/profiles/create";	// (2) 프로필 등록 페이지
     }
 }

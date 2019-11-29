@@ -29,7 +29,6 @@ public class ProfileController {
      * @return
      */
     @GetMapping(value = "/page")
-    //@ResponseBody
     public String getProfile() {
         log.info("> into getProfile");
         int count = 0;
@@ -55,11 +54,8 @@ public class ProfileController {
         return "redirect:/profiles/create";                         // (2) 프로필 등록 페이지
     }
 
-
-
     @GetMapping(value = "/{id}")
     public String getProfile(Model model, @PathVariable String id) {
-        log.info(">> getProfile :: " + profileService.getProfile(id));
         model.addAttribute("profiles", profileService.getProfile(id));
         return "contents/profile-detail";
     }
@@ -94,6 +90,5 @@ public class ProfileController {
         log.info(">> updateProfiles " + profile.toString());
         return profileService.updateProfiles(id, profile);
     }
-
 
 }
