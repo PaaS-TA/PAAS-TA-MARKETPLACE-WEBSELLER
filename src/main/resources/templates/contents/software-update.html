@@ -1148,6 +1148,11 @@
         //[테이블] 행 삭제
         function delRow(){
         	if (selectDateIsPastCurrent()) {
+        		commonAlert.setCallBackFunc(function(){
+        			setTimeout(function(){
+        				$('html, body').animate({scrollTop : ($("#searchBtn").offset().top - 100)}, 400);
+        			}, 300);
+        		});
         		commonAlert.show("판매금액 적용월이 현재일 이후로만 판매금액을 삭제 하실수 있습니다.");
         		return;
         	}
@@ -1168,6 +1173,11 @@
         var nameIndex = 0;
         function addRow() {
         	if (selectDateIsPastCurrent()) {
+        		commonAlert.setCallBackFunc(function(){
+        			setTimeout(function(){
+        				$('html, body').animate({scrollTop : ($("#searchBtn").offset().top - 100)}, 400);
+        			}, 300);
+        		});
         		commonAlert.show("판매금액 적용월이 현재일 이후로만 판매금액을 추가 하실수 있습니다.");
         		return;
         	}
