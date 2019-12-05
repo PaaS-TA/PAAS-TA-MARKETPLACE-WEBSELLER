@@ -106,13 +106,19 @@ public class SoftwareService {
         paasApiRest.delete("/softwares/plan/" + id);
     }
 
+    /**
+     * 판매된 상품의 갯수 조회
+     * @param queryParamString
+     * @return
+     */
     public Integer getSoldSoftwareCount(String queryParamString) {
-    	ResponseEntity<Integer> result = paasApiRest.exchange("/softwares/soldSoftwareCount" + queryParamString, HttpMethod.GET, null, Integer.class);
-        return (result.getBody() == null ? 0 : result.getBody());
+    	ResponseEntity<Integer> result = paasApiRest.exchange("/softwares/soldSoftwareCount" + queryParamString, HttpMethod.GET, null, new ParameterizedTypeReference<Integer>() {});
+    	Integer count = result.getBody();
+        return (count == null ? 0 : count);
     }
 
     /**
-     * 판매된 소프트웨어의 카운트정보 조회
+     * 사용중인 상품의 갯수 조회
      * @param queryParamString
      * @return
      */

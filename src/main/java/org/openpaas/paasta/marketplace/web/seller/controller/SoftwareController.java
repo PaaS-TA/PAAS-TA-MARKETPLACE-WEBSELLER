@@ -410,7 +410,7 @@ public class SoftwareController {
     		softwareIdList.add(info.getId());
     	}
     	
-    	// 판매된 소프트웨어의 카운트정보 조회
+    	// 사용중인 상품의 갯수 조회
     	Map<String,Object> instanceCountMap = softwareService.getSoftwareInstanceCountMap(softwareIdList);
     	resultMap.put("instanceCountMap", instanceCountMap);
     	

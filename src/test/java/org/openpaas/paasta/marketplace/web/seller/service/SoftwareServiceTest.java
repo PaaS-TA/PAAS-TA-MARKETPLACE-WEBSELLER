@@ -8,7 +8,10 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -24,6 +27,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
+
 @SuppressWarnings({ "unchecked" })
 public class SoftwareServiceTest extends AbstractMockTest {
 
@@ -31,6 +36,9 @@ public class SoftwareServiceTest extends AbstractMockTest {
 
     @Mock
     ResponseEntity<CustomPage<Software>> softwarePageResponse;
+    
+    @Mock
+    ResponseEntity<Integer> soldSoftwareCount;
 
     @Mock
     CustomPage<Software> softwareCustomPage;
@@ -229,6 +237,32 @@ public class SoftwareServiceTest extends AbstractMockTest {
         doNothing().when(paasApiRest).delete(eq("/softwares/plan/1"));
 
         softwareService.deleteSwpId(1L);
+    }
+    
+    // 판매된 상품의 갯수 조회
+    @Test
+    public void getSoldSoftwareCount() {
+        when(paasApiRest.exchange(startsWith("/softwares/soldSoftwareCount"), eq(HttpMethod.GET), eq(null), any(ParameterizedTypeReference.class)))
+        				.thenReturn(soldSoftwareCount);
+        when(soldSoftwareCount.getBody()).thenReturn(1);
+
+		Integer result = softwareService.getSoldSoftwareCount("?sort=id,asc");
+		assertEquals(1, result.intValue());
+    }
+
+    // 사용중인 상품의 갯수 조회
+    @Test
+    public void getSoftwareInstanceCountMap() {
+    	List<Long> softwareIdList = Arrays.asList(1L, 2L, 3L);
+    	Map<String,Object> mockMap = new HashMap<String,Object>();
+    	mockMap.put("1", 10);
+    	mockMap.put("2", 20);
+    	mockMap.put("3", 30);
+    	
+    	when(paasApiRest.getForObject(startsWith("/softwares/instanceCount"), eq(Map.class))).thenReturn(mockMap);
+	
+    	Map<String,Object> result = softwareService.getSoftwareInstanceCountMap(softwareIdList);
+		assertEquals(3, result.size());
     }
 
 }
