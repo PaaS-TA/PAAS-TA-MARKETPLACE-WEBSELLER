@@ -396,7 +396,14 @@
 
         //[테이블] 가격
         function amt(id){
-            $("#sumAmt_"+id).val(Number($("#cpuAmt_"+id).val())+ Number($("#memoryAmt_"+id).val())+ Number($("#diskAmt_"+id).val()));
+            var tempCpuAmt = commonUtils.onlyNumber($("#cpuAmt_"+id).val());
+            var tempMemoryAmt = commonUtils.onlyNumber($("#memoryAmt_"+id).val());
+            var tempDiskAmt = commonUtils.onlyNumber($("#diskAmt_"+id).val());
+            $("#sumAmt_"+id).val(commonUtils.addComma(tempCpuAmt + tempMemoryAmt+ tempDiskAmt));
+
+            $("#cpuAmt_"+id).val(commonUtils.addComma(tempCpuAmt));
+            $("#memoryAmt_"+id).val(commonUtils.addComma(tempMemoryAmt));
+            $("#diskAmt_"+id).val(commonUtils.addComma(tempDiskAmt));
         };
 
         //[테이블] 행 삭제
@@ -494,11 +501,36 @@
             
             // 마지막 스크린샷 Empty File 삭제
             $("#screenshot_ul").children().last().detach();
-            submitForm();
-        }
 
-        function submitForm() {
-            document.frm.submit();
+            // 상품금액 comma삭제
+            var elementList = $("#pricePerMonth-tbody input[type=text]");
+            if (!commonUtils.isEmptyArray(elementList)) {
+                elementList.each(function(index, item) {
+                    var obj = $(this);
+                    if (commonUtils.contains(obj.attr("id"), "cpuAmt_") ||
+                        commonUtils.contains(obj.attr("id"), "memoryAmt_") ||
+                        commonUtils.contains(obj.attr("id"), "diskAmt_")) {
+                        obj.val(commonUtils.onlyNumber(obj.val()));
+                    }
+                });
+            }
+
+            // Submit
+            try {
+                document.frm.submit();
+            } catch(e) {
+                // 등록 오류시 화면의 상품금액 comma 복구
+                if (!commonUtils.isEmptyArray(elementList)) {
+                    elementList.each(function(index, item){
+                        var obj = $(this);
+                        if (commonUtils.contains(obj.attr("id"), "cpuAmt_") ||
+                            commonUtils.contains(obj.attr("id"), "memoryAmt_") ||
+                            commonUtils.contains(obj.attr("id"), "diskAmt_")) {
+                            obj.val(commonUtils.addComma(obj.val()));
+                        }
+                    });
+                }
+            }
         }
 
         function isEmpty(val) {
@@ -506,56 +538,55 @@
         };
 
         $('#saveBtn').click(function(){
-            // TR Rows
             var trRows = $("#pricePerMonth-tbody tr");
             var manCheck = false;
             var msg = "";
 
-            if(!manCheck && isEmpty($("#swname").val())) {
-                msg = "상품명을 입력하십시오.";
-                manCheck = true;
+            if(isEmpty($("#swname").val())) {
+                commonAlert.show("상품명을 입력하십시오", "swname");
+                return;
             }
 
-            if(!manCheck && isEmpty($("#category option:selected").val())) {
-                msg = "상품 카테고리를 선택하십시오.";
-                manCheck = true;
+            if(isEmpty($("#category option:selected").val())) {
+                commonAlert.show("상품 카테고리를 선택하십시오", "category");
+                return;
             }
 
-            if(!manCheck && isEmpty($("#summary").val())) {
-                msg = "상품 개요를 입력하십시오.";
-                manCheck = true;
+            if(isEmpty($("#summary").val())) {
+                commonAlert.show("상품 개요를 입력하십시오.", "summary");
+                return;
             }
 
             var fileCheck = $("#iconFileInput").val();
-            if(!manCheck && isEmpty(fileCheck) &&!fileCheck){
-                msg = "상품 아이콘을 등록하십시오.";
-                manCheck = true;
+            if(isEmpty(fileCheck) &&!fileCheck){
+                commonAlert.show("상품 아이콘을 등록하십시오.", "summary");
+                return;
             }
             
-            if(!manCheck && $('[name="screenshot_upload_list"]').children().length == 1){            	
-                msg = "싱픔 스크린샷을 등록하십시오.";
-                manCheck = true;
+            if($('[name="screenshot_upload_list"]').children().length == 1){            	
+                commonAlert.show("싱픔 스크린샷을 등록하십시오.", "summary");
+                return;
             }
 
-            if(!manCheck && isEmpty($("#swDescription").val())) {
-                msg = "상품 상세설명을 입력하십시오.";
-                manCheck = true;
+            if(isEmpty($("#swDescription").val())) {
+                commonAlert.show("상품 상세설명을 입력하십시오.", "swDescription");
+                return;
             }
 
             var radio11 = $("input[name=type]:checked").val();
-            if(!manCheck && isEmpty(radio11) && typeof radio11 == "undefined") {
-                msg = "상품 파일유형을 선택하십시오.";
-                manCheck = true;
+            if(isEmpty(radio11) && typeof radio11 == "undefined") {
+                commonAlert.show("상품 파일유형을 선택하십시오.", "radio1-Api");
+                return;
             }
 
-            if(!manCheck && isEmpty($("#productFile").val())) {
-                msg = "상품 파일을 등록하십시오.";
-                manCheck = true;
+            if(isEmpty($("#productFile").val())) {
+                commonAlert.show("상품 파일을 등록하십시오.", "productFileInput");
+                return;
             }
 
-            if(!manCheck && isEmpty($("#environmentFile").val())) {
-                msg = "상품 환경파일을 등록하십시오.";
-                manCheck = true;
+            if(isEmpty($("#environmentFile").val())) {
+                commonAlert.show("상품 환경파일을 등록하십시오.", "environmentFile");
+                return;
             }
 
             trRows.each(function(index, item){
@@ -565,46 +596,53 @@
                 if(!manCheck && isEmpty($("#name_"+eleindex).val())) {
                     msg = "플랜명을 입력하십시오.";
                     manCheck = true;
+                    return;
                 }
                 if(!manCheck && isEmpty($("#description_"+eleindex).val())) {
                     msg = "플랜 설명을 입력하십시오.";
                     manCheck = true;
+                    return;
                 }
                 if(!manCheck && isEmpty($("#cpuAmt_"+eleindex).val())) {
                     msg = "CPU 가격을 입력하십시오.";
                     manCheck = true;
+                    return;
                 }
                 if(!manCheck && isEmpty($("#memorySize_"+eleindex).val())) {
                     msg = "메모리 크기를 입력하십시오.";
                     manCheck = true;
+                    return;
                 }
                 if(!manCheck && isEmpty($("#memoryAmt_"+eleindex).val())) {
                     msg = "메모리 가격을 입력하십시오.";
                     manCheck = true;
+                    return;
                 }
                 if(!manCheck && isEmpty($("#diskSize_"+eleindex).val())) {
                     msg = "디스크 크기를 입력하십시오.";
                     manCheck = true;
+                    return;
                 }
                 if(!manCheck && isEmpty($("#diskAmt_"+eleindex).val())) {
                     msg = "디스크 가격을 입력하십시오.";
                     manCheck = true;
+                    return;
                 }
             })
 
+            if (manCheck) {
+                commonAlert.show(msg, "applyMonth");
+                return;
+            }
+
             var inUse = $("input[name=inUse]:checked").val();
-            if(!manCheck && isEmpty(inUse) && typeof inUse == "undefined") {
-                msg = "상품 전시여부를 선택하십시오.";
-                manCheck = true;
+            if(isEmpty(inUse) && typeof inUse == "undefined") {
+                commonAlert.show("상품 전시여부를 선택하십시오.", "radio1-Y");
+                return;
             }
 
-            if(!manCheck && isEmpty($("#version").val())) {
-                msg = "상품 버전을 입력하십시오.";
-                manCheck = true;
-            }
-
-            if(manCheck) {
-            	commonAlert.show(msg);
+            if(isEmpty($("#version").val())) {
+                commonAlert.show("상품 버전을 입력하십시오.", "version");
                 return;
             }
 

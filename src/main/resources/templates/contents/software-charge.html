@@ -81,7 +81,6 @@
         <!-- //검색 Form -->
 
         <div class="cont-titWrap mt30">
-<!--            <h3 class="h-tit3">총 건수 <span class="point4">(10)</span><span class="point_txt"> / 총 금액(501,000원)</span></h3>-->
             <h3 class="h-tit3">총 건수 <span class="point4" id="totalElements"></span><span class="point_txt" id="totalPriceElements"></span></h3>
         </div>
 
@@ -133,7 +132,7 @@
     		<td>${version}</td>
     		<td>${createdDate}</td>
     		<td>${sellCount} 개</td>
-    		<td>${softwarePlanAmtMonth} 원</td>
+    		<td>${commonUtils.addComma(softwarePlanAmtMonth)} 원</td>
 		</tr>
 	</SCRIPT>
     <!-- //InstanceCartList Template -->
@@ -181,7 +180,7 @@
             		$.tmpl(listTemplate, info).appendTo("#statsSoftwareArea");
             		rowNum--;
 				});
-            	$("#totalElements").text("("+ statsSoftwareSellPriceList.length +")");
+            	$("#totalElements").text("("+ commonUtils.addComma(statsSoftwareSellPriceList.length) +")");
             } else {
             	$("#statsSoftwareArea").append($.parseHTML("<tr><td colspan='7'><p class='user_p'>상품이 존재하지 않습니다.</p></td><tr>"));
             	$("#totalElements").text("(0)");

@@ -287,14 +287,14 @@
                                             </td>
                                             <td><input class="form-control" type="text" th:value="${softwarePlan.description}" th:id="'description_'+ ${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].description'"></td>
 
-                                            <td><input class="form-control" type="text" th:value="${softwarePlan.cpuAmt}" th:id="'cpuAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].cpu'" th:onkeyup="'amt('+${stat.index}+')'" placeholder="₩ 1,000"></td>
+                                            <td><input class="form-control" type="text" th:value="${#numbers.formatInteger(softwarePlan.cpuAmt, 0, 'COMMA')}" th:id="'cpuAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].cpu'" th:onkeyup="'amt('+${stat.index}+')'" placeholder="₩ 1,000"></td>
                                             <td>
-                                                <input class="form-control" type="text" th:value="${softwarePlan.memorySize}" th:id="'memorySize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].memorySize'" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:value="${softwarePlan.memoryAmt}" th:id="'memoryAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].memoryAmt'" th:onkeyup="'amt('+${stat.index}+')'" placeholder="₩ 1,000">
+                                                <input class="form-control" type="text" th:value="${softwarePlan.memorySize}" th:id="'memorySize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].memorySize'" th:onkeyup="'chk('+${stat.index}+')'"> &nbsp;<input class="form-control" type="text" th:value="${#numbers.formatInteger(softwarePlan.memoryAmt, 0, 'COMMA')}" th:id="'memoryAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].memoryAmt'" th:onkeyup="'amt('+${stat.index}+')'" placeholder="₩ 1,000">
                                             </td>
                                             <td>
-                                                <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" th:id="'diskSize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskSize'" th:onkeyup="'chk('+${stat.index}+')'">&nbsp;<input class="form-control" type="text" th:value="${softwarePlan.diskAmt}" th:id="'diskAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskAmt'" th:onkeyup="'amt('+${stat.index}+')'" placeholder="₩ 1,000">
+                                                <input class="form-control" type="text" th:value="${softwarePlan.diskSize}" th:id="'diskSize_'+${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskSize'" th:onkeyup="'chk('+${stat.index}+')'">&nbsp;<input class="form-control" type="text" th:value="${#numbers.formatInteger(softwarePlan.diskAmt, 0, 'COMMA')}" th:id="'diskAmt_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].diskAmt'" th:onkeyup="'amt('+${stat.index}+')'" placeholder="₩ 1,000">
                                             </td>
-                                            <td><input class="form-control" th:value="${softwarePlan.memoryAmt+ softwarePlan.diskAmt+softwarePlan.memoryAmt}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly>
+                                            <td><input class="form-control" th:value="${#numbers.formatInteger((softwarePlan.memoryAmt + softwarePlan.diskAmt + softwarePlan.memoryAmt), 0, 'COMMA')}" th:id="'sumAmt_' +${stat.index}" name="sumAmt" readonly>
                                                 <input type="hidden" th:id="'inUse_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].inUse'" th:value='${softwarePlan.inUse}'/>
                                                 <input type="hidden" th:id="'applyMonth_' +${stat.index}" th:name="'softwarePlanList['+${stat.index}+'].applyMonth'" th:value='${softwarePlan.applyMonth}'/>
                                             </td>
@@ -652,7 +652,7 @@
 
             // 알림 노출
             if(manCheck) {
-                commonAlert.show(msg);
+                commonAlert.show(msg, "softwareHistoryDescription");
                 return;
             }
             
@@ -702,13 +702,13 @@
                     } else if (index == 1) {
                         softwarePlanInfo.description = tdChildrenObj.eq(0).val();
                     } else if (index == 2) {
-                        softwarePlanInfo.cpuAmt = tdChildrenObj.eq(0).val();
+                        softwarePlanInfo.cpuAmt = commonUtils.onlyNumber(tdChildrenObj.eq(0).val());
                     } else if (index == 3) {
                         softwarePlanInfo.memorySize = tdChildrenObj.eq(0).val();
-                        softwarePlanInfo.memoryAmt = tdChildrenObj.eq(1).val();
+                        softwarePlanInfo.memoryAmt = commonUtils.onlyNumber(tdChildrenObj.eq(1).val());
                     } else if (index == 4) {
                         softwarePlanInfo.diskSize = tdChildrenObj.eq(0).val();
-                        softwarePlanInfo.diskAmt = tdChildrenObj.eq(1).val();
+                        softwarePlanInfo.diskAmt = commonUtils.onlyNumber(tdChildrenObj.eq(1).val());
                     }
                     else if (index == 5) {
                         softwarePlanInfo.inUse = tdChildrenObj.eq(1).val();
@@ -1124,10 +1124,10 @@
                         + '<td>'+data[i].name+'</td>'
                         + '<td>'+data[i].memorySize+'</td>'
                         + '<td>'+data[i].diskSize+'</td>'
-                        + '<td>'+data[i].cpuAmt+'</td>'
-                        + '<td>'+data[i].memoryAmt+'</td>'
-                        + '<td>'+data[i].diskAmt+'</td>'
-                        + '<td>'+totalAmt+'</td>'
+                        + '<td>'+commonUtils.addComma(data[i].cpuAmt)+'</td>'
+                        + '<td>'+commonUtils.addComma(data[i].memoryAmt)+'</td>'
+                        + '<td>'+commonUtils.addComma(data[i].diskAmt)+'</td>'
+                        + '<td>'+commonUtils.addComma(totalAmt)+'</td>'
                         + '</tr>'
                     );
                 }
@@ -1142,18 +1142,20 @@
 
         //[테이블] 가격
         function amt(id){
-            $("#sumAmt_"+id).val(Number($("#cpuAmt_"+id).val())+ Number($("#memoryAmt_"+id).val())+ Number($("#diskAmt_"+id).val()));
+            var tempCpuAmt = commonUtils.onlyNumber($("#cpuAmt_"+id).val());
+            var tempMemoryAmt = commonUtils.onlyNumber($("#memoryAmt_"+id).val());
+            var tempDiskAmt = commonUtils.onlyNumber($("#diskAmt_"+id).val());
+            $("#sumAmt_"+id).val(commonUtils.addComma(tempCpuAmt + tempMemoryAmt+ tempDiskAmt));
+
+            $("#cpuAmt_"+id).val(commonUtils.addComma(tempCpuAmt));
+            $("#memoryAmt_"+id).val(commonUtils.addComma(tempMemoryAmt));
+            $("#diskAmt_"+id).val(commonUtils.addComma(tempDiskAmt));
         };
 
         //[테이블] 행 삭제
         function delRow(){
         	if (selectDateIsPastCurrent()) {
-        		commonAlert.setCallBackFunc(function(){
-        			setTimeout(function(){
-        				$('html, body').animate({scrollTop : ($("#searchBtn").offset().top - 100)}, 400);
-        			}, 300);
-        		});
-        		commonAlert.show("판매금액 적용월이 현재일 이후로만 판매금액을 삭제 하실수 있습니다.");
+        		commonAlert.show("판매금액 적용월이 현재일 이후로만 판매금액을 삭제 하실수 있습니다.", "searchBtn");
         		return;
         	}
 
@@ -1173,12 +1175,7 @@
         var nameIndex = 0;
         function addRow() {
         	if (selectDateIsPastCurrent()) {
-        		commonAlert.setCallBackFunc(function(){
-        			setTimeout(function(){
-        				$('html, body').animate({scrollTop : ($("#searchBtn").offset().top - 100)}, 400);
-        			}, 300);
-        		});
-        		commonAlert.show("판매금액 적용월이 현재일 이후로만 판매금액을 추가 하실수 있습니다.");
+        		commonAlert.show("판매금액 적용월이 현재일 이후로만 판매금액을 추가 하실수 있습니다.", "searchBtn");
         		return;
         	}
 
@@ -1261,6 +1258,11 @@
 
         //리로드시, 값 초기화 셋팅(data)
         var callbackRow  = function (data) {
+            var tempCpuAmt = 0;
+            var tempMemoryAmt = 0;
+            var tempDiskAmt = 0;
+            var tempTotalAmt = 0;
+            
             $('#pricePerMonth-tbody').html("");
             $("#softwarePlaneOriginalList").val("");
 
@@ -1270,7 +1272,10 @@
             if(data.length > 0){
                 for(var i = 0; i < data.length; i++){
                     orginPlanIdList += "^"+ data[i].id;
-                    var totalAmt = data[i].cpuAmt+data[i].memoryAmt+data[i].diskAmt;
+                    tempCpuAmt = commonUtils.addComma(data[i].cpuAmt);
+                    tempMemoryAmt = commonUtils.addComma(data[i].memoryAmt);
+                    tempDiskAmt = commonUtils.addComma(data[i].diskAmt);
+                    tempTotalAmt = commonUtils.addComma(data[i].cpuAmt + data[i].memoryAmt + data[i].diskAmt);
 
                     $('#pricePerMonth-tbody').append(
                         "<tr>"
@@ -1278,15 +1283,15 @@
                         +"		<input type='checkbox' id='checkRow' name='checkRow'><input type=hidden id='planid_"+index+"' name='softwarePlanList["+nameIndex+"].id' value='"+data[i].id+"'>&nbsp;<input type='text' id='name_"+index+"' name='softwarePlanList["+nameIndex+"].name' value='"+data[i].name+"' placeholder='Small'>"
                         +"	</td>"
                         +"	<td><input class='form-control' type='text' id='description_"+index+"' name='softwarePlanList["+nameIndex+"].description' value='"+data[i].description+"' placeholder='표준성능'></td>"
-                        +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"'  name='softwarePlanList["+nameIndex+"].cpuAmt' value='"+data[i].cpuAmt+"' onkeyup='amt("+index +")' placeholder='₩ 1,000'></td>"
+                        +"	<td><input class='form-control' type='text' id='cpuAmt_"+index+"'  name='softwarePlanList["+nameIndex+"].cpuAmt' value='"+tempCpuAmt+"' onkeyup='amt("+index +")' placeholder='₩ 1,000'></td>"
                         +"	<td>"
-                        +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' value='"+data[i].memorySize+"' onkeyup='chk("+index+")' placeholder='1234M'>  &nbsp;<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' value='"+data[i].memoryAmt+"' onkeyup='amt("+index+")' placeholder='₩ 1,000'>"
+                        +"		<input class='form-control' type='text' id='memorySize_"+index+"' name='softwarePlanList["+nameIndex+"].memorySize' value='"+data[i].memorySize+"' onkeyup='chk("+index+")' placeholder='1234M'>  &nbsp;<input class='form-control' type='text' id='memoryAmt_"+index+"' name='softwarePlanList["+nameIndex+"].memoryAmt' value='"+tempMemoryAmt+"' onkeyup='amt("+index+")' placeholder='₩ 1,000'>"
                         +"	</td>"
                         +"	<td>"
-                        +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' value='"+data[i].diskSize+"' onkeyup='chk("+index+")' placeholder='1G'>  &nbsp;<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' value='"+data[i].diskAmt+"' onkeyup='amt("+index+")' placeholder='₩ 1,000'>"
+                        +"		<input class='form-control' type='text' id='diskSize_"+index+"' name='softwarePlanList["+nameIndex+"].diskSize' value='"+data[i].diskSize+"' onkeyup='chk("+index+")' placeholder='1G'>  &nbsp;<input class='form-control' type='text' id='diskAmt_"+index+"' name='softwarePlanList["+nameIndex+"].diskAmt' value='"+tempDiskAmt+"' onkeyup='amt("+index+")' placeholder='₩ 1,000'>"
                         +"	</td>"
                         +"	<td>"
-                        +"		<input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' value='"+totalAmt+"' readonly>"
+                        +"		<input class='form-control' type='text' id='sumAmt_"+index+"' name='sumAmt' value='"+tempTotalAmt+"' readonly>"
                         +"      <input type='hidden' id='inUse_"+index+"' name='softwarePlanList["+nameIndex+"].inUse' value='"+data[i].inUse+"' >"
                         +"		<input type='hidden' name='softwarePlanList["+nameIndex+"].applyMonth' value='"+data[i].applyMonth+"'>"
                         +"	</td>"

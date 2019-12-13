@@ -293,7 +293,7 @@
                         + "<td>" + createdDate + "</td>"
                         + "<td>" + productList[i].inUse + "</td>"
                         + "<td>" + productList[i].status + "</td>"
-                        + "<td>" + statusModifiedDate + "</td>"
+                        + "<td>" + commonUtils.defaultString(statusModifiedDate, "-") + "</td>"
                         +"</tr>"
                     );
                 }

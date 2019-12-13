@@ -67,7 +67,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">가격</th>
-                                <td th:text="${software.pricePerMonth}">원/월</td>
+                                <td th:text="${#numbers.formatInteger(software.pricePerMonth, 0, 'COMMA') +' 원/월~'}"></td>
                                 <th scope="row">판매자</th>
                                 <td th:text="${software.createdBy}"></td>
                             </tr>
@@ -85,7 +85,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">판매량</th>
-                                <td colspan="3" th:text="${personalSoldInstanceCount + ' 개'}"></td>
+                                <td colspan="3" th:text="${#numbers.formatInteger(personalSoldInstanceCount, 0, 'COMMA') +' 개'}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -262,7 +262,7 @@
                         + "<td>" + content[i].createdBy + "</td>"
                         + "<td>" + usageStartDate + "</td>"
                         + "<td>" + usageEndDate + "</td>"
-                        + "<td>" + content[i].softwarePlanAmtMonth + "</td>"
+                        + "<td>" + commonUtils.addComma(content[i].softwarePlanAmtMonth) +" 원</td>"
                         + "</tr>"
                     );
                 }

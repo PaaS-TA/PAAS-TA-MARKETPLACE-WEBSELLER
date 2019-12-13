@@ -146,14 +146,6 @@
         var CURR_TOTAL_ELEMENTS = 0;
         var NEXT_STEP_PROC_URL;
 
-        // 상품 사용자 수
-        /* var userCountPerSoftware = "[[${instanceUserCount}]]";
-        var resultCountList = commonUtils.isBlank(userCountPerSoftware) ? [] : JSON.parse(userCountPerSoftware.replace(/&quot;/g,'"')); */
-
-        //사용량 추이(terms,counts)
-        /* var totalCountInstsProviderInfo = "[[${totalCountInstsProviderInfo}]]";
-        var countofInstsProvider = commonUtils.isBlank(totalCountInstsProviderInfo) ? [] : JSON.parse(totalCountInstsProviderInfo.replace(/&quot;/g,'"')); */
-
         // ON LOAD
         $(document).ready(function() {
             currentMenu('2_1');
@@ -370,9 +362,9 @@
 
         // 상태 요약 정보 화면설정
         var callbackSoftwareStatsInfo = function(data) {
-        	$("#view-totalElements").text(" ("+ CURR_TOTAL_ELEMENTS +")");
-        	$("#view-countOfInstsUsing").text(" ("+ data.countOfInstsUsing +")");
-        	$("#view-countOfUsersUsing").text(" ("+ data.countOfUsersUsing +")");
+        	$("#view-totalElements").text(" ("+ commonUtils.addComma(CURR_TOTAL_ELEMENTS) +")");
+        	$("#view-countOfInstsUsing").text(" ("+ commonUtils.addComma(data.countOfInstsUsing) +")");
+        	$("#view-countOfUsersUsing").text(" ("+ commonUtils.addComma(data.countOfUsersUsing) +")");
         }
 
         var callbackSoftwareStatsList = function(resultMap) {
@@ -416,8 +408,8 @@
                         + "<td><a href='javascript:void(0);' onclick=moveSoftwareStatsDetail('"+content[i].id+"')>" + content[i].name+ "</a></td>"
                         + "<td>" + content[i].version + "</td>"
                         + "<td>" + createdDate + "</td>"
-                        + "<td>" + statusModifiedDate + "</td>"
-                        + "<td>" + soldCount + " 개</td>"
+                        + "<td>" + commonUtils.defaultString( statusModifiedDate, "-") + "</td>"
+                        + "<td>" + commonUtils.addComma(soldCount) + " 개</td>"
                         + "</tr>"
                     );
                 }
