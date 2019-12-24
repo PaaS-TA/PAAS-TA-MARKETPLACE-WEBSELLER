@@ -399,7 +399,7 @@
             var tempCpuAmt = commonUtils.onlyNumber($("#cpuAmt_"+id).val());
             var tempMemoryAmt = commonUtils.onlyNumber($("#memoryAmt_"+id).val());
             var tempDiskAmt = commonUtils.onlyNumber($("#diskAmt_"+id).val());
-            $("#sumAmt_"+id).val(commonUtils.addComma(tempCpuAmt + tempMemoryAmt+ tempDiskAmt));
+            $("#sumAmt_"+id).val(commonUtils.addComma(Number(tempCpuAmt) + Number(tempMemoryAmt) + Number(tempDiskAmt)));
 
             $("#cpuAmt_"+id).val(commonUtils.addComma(tempCpuAmt));
             $("#memoryAmt_"+id).val(commonUtils.addComma(tempMemoryAmt));
